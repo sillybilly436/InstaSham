@@ -1,0 +1,26 @@
+/*  Name: Bronson Housmans, Billy Dolny, and Ben Curtis
+    Project: InstaSham
+    Description: This css that styles the multiple html 
+    files for InstaSham.
+*/
+
+/* Login Page CSS */
+#loginTitle {
+    font-size: 300%;
+    color:yellow;
+    text-align: center;
+}
+
+#loginLeft {
+    font-size: 150%;
+    position:fixed;
+    left:15%;
+    right:50%;
+}
+
+#loginRight{
+    font-size: 150%;
+    position:fixed;
+    left:60%;
+    right:0;
+}
