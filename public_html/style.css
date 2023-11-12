@@ -1,0 +1,33 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: navy;
+}
+
+#dmHomeContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+.shamBanner {
+    color: navy;
+    background-color: yellow;
+    grid-column: 1;
+    grid-row: 1 / 2;
+}
+
+#dmHomeContent {
+    grid-row: 2 / 3;
+    grid-column: 1;
+}
+
+.navBar {
+    background-color: yellow;
+    grid-row: 3;
+    grid-column: 1;
+}
+
+a {
+    padding: 30px;
+}
