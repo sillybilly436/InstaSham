@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Create Post</title>
+        <link rel="stylesheet" type="text/css" href="./style.css">
+        <script src="./client.js"></script>
+    </head>
+    <body>
+        <div class="banner"></div>
+        <div id="create_post">
+            <div id="add_photo_box">
+                <div id="preview_photos">
+                    <img class="create_post_imgs" src="imgref" alt="Img">
+                </div>
+                <button onclick="addPhoto()">Add Photo!</button>
+            </div>
+            <div id="create_caption_box">
+                <label for="create_caption">Caption: </label>
+                <textarea id="create_caption"></textarea>
+            </div>
+            <!-- finds users for the client, then allows the user to click on any user to add them to the taged users for a post -->
+            <div id="create_user_tag_box">
+                <div id="taged_users">
+                    <!-- added as user adds people to tag -->
+                    <div class="user_box" onclick="removeUserTag('username')">
+                        <img class="imgs" src="'imgref'" alt="'username' pfp">
+                        <div id="username">'username'</div>
+                    </div>
+                </div>
+                <label for=""></label>
+                <input type="text" id="user_tag_search" oninput="tagSearchUser()">
+                <div id="user_tag_list">
+                    <!-- ~5 of these created for the first 5 recomended users to add to the tags -->
+                    <div class="user_box" onclick="addUserTag('username')">
+                        <img class="imgs" src="'imgref'" alt="'username' pfp">
+                        <div id="username">'username'</div>
+                    </div>
+                </div>
+            </div>
+            <button id="create_post" onclick="createPost()">Post</button>
+        </div>
+
+        <div class="nav_bar"></div>
+    </body>
+</html>
