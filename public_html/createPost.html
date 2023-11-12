@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Create Post</title>
+        <link rel="stylesheet" type="text/css" href="./style.css">
+        <script src="./client.js"></script>
+    </head>
+    <body>
+        <div class="shamBanner">InstaSham</div>
+        <div id="create_post">
+            <div id="addPhotoBox">
+                <div id="previewPhotos">
+                    <img class="createPostImgs" src="imgref" alt="Img">
+                </div>
+                <button onclick="addPhoto()">Add Photo!</button>
+            </div>
+            <div id="createCaptionBox">
+                <label for="createCaption">Caption: </label>
+                <textarea id="createCaption"></textarea>
+            </div>
+            <!-- finds users for the client, then allows the user to click on any user to add them to the taged users for a post -->
+            <div id="createUserTagBox">
+                <div id="tagedUsers">
+                    <!-- added as user adds people to tag -->
+                    <div class="userBox" onclick="removeUserTag('username')">
+                        <img class="imgs" src="'imgref'" alt="'username' pfp">
+                        <div id="username">'username'</div>
+                    </div>
+                </div>
+                <label for=""></label>
+                <input type="text" id="userTagSearch" oninput="tagSearchUser()">
+                <div id="userTagList">
+                    <!-- ~5 of these created for the first 5 recomended users to add to the tags -->
+                    <div class="userBox" onclick="addUserTag('username')">
+                        <img class="imgs" src="'imgref'" alt="'username' pfp">
+                        <div id="username">'username'</div>
+                    </div>
+                </div>
+            </div>
+            <button id="createPost" onclick="createPost()">Post</button>
+        </div>
+
+        <div class="navBar">
+            <a href="./home.html">Home</a>
+            <a href="./user.html">User</a>
+            <a href="./post.html">Create Post</a>
+            <a href="./global.html">Global</a>
+            <a href="./dmHome.html">Direct Messages</a>
+        </div>
+    </body>
+</html>
