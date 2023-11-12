@@ -6,40 +6,46 @@
         <script src="./client.js"></script>
     </head>
     <body>
-        <div class="banner"></div>
+        <div class="shamBanner">InstaSham</div>
         <div id="create_post">
-            <div id="add_photo_box">
-                <div id="preview_photos">
-                    <img class="create_post_imgs" src="imgref" alt="Img">
+            <div id="addPhotoBox">
+                <div id="previewPhotos">
+                    <img class="createPostImgs" src="imgref" alt="Img">
                 </div>
                 <button onclick="addPhoto()">Add Photo!</button>
             </div>
-            <div id="create_caption_box">
-                <label for="create_caption">Caption: </label>
-                <textarea id="create_caption"></textarea>
+            <div id="createCaptionBox">
+                <label for="createCaption">Caption: </label>
+                <textarea id="createCaption"></textarea>
             </div>
             <!-- finds users for the client, then allows the user to click on any user to add them to the taged users for a post -->
-            <div id="create_user_tag_box">
-                <div id="taged_users">
+            <div id="createUserTagBox">
+                <div id="tagedUsers">
                     <!-- added as user adds people to tag -->
-                    <div class="user_box" onclick="removeUserTag('username')">
+                    <div class="userBox" onclick="removeUserTag('username')">
                         <img class="imgs" src="'imgref'" alt="'username' pfp">
                         <div id="username">'username'</div>
                     </div>
                 </div>
                 <label for=""></label>
-                <input type="text" id="user_tag_search" oninput="tagSearchUser()">
-                <div id="user_tag_list">
+                <input type="text" id="userTagSearch" oninput="tagSearchUser()">
+                <div id="userTagList">
                     <!-- ~5 of these created for the first 5 recomended users to add to the tags -->
-                    <div class="user_box" onclick="addUserTag('username')">
+                    <div class="userBox" onclick="addUserTag('username')">
                         <img class="imgs" src="'imgref'" alt="'username' pfp">
                         <div id="username">'username'</div>
                     </div>
                 </div>
             </div>
-            <button id="create_post" onclick="createPost()">Post</button>
+            <button id="createPost" onclick="createPost()">Post</button>
         </div>
 
-        <div class="nav_bar"></div>
+        <div class="navBar">
+            <a href="./home.html">Home</a>
+            <a href="./user.html">User</a>
+            <a href="./post.html">Create Post</a>
+            <a href="./global.html">Global</a>
+            <a href="./dmHome.html">Direct Messages</a>
+        </div>
     </body>
 </html>
