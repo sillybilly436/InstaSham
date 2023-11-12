@@ -18,6 +18,7 @@ html, body {
 }
 
 #dmHomeContent {
+    color: white;
     grid-row: 2 / 3;
     grid-column: 1;
 }
@@ -55,4 +56,23 @@ a {
     position:fixed;
     left:60%;
     right:0;
+}
+
+#dmSpecificContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 60vh 28vh 12vh;
+}
+
+#dmSpecificMessages {
+    color: yellow;
+    grid-row: 1 / 2;
+    grid-column: 1;
+}
+
+#dmSpecificInput {
+    color: yellow;
+    grid-row: 2 / 3;
+    grid-column: 1;
+    border: 5px solid white;
 }
