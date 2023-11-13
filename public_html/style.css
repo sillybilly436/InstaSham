@@ -109,3 +109,15 @@ a {
     grid-column: 1;
     border: 5px solid white;
 }
+
+#globalContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+#globalContent {
+    grid-row: 2 / 3;
+    grid-column: 1;
+    color: white;
+}
