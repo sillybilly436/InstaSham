@@ -51,6 +51,7 @@ html, body {
 }
 
 #dmHomeContent {
+    color: white;
     grid-row: 2 / 3;
     grid-column: 1;
 }
