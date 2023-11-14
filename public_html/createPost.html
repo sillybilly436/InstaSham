@@ -12,24 +12,29 @@
 
             <div id="createPostContent">
                 <div id="addPhotoBox">
+                    <div class="createPostTitles">Add Photos To Your Post</div>
                     <div id="previewPhotos">
                         <img class="createPostImgs" src="imgref" alt="Img">
+                        <img class="createPostImgs" src="imgref" alt="Img">
+                        <img class="createPostImgs" src="imgref" alt="Img">
+                        <img class="createPostImgs" src="imgref" alt="Img">
+                        <img class="createPostImgs" src="imgref" alt="Img">
                     </div>
-                    <button onclick="addPhoto()">Add Photo!</button>
                 </div>
                 <div id="createCaptionBox">
-                    <label for="createCaption">Caption: </label>
+                    <div class="createPostTitles">Add A Caption To Your Post</div>
                     <textarea id="createCaption"></textarea>
                 </div>
                 <!-- finds users for the client, then allows the user to click on any user to add them to the taged users for a post -->
                 <div id="createUserTagBox">
-                    <div id="tagTitle">Tag Others In Your Post</div>
+                    <div class="createPostTitles">Tag Others In Your Post</div>
                     <div id="tagedUsers">
                         <div>Tagged Users</div>
                         <!-- added as user adds people to tag -->
                         <div class="userBox" onclick="removeUserTag('username')">
                             <img class="inTextPfp" src="'imgref'" alt="'username' pfp">
                             <div class="username">'username'</div>
+                            <div id="createTagStart">Search Users To Tag</div>
                         </div>
                     </div>
                     <label for="userTagSearch">Search Users</label>

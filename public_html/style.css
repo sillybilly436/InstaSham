@@ -72,6 +72,20 @@ a {
     grid-template-rows: 12vh 76vh 12vh;
 }
 
+/*
+Stlye for the create post page
+*/
+#createPostContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+.createPostTitles {
+    font-size: 3vh;
+    font-weight: bold;
+}
+
 #createPostContent {
     color: yellow;
     text-align: center;
@@ -79,24 +93,40 @@ a {
     grid-column: 1;
     display: grid;
     grid-template-columns: 100vw;
-    grid-template-rows: 24vh 24vh 24vh 4vh;
+    grid-template-rows: 28vh 20vh 24vh 4vh;
+}
+
+#previewPhotos {
+    overflow-x: scroll;
+    white-space: nowrap;
 }
 
 #addPhotoBox {
     grid-row: 1 / 2;
+    height: 100%;
+}
+
+.createPostImgs {
+    display: inline-block;
+    height: 22vh;
+    aspect-ratio: 1 / 1;
+    border: 2px yellow solid;
 }
 
 #createCaptionBox {
     grid-row: 2 / 3;
 }
 
-#createUserTagBox {
-    grid-row: 3 / 4;
+#createCaption {
+    height: 16vw;
+    width: 90%;
+    border: 2px yellow solid;
+    background-color: navy;
+    color: yellow;
 }
 
-#tagTitle {
-    font-size: 3vh;
-    font-weight: bold;
+#createUserTagBox {
+    grid-row: 3 / 4;
 }
 
 .userBox {
