@@ -137,3 +137,21 @@ a {
     height: auto;	
 }
 
+#userPosts {
+    margin-left: auto;
+    margin-right:auto;
+    text-align: center;
+}
+
+#postPic {
+    border: 1px solid #ddd;	/* thickness and color of border */
+    border-radius: 25px;		/* edge rounding of border */
+    width: 300px;				/* width of image (px or % or auto) */
+    height: auto;	
+}
+
+#specificComments {
+    margin-left: auto;
+    margin-right:auto;
+    text-align: center;
+}
