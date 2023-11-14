@@ -43,3 +43,9 @@ var messageSchema = new mongoose.Schema({
     messages: []
 });
 var messageData = mongoose.model('messageData', messageSchema);
+
+app.post('/user/login', (req, res) => {
+    let currAttempt = req.body;
+    let p1 = userData.find({username: currAttempt.username}).exec();
+    let unhashedPass = currAttempt.password;
+});
