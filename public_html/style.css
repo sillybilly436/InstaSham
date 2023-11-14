@@ -64,31 +64,6 @@ html, body {
 
 a {
     padding: 30px;
-}/*  Name: Bronson Housmans, Billy Dolny, and Ben Curtis
-    Project: InstaSham
-    Description: This css that styles the multiple html 
-    files for InstaSham.
-*/
-
-/* Login Page CSS */
-#loginTitle {
-    font-size: 300%;
-    color:yellow;
-    text-align: center;
-}
-
-#loginLeft {
-    font-size: 150%;
-    position:fixed;
-    left:15%;
-    right:50%;
-}
-
-#loginRight{
-    font-size: 150%;
-    position:fixed;
-    left:60%;
-    right:0;
 }
 
 #dmSpecificContainer {
@@ -120,4 +95,63 @@ a {
     grid-row: 2 / 3;
     grid-column: 1;
     color: white;
+}
+
+/* user.html Page CSS */
+#userContainer {
+    color:white;
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+#userContent {
+    grid-row: 2 / 3;
+    grid-column: 1;
+}
+
+#userProfilePic {
+    border: 1px solid #ddd;	/* thickness and color of border */
+    border-radius: 25px;		/* edge rounding of border */
+    width: 100px;				/* width of image (px or % or auto) */
+    height: auto;	
+}
+
+/* user.html Page CSS */
+#userContainer {
+    color:white;
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+#userContent {
+    grid-row: 2 / 3;
+    grid-column: 1;
+}
+
+#userProfilePic {
+    border: 1px solid #ddd;	/* thickness and color of border */
+    border-radius: 25px;		/* edge rounding of border */
+    width: 100px;				/* width of image (px or % or auto) */
+    height: auto;	
+}
+
+#userPosts {
+    margin-left: auto;
+    margin-right:auto;
+    text-align: center;
+}
+
+#postPic {
+    border: 1px solid #ddd;	/* thickness and color of border */
+    border-radius: 25px;		/* edge rounding of border */
+    width: 300px;				/* width of image (px or % or auto) */
+    height: auto;	
+}
+
+#specificComments {
+    margin-left: auto;
+    margin-right:auto;
+    text-align: center;
 }
