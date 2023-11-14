@@ -64,3 +64,27 @@ html, body {
 a {
     padding: 30px;
 }
+
+/* user.html Page CSS */
+#userContainer {
+    color:white;
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+#userContent {
+    grid-row: 2 / 3;
+    grid-column: 1;
+}
+
+#userProfilePic {
+    border: 1px solid #ddd;	/* thickness and color of border */
+    border-radius: 25px;		/* edge rounding of border */
+    width: 100px;				/* width of image (px or % or auto) */
+    height: auto;	
+}
+
+#userUsername{
+   
+}
