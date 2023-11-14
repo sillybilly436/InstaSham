@@ -64,3 +64,53 @@ html, body {
 a {
     padding: 30px;
 }
+
+#createPostContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+#createPostContent {
+    color: yellow;
+    text-align: center;
+    grid-row: 2 / 3;
+    grid-column: 1;
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 24vh 24vh 24vh 4vh;
+}
+
+#addPhotoBox {
+    grid-row: 1 / 2;
+}
+
+#createCaptionBox {
+    grid-row: 2 / 3;
+}
+
+#createUserTagBox {
+    grid-row: 3 / 4;
+}
+
+#tagTitle {
+    font-size: 3vh;
+    font-weight: bold;
+}
+
+.userBox {
+    display: inline-block;
+}
+
+.inTextPfp {
+    float: left;
+}
+
+.username {
+    float: right;
+}
+
+#createPost {
+    grid-row: 4;
+}
+
