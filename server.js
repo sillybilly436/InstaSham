@@ -6,12 +6,19 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
 const parser = require('body-parser');
 const app = express();
 const port = 3000;
+const cm = require('./customsessions');
+
+cm.sessions.startCleanup();
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(parser.json());
+
+app.use(express.static('public_html'))
 
 // Sets up the mongoose database
 const db  = mongoose.connection;
@@ -44,8 +51,65 @@ var messageSchema = new mongoose.Schema({
 });
 var messageData = mongoose.model('messageData', messageSchema);
 
+// creating an account
+app.get('/user/create/:username/:password', (req, res) => {
+    let p1 = userData.find({username: req.params.username}).exec();
+    p1.then( (results) => { 
+      if (results.length > 0) {
+        res.end('That username is already taken.');
+      } else {
+  
+        let newSalt = Math.floor((Math.random() * 1000000));
+        let toHash = req.params.password + newSalt;
+        var hash = crypto.createHash('sha3-256');
+        let data = hash.update(toHash, 'utf-8');
+        let newHash = data.digest('hex');
+  
+        var newUser = new userData({ 
+          username: req.params.username,
+          password: newHash,
+          salt: newSalt,
+          friends: []
+        });
+        newUser.save().then( (doc) => { 
+            res.end('Created new account!');
+          }).catch( (err) => { 
+            console.log(err);
+            res.end('Failed to create new account.');
+          });
+      }
+    });
+    p1.catch( (error) => {
+      res.end('Failed to create new account.');
+    });
+  });
+
+// logging in to an existing account
 app.post('/user/login', (req, res) => {
-    let currAttempt = req.body;
-    let p1 = userData.find({username: currAttempt.username}).exec();
-    let unhashedPass = currAttempt.password;
+    let u = req.body.username;
+    let p1 = userData.find({username: u}).exec();
+    p1.then( (results) => {
+        console.log(results);
+        for(let i = 0; i < results.length; i++) {
+    
+          let existingSalt = results[i].salt;
+          let toHash = req.body.password + existingSalt;
+          var hash = crypto.createHash('sha3-256');
+          let data = hash.update(toHash, 'utf-8');
+          let newHash = data.digest('hex');
+          
+          if (newHash == results[i].password) {
+            let id = cm.sessions.addOrUpdateSession(u);
+            res.cookie("login", {username: u, sid: id}, {maxAge: 60000*60*24});
+            res.end('Successful');
+            return;
+          } 
+        } 
+        res.end('login failed');
+      });
+      p1.catch( (error) => {
+        res.end('login failed');
+      });
 });
+
+app.listen(port, () => { console.log('server has started'); });
