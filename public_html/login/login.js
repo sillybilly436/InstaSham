@@ -16,7 +16,7 @@ function login() {
         return response.text();
     }).then((response) => {
         if(response == 'Successful') {
-            window.location.href = '/home.html';
+            window.location.href = '/app/home.html';
         } else {
             let fail = document.getElementById('failMessage');
             fail.innerText = 'Login attempt failed';

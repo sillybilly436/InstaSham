@@ -116,9 +116,9 @@ app.post('/user/login', (req, res) => {
 Testing multer to add img
 */
 
-//const multer = require('multer');
-//const upload = multer({dest: 'public_html/app/uploads/images'});
-/*
+const multer = require('multer');
+const upload = multer({dest: 'public_html/app/uploads/images'});
+
 app.post('/upload', upload.single('photo'), (req, res) => {
   if(req.file) {
     res.json(req.file);
@@ -126,6 +126,6 @@ app.post('/upload', upload.single('photo'), (req, res) => {
     throw 'error';
   }
 })
-*/
+
 
 app.listen(port, () => { console.log('server has started'); });
