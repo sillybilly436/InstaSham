@@ -4,32 +4,6 @@
     files for InstaSham.
 */
 
-/* Login Page CSS */
-#loginHTML {
-    background-color: navy;
-}
-
-#loginTitle {
-    font-size: 300%;
-    color:yellow;
-    text-align: center;
-}
-
-#loginLeft {
-    color:white;
-    font-size: 150%;
-    position:fixed;
-    left:15%;
-    right:50%;
-}
-
-#loginRight{
-    color:white;
-    font-size: 150%;
-    position:fixed;
-    left:60%;
-    right:0;
-}
 /* dmHome Page CSS */
 html, body {
     margin: 0;
