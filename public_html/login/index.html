@@ -1,0 +1,40 @@
+<!--
+    Name: Bronson Housmans, Billy Dolny, and Ben Curtis
+    Project: InstaSham
+    Description: This html site is created to be a loging screen,
+    It is also used to be able to create a new account as well. It should
+    stop duplicte users and if the user not real or password does not
+    match.
+-->
+
+<!DOCTYPE html>
+<html id="loginHTML" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Instasham</title>
+        <link type="text/css" rel="stylesheet" href="style.css">
+        <script src="login.js"></script>
+    </head>
+    <body>
+        <p id="loginTitle">InstaSham</p><br>
+        <div id="loginLeft">
+            <p>Login</p><br>
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username"><br><br>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password"><br><br>
+            <input type="button" value="Login" id="userButton" onclick="login()">
+            <div id="failMessage"></div>
+        </div>
+        
+        <div id="loginRight">
+            <p>Create Account</p><br>
+            <label for="newUsername">Username</label>
+            <input type="text" name="newUsername" id="newUsername" required><br><br>
+            <label for="newPassword">Password</label>
+            <input type="password" name="newPassword" id="newPassword" required><br><br>
+            <input type="button" value="Create" id="newUserButton" onclick="checkCreateUser()">
+            <div id="retMessage"></div>
+        </div>
+    </body>
+</html>
