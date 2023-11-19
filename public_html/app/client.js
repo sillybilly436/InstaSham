@@ -16,12 +16,25 @@ function searchFriends() {
         let currKeys = Object.keys(usersObj);
         let htmlStr = '';
         for(let i = 0; i < currKeys.length; i++) {
-            let currUsername = currKeys[i];
-            htmlStr = htmlStr + '<p>' + usersObj[currUsername] + '</p>' + 
+            let currKey = currKeys[i];
+            let currName = '' + usersObj[currKey];
+            htmlStr = htmlStr + '<p>' + currName + '</p>' + 
             `<input type='button' name='dmHomeNewMessage${i}' id='dmHomeNewMessage${i}'
-            onclick='startMessage(${i})' value='Send Message'><br>`; 
+            onclick='startMessage("${currName}")' value='Send Message'><br>`; 
         }
         let found = document.getElementById('dmHomeFriendsFound');
         found.innerHTML = htmlStr;
+    })
+}
+
+function startMessage(userToMessage) {
+    console.log(userToMessage);
+    let otherName = { name: userToMessage };
+    fetch('/dm', {
+        method:'POST',
+        body: JSON.stringify(otherName),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        window.location.href = '/app/dmSpecific.html';
     })
 }

@@ -45,6 +45,12 @@ var postSchema = new mongoose.Schema({
 });
 var postData = mongoose.model('postData', postSchema);
 
+var dmSchema = new mongoose.Schema({
+  chatName: String,
+  chats: []
+});
+var dmData = mongoose.model('dmData', dmSchema);
+
 var messageSchema = new mongoose.Schema({
     alias: String,
     message: String
@@ -52,21 +58,21 @@ var messageSchema = new mongoose.Schema({
 var messageData = mongoose.model('messageData', messageSchema);
 
 // creating an account
-app.get('/user/create/:username/:password', (req, res) => {
-    let p1 = userData.find({username: req.params.username}).exec();
+app.post('/user/create', (req, res) => {
+    let p1 = userData.find({username: req.body.username}).exec();
     p1.then( (results) => { 
       if (results.length > 0) {
         res.end('That username is already taken.');
       } else {
-  
+
         let newSalt = Math.floor((Math.random() * 1000000));
-        let toHash = req.params.password + newSalt;
+        let toHash = req.body.password + newSalt;
         var hash = crypto.createHash('sha3-256');
         let data = hash.update(toHash, 'utf-8');
         let newHash = data.digest('hex');
   
         var newUser = new userData({ 
-          username: req.params.username,
+          username: req.body.username,
           password: newHash,
           salt: newSalt,
           friends: []
@@ -139,6 +145,43 @@ app.post('/find/friends', (req,res) => {
       usersFound['username'+i] = response[i].username;
     }
     res.end(JSON.stringify(usersFound));
+  })
+});
+
+// opening a message between users
+app.post('/dm', (req,res) => {
+  let user2 = req.body.name;
+  let user1 = req.cookies.login.username;
+  let names = user1 + user2;
+  let p1 = dmData.find({chatName: {$regex: names}}).exec();
+  p1.then((response) => {
+    if(response.length > 0) {
+      console.log(response[0].chats);
+      let resObj = {chats: response[0].chats};
+      res.end(JSON.stringify(resObj));
+    } else {
+      let comboNames = user1 + user2 + user2 + user1;
+      let chatObj = {chatName: comboNames, chats: []};
+      let newChat = new dmData(chatObj);
+      newChat.save()
+      .then(() => {
+        let query1 = userData.find({username: user1})
+        query1.then((res) => {
+          let user = res[0];
+          let messages1 = user.directMessages;
+          messages1.push(chatObj)
+          user.save();
+        })
+        let query2 = userData.find({username: user2})
+        query2.then((res) => {
+          let user = res[0];
+          let messages2 = user.directMessages;
+          messages2.push(chatObj)
+          user.save();
+          res.end("New dm created");
+        })
+      })
+    }
   })
 })
 

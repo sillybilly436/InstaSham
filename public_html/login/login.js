@@ -25,10 +25,18 @@ function login() {
 }
 
 function checkCreateUser () {
-    let newUsername = document.getElementById('newUsername').value;
-    let newPassword = document.getElementById('newPassword').value;
+    let newUserObj = {
+        username: document.getElementById('newUsername').value,
+        password:  document.getElementById('newPassword').value };
+    //let newUsername = document.getElementById('newUsername').value;
+    //let newPassword = document.getElementById('newPassword').value;
     let resMessage = document.getElementById('retMessage');
-    fetch(`user/create/${newUsername}/${newPassword}`).then((res) => {
+    console.log('sending now');
+    fetch('/user/create', {
+        method:'POST',
+        body: JSON.stringify(newUserObj),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
         return res.text();
     }).then((res) => {
         resMessage.innerText = res;
