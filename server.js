@@ -30,7 +30,8 @@ var usernameSchema = new mongoose.Schema({
     username: String,
     password: String,
     salt: String,
-    friends: []
+    friends: [],
+    directMessages: []
 });
 var userData = mongoose.model('userData', usernameSchema);
 
@@ -45,9 +46,8 @@ var postSchema = new mongoose.Schema({
 var postData = mongoose.model('postData', postSchema);
 
 var messageSchema = new mongoose.Schema({
-    username1: String,
-    username2: String,
-    messages: []
+    alias: String,
+    message: String
 });
 var messageData = mongoose.model('messageData', messageSchema);
 
@@ -116,15 +116,30 @@ app.post('/user/login', (req, res) => {
 Testing multer to add img
 */
 
-const multer = require('multer');
-const upload = multer({dest: 'public_html/app/uploads/images'});
-
+//const multer = require('multer');
+//const upload = multer({dest: 'public_html/app/uploads/images'});
+/** 
 app.post('/upload', upload.single('photo'), (req, res) => {
   if(req.file) {
     res.json(req.file);
   } else {
     throw 'error';
   }
+})
+*/
+
+// searches users for match with input string
+app.post('/find/friends', (req,res) => {
+  let currName = req.body.name;
+  let p1 = userData.find({username: {$regex: currName}}).exec();
+  p1.then((response) => {
+    console.log(response);
+    let usersFound = {};
+    for(let i = 0; i < response.length; i++) {
+      usersFound['username'+i] = response[i].username;
+    }
+    res.end(JSON.stringify(usersFound));
+  })
 })
 
 //handles creation of new DM between users

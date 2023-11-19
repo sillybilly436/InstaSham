@@ -11,10 +11,15 @@
         <link type="text/css" rel="stylesheet" href="./style.css">
     </head>
     <body>
+        <script src="client.js"></script>
         <div id="dmHomeContainer">
             <div class="shamBanner">InstaSham</div>
             <div id="dmHomeContent">
                 <h1 id="dmHomeTitle">Direct Messages</h1>
+                <label for="dmHomeSearch">Search for friend to DM</label>
+                <input type="text" name="dmHomeSearch" id="dmHomeSearch"
+                oninput="searchFriends()">
+                <div id="dmHomeFriendsFound"></div>
                 <img src="fake.png">
                 <p>Username</p>
                 <input type="button" value="Open messages" id="dmHomeOpenButton"
