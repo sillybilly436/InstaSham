@@ -127,5 +127,7 @@ app.post('/upload', upload.single('photo'), (req, res) => {
   }
 })
 
+//handles creation of new DM between users
+
 
 app.listen(port, () => { console.log('server has started'); });
