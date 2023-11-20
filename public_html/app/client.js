@@ -35,6 +35,10 @@ function startMessage(userToMessage) {
         body: JSON.stringify(otherName),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
-        window.location.href = '/app/dmSpecific.html';
-    })
+        location.reload();
+    });
+}
+
+function openMessage() {
+    
 }

@@ -139,7 +139,6 @@ app.post('/find/friends', (req,res) => {
   let currName = req.body.name;
   let p1 = userData.find({username: {$regex: currName}}).exec();
   p1.then((response) => {
-    console.log(response);
     let usersFound = {};
     for(let i = 0; i < response.length; i++) {
       usersFound['username'+i] = response[i].username;
@@ -166,19 +165,19 @@ app.post('/dm', (req,res) => {
       newChat.save()
       .then(() => {
         let query1 = userData.find({username: user1})
-        query1.then((res) => {
-          let user = res[0];
+        query1.then((resOne) => {
+          let user = resOne[0];
           let messages1 = user.directMessages;
           messages1.push(chatObj)
           user.save();
         })
         let query2 = userData.find({username: user2})
-        query2.then((res) => {
-          let user = res[0];
+        query2.then((resTwo) => {
+          let user = resTwo[0];
           let messages2 = user.directMessages;
           messages2.push(chatObj)
           user.save();
-          res.end("New dm created");
+          res.end("Successful");
         })
       })
     }
