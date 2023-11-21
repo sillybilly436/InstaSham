@@ -18,8 +18,6 @@
                     <div class="createPostTitles">Add Photos To Your Post</div>
                     <div id="previewPhotos">
                         <!--odd bug, previewed imgs have less of a margin?-->
-                        <img class="createPostImgs" src="./images/addImg.png" alt="Img">
-                        <img class="createPostImgs" src="./images/blankPic.png" alt="Img">
                         <form id="uploadFiles" class="createPostImgs" action="/postImg" method="post" enctype="multipart/form-data">
                             <label>
                                 <input type="file" accept="image/*" id="uploadImg" name="uploadedImgs" onchange="previewImg()" multiple>
@@ -28,10 +26,12 @@
                         </form>
                     </div>
                 </div>
+
                 <div id="createCaptionBox">
                     <div class="createPostTitles">Add A Caption To Your Post</div>
                     <textarea id="createCaption"></textarea>
                 </div>
+
                 <!-- finds users for the client, then allows the user to click on any user to add them to the taged users for a post -->
                 <div id="createUserTagBox">
                     <div class="createPostTitles">Tag Others In Your Post</div>
@@ -54,6 +54,7 @@
                         </div>
                     </div>
                 </div>
+
                 <button id="createPost" onclick="createPost()">Post</button>
             </div>
 

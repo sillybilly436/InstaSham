@@ -3,19 +3,19 @@
  * Description:
  */
 
-var files = {};
-
 function previewImg() {
     let uploadImg = document.getElementById('uploadImg');
-    const [file] = uploadImg.files;
-    if (file) {
-        files += file;
-        console.log(file);
-        console.log(files);
-        let current = document.getElementById("previewPhotos");
-        let oldHTML = current.innerHTML;
-        let newHTML = '<img class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
-        current.innerHTML = newHTML + oldHTML;
+    const files = uploadImg.files;
+    if (files) {
+        for (i = 0; i < files.length; i++) {
+            let file = files[i];
+            console.log(file);
+            let current = document.getElementById("previewPhotos");
+            let oldHTML = current.innerHTML;
+            let newHTML = '<img class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
+            current.innerHTML = newHTML + oldHTML;
+        }
+        
     }
 }
 
