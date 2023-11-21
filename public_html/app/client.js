@@ -5,17 +5,16 @@
 
 function previewImg() {
     let uploadImg = document.getElementById('uploadImg');
-    const files = uploadImg.files;
+    var files = uploadImg.files;
     if (files) {
         for (i = 0; i < files.length; i++) {
             let file = files[i];
             console.log(file);
             let current = document.getElementById("previewPhotos");
             let oldHTML = current.innerHTML;
-            let newHTML = '<img class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
+            let newHTML = '<img id="file' + i + '" class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
             current.innerHTML = newHTML + oldHTML;
         }
-        
     }
 }
 
