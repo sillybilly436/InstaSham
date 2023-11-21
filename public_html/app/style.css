@@ -156,12 +156,13 @@ a {
 
 .inTextPfp {
     float: left;
-    height: 2vw;
+    height: 2vh;
     aspect-ratio: 1 / 1;
 }
 
 .username {
     float: right;
+    height:2vh
 }
 
 #createPost {
