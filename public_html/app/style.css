@@ -22,6 +22,8 @@ html, body {
     background-color: yellow;
     grid-column: 1;
     grid-row: 1 / 2;
+    text-align: center;
+    font-size: 240%;
 }
 
 #dmHomeContent {
@@ -31,10 +33,22 @@ html, body {
     overflow-y: scroll;
 }
 
+#specificContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 8vh 84vh 8vh;
+}
+
 .navBar {
     background-color: yellow;
     grid-row: 3;
     grid-column: 1;
+    text-align: center;
+    font-size: 200%;
+}
+
+#userContent {
+    overflow-y: scroll;
 }
 
 a {
@@ -83,6 +97,10 @@ Stlye for the create post page
     display: grid;
     grid-template-columns: 100vw;
     grid-template-rows: 28vh 20vh 24vh 4vh;
+}
+
+a {
+    margin-top: 50%;
 }
 
 #previewPhotos {
@@ -151,7 +169,7 @@ Stlye for the create post page
 #homeContainer {
     display: grid;
     grid-template-columns: 100vw;
-    grid-template-rows: 12vh 76vh 12vh;
+    grid-template-rows: 8vh 84vh 8vh;
 }
 
 #homeContent {
@@ -172,4 +190,29 @@ Stlye for the create post page
     grid-row: 2 / 3;
     grid-column: 1;
     overflow-y: scroll;
+}
+
+#postPic {
+    max-width: 25%;
+  height: auto;
+}
+
+#specificProfilePic {
+    max-width: 10%;
+    border-radius: 50%;
+    height: auto;
+}
+
+#homeProfilePic {
+    max-width: 3%;
+    border-radius: 50%;
+    height: auto;
+}
+
+#userContent {
+    color: white;
+}
+
+#dmHomeExistingMessages {
+    margin-bottom: 4%;
 }

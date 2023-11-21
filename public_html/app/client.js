@@ -101,12 +101,10 @@ function getPosts() {
 }
 
 function openMessage(elementNum) {
-    let otherUser = document.getElementById(`dmHomeOpenButton${elementNum}`).value;
-    window.location.href = '/app/dmSpecific.html?sharedVariable' + encodeURIComponent(otherUser);
-    var urlParams = new URLSearchParams(window.location.search);
-    var sharedVariable = urlParams.get('sharedVariable');
-    let specificFriend = document.getElementById('dmSpecificFriend');
-    specificFriend.innerText = sharedVariable;
+    let encodeStr = document.getElementById(`dmHomeOpenButton${elementNum}`).value;
+    let splitEncode = encodeStr.split(' ');
+    let otherUser = splitEncode[3];
+    window.location.href = '/app/dmSpecific.html?' + encodeURIComponent(otherUser);
 }
 
 function provideDMs() {
@@ -119,10 +117,47 @@ function provideDMs() {
         let htmlStr = '';
         for(let i = 0; i < dmList.length; i++) {
             htmlStr = htmlStr + `<p><strong>` + dmList[i].chatName + `</strong></p>`
-            + `<input type="button" value="Open messages" id="dmHomeOpenButton${i}"
+            + `<input type="button" value="Open messages with ${dmList[i].chatName}" id="dmHomeOpenButton${i}"
             name = "dmHomeOpenButton${i}" onclick="openMessage(${i})"><br>`
         }
         let content = document.getElementById('dmHomeExistingMessages');
         content.innerHTML = htmlStr;
     })
+}
+
+function refreshDMs() {
+    setInterval(loadDMPage, 2000);
+}
+
+function loadDMPage() {
+    var specificFriend = document.getElementById('dmSpecificFriend');
+    var urlParam = new URLSearchParams(window.location.search);
+    urlParam = '' + urlParam;
+    urlParam = urlParam.substring(0, urlParam.length-1);
+    specificFriend.innerText = urlParam;
+    fetch(`/dms/load/${urlParam}`).then((res) => {
+        return res.text();
+    }).then((jsonStr) => {
+        let jsonObj = JSON.parse(jsonStr);
+        let messageChats = jsonObj.chatList;
+        let htmlStr = '';
+        for(let i = 0; i < messageChats.length; i++) {
+            htmlStr = htmlStr + `<p><strong>` + messageChats[i].alias + `: </strong>` +
+            messageChats[i].message + `</p>`
+        }
+        let dmSpecificContent = document.getElementById('dmSpecificMessages');
+        dmSpecificContent.innerHTML = htmlStr;
+    })
+}
+
+function sendDM() {
+    var dmBody = {user1: document.getElementById('dmSpecificFriend').innerText,
+                message: document.getElementById('dmSpecificInputMessage').value};
+    fetch('/dms/post', {
+        method:'POST',
+        body: JSON.stringify(dmBody),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        return res.text();
+    });
 }
