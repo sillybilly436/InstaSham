@@ -39,6 +39,51 @@ function startMessage(userToMessage) {
     });
 }
 
+function addItem() {
+    let item = {
+        description: document.getElementById('createCaption').value,
+        image: document.getElementById('previewPhotos').value,
+        tags: document.getElementById('tags').value,
+        likes: 0,
+        comments : null, 
+    }
+    fetch(`/add/item`, {
+        method: 'POST',
+        body: JSON.stringify(item),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        window.location.href = '/home.html';
+        return res.text();
+    }).then((text) => {
+        window.location.href = '/home.html';
+        return;
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+function getPosts() {
+    let keyword = document.getElementById('searchInput').value;
+    fetch(`/get/items`).then((res) => {
+        return res.text();
+    }).then((res) => {
+        return JSON.parse(res);
+    }).then((retObj) => {
+        let htmlStr = '';
+        let buttonIndex = 0;
+        for(jsonObj of retObj) {
+            htmlStr = htmlStr + `<div class='allPosts'><p id='title${buttonIndex}'>${jsonObj.username}</p><p>
+            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.likes} Likes and ${jsonObj.comments} Comments</p>`;
+            console.log(jsonObj);
+            htmlStr = htmlStr + `<input type='button' id='buyButton name='buyButton' value='View Post' onclick='buyNow(${buttonIndex})'></div>`;
+            buttonIndex++;
+        }
+        console.log(htmlStr)
+        let right = document.getElementById('rightSide')
+        right.innerHTML = htmlStr;
+    })
+}
+
 function openMessage() {
     
 }
