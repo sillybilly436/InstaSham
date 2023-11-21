@@ -146,3 +146,14 @@ function loadDMPage() {
         dmSpecificContent.innerHTML = htmlStr;
     })
 }
+
+function sendDM() {
+    var specificFriend = {user1: document.getElementById('dmSpecificFriend').value};
+    fetch('/dms/post', {
+        method:'POST',
+        body: JSON.stringify(specificFriend),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        // tbd
+    });
+}
