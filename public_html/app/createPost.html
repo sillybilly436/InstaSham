@@ -6,10 +6,10 @@
         <script src="./client.js"></script>
     </head>
     <body>
-        <form action="/upload" method="post" enctype="multipart/form-data">
+        <!--form action="/upload" method="post" enctype="multipart/form-data">
             <input type="file" accept="image/*" name="photo" >
             <input type="submit" value="upload">
-        </form>
+        </form-->
         <div id="createPostContainer">
             <div class="shamBanner">InstaSham</div>
 
@@ -17,11 +17,15 @@
                 <div id="addPhotoBox">
                     <div class="createPostTitles">Add Photos To Your Post</div>
                     <div id="previewPhotos">
-                        <img class="createPostImgs" src="imgref" alt="Img">
-                        <img class="createPostImgs" src="imgref" alt="Img">
-                        <img class="createPostImgs" src="imgref" alt="Img">
-                        <img class="createPostImgs" src="imgref" alt="Img">
-                        <img class="createPostImgs" src="imgref" alt="Img">
+                        <!--odd bug, previewed imgs have less of a margin?-->
+                        <img class="createPostImgs" src="./images/addImg.png" alt="Img">
+                        <img class="createPostImgs" src="./images/blankPic.png" alt="Img">
+                        <form id="uploadFiles" class="createPostImgs" action="/postImg" method="post" enctype="multipart/form-data">
+                            <label>
+                                <input type="file" accept="image/*" id="uploadImg" name="uploadedImgs" onchange="previewImg()" multiple>
+                                <img src="./images/addImg.png" alt="addImg" id="uploadImgImg">
+                            </label>
+                        </form>
                     </div>
                 </div>
                 <div id="createCaptionBox">
