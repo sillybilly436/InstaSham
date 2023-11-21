@@ -232,6 +232,19 @@ app.get('/get/items', (req,res) => {
   });
 });
 
+// searches for messages between users
+app.get('/dms/load/:name', (req, res) => {
+  let user1 = req.params.name;
+  let user2 = req.cookies.login.username;
+  let names = user1 + user2;
+  let query = dmData.find({chatName: {$regex: names}});
+  query.then((item) => {
+    let chatObj = item[0];
+    let retObj = {chatList: chatObj.chats};
+    res.end(JSON.stringify(retObj));
+  })
+})
+
 
 //handles creation of new DM between users
 

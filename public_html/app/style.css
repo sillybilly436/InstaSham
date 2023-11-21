@@ -159,3 +159,7 @@ Stlye for the create post page
     grid-column: 1;
     overflow-y: scroll;
 }
+
+#dmHomeExistingMessages {
+    margin-bottom: 4%;
+}
