@@ -17,8 +17,37 @@
             <div class="shamBanner">InstaSham</div>
             <div id="homeContent">
                 <h1 id="homeTitle">Home</h1>
-                <img src="./images/blankPic.png">
-                <p>Username</p>
+                <span>
+                <img id="specificProfilePic" src="./images/blankPic.png">
+                Username
+               </span>
+
+                <div id="userContent">
+                    <center>
+                    <span id="userUsername">
+                    <img id="homeProfilePic" src="./images/blankPic.png" alt="image">
+                    Username
+                    </span>
+                    <div>
+                    <img id="postPic" src="./images/blankPic.png" alt="postpic">
+                    
+                    <div id="userPosts">Caption</div> <br>
+                    <input type="button" value="see individual post" id="homeCommentButt" onclick="senttoind();">
+                </div>
+                <br>
+                <span id="userUsername">
+                    <img id="homeProfilePic" src="./images/blankPic.png" alt="image">
+                    Username
+                    </span>
+                    <div>
+                    <img id="postPic" src="./images/blankPic.png" alt="postpic">
+                    
+                    <div id="userPosts">Caption</div> <br>
+                    <input type="button" value="see individual post" id="homeCommentButt" onclick="senttoind();">
+                </div>
+                </center>
+                </div>
+
                 <input type="button" value="Comment" id="commentButton"
                 name="commentButton" onclick="openPost()">   
             </div>
