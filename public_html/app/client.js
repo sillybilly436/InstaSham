@@ -125,8 +125,11 @@ function provideDMs() {
     })
 }
 
+function refreshDMs() {
+    setInterval(loadDMPage, 2000);
+}
+
 function loadDMPage() {
-    console.log('made it to load name')
     var specificFriend = document.getElementById('dmSpecificFriend');
     var urlParam = new URLSearchParams(window.location.search);
     urlParam = '' + urlParam;
@@ -139,7 +142,7 @@ function loadDMPage() {
         let messageChats = jsonObj.chatList;
         let htmlStr = '';
         for(let i = 0; i < messageChats.length; i++) {
-            htmlStr = htmlStr + `<p><strong>` + messageChats[i].alias + `:</strong>` +
+            htmlStr = htmlStr + `<p><strong>` + messageChats[i].alias + `: </strong>` +
             messageChats[i].message + `</p>`
         }
         let dmSpecificContent = document.getElementById('dmSpecificMessages');
@@ -148,12 +151,13 @@ function loadDMPage() {
 }
 
 function sendDM() {
-    var specificFriend = {user1: document.getElementById('dmSpecificFriend').value};
+    var dmBody = {user1: document.getElementById('dmSpecificFriend').innerText,
+                message: document.getElementById('dmSpecificInputMessage').value};
     fetch('/dms/post', {
         method:'POST',
-        body: JSON.stringify(specificFriend),
+        body: JSON.stringify(dmBody),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
-        // tbd
+        return res.text();
     });
 }
