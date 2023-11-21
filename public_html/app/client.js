@@ -39,33 +39,6 @@ function startMessage(userToMessage) {
     });
 }
 
-function openMessage(elementNum) {
-    let otherUser = document.getElementById(`dmHomeOpenButton${elementNum}`).value;
-    window.location.href = '/app/dmSpecific.html?sharedVariable' + encodeURIComponent(otherUser);
-    var urlParams = new URLSearchParams(window.location.search);
-    var sharedVariable = urlParams.get('sharedVariable');
-    let specificFriend = document.getElementById('dmSpecificFriend');
-    specificFriend.innerText = sharedVariable;
-}
-
-function provideDMs() {
-    console.log('about to fetch');
-    fetch('/user/dms').then((res) => {
-        return res.text();
-    }).then((jsonStr) => {
-        let jsonObj = JSON.parse(jsonStr);
-        let dmList = jsonObj.dms;
-        let htmlStr = '';
-        for(let i = 0; i < dmList.length; i++) {
-            htmlStr = htmlStr + `<p><strong>` + dmList[i].chatName + `</strong></p>`
-            + `<input type="button" value="" id="dmHomeOpenButton${i}"
-            name = "dmHomeOpenButton${i}" onclick="openMessage(${i})"><br>`
-        }
-        let content = document.getElementById('dmHomeExistingMessages');
-        content.innerHTML = htmlStr;
-    })
-}
-
 function addItem() {
     let item = {
         description: document.getElementById('createCaption').value,
@@ -130,7 +103,7 @@ function provideDMs() {
         let htmlStr = '';
         for(let i = 0; i < dmList.length; i++) {
             htmlStr = htmlStr + `<p><strong>` + dmList[i].chatName + `</strong></p>`
-            + `<input type="button" value="" id="dmHomeOpenButton${i}"
+            + `<input type="button" value="Open messages" id="dmHomeOpenButton${i}"
             name = "dmHomeOpenButton${i}" onclick="openMessage(${i})"><br>`
         }
         let content = document.getElementById('dmHomeExistingMessages');
