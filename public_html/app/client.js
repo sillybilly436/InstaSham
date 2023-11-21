@@ -65,3 +65,75 @@ function provideDMs() {
         content.innerHTML = htmlStr;
     })
 }
+
+function addItem() {
+    let item = {
+        description: document.getElementById('createCaption').value,
+        image: document.getElementById('previewPhotos').value,
+        tags: document.getElementById('tags').value,
+        likes: 0,
+        comments : null, 
+    }
+    fetch(`/add/item`, {
+        method: 'POST',
+        body: JSON.stringify(item),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        window.location.href = '/home.html';
+        return res.text();
+    }).then((text) => {
+        window.location.href = '/home.html';
+        return;
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+function getPosts() {
+    let keyword = document.getElementById('searchInput').value;
+    fetch(`/get/items`).then((res) => {
+        return res.text();
+    }).then((res) => {
+        return JSON.parse(res);
+    }).then((retObj) => {
+        let htmlStr = '';
+        let buttonIndex = 0;
+        for(jsonObj of retObj) {
+            htmlStr = htmlStr + `<div class='allPosts'><p id='title${buttonIndex}'>${jsonObj.username}</p><p>
+            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.likes} Likes and ${jsonObj.comments} Comments</p>`;
+            console.log(jsonObj);
+            htmlStr = htmlStr + `<input type='button' id='buyButton name='buyButton' value='View Post' onclick='buyNow(${buttonIndex})'></div>`;
+            buttonIndex++;
+        }
+        console.log(htmlStr)
+        let right = document.getElementById('rightSide')
+        right.innerHTML = htmlStr;
+    })
+}
+
+function openMessage(elementNum) {
+    let otherUser = document.getElementById(`dmHomeOpenButton${elementNum}`).value;
+    window.location.href = '/app/dmSpecific.html?sharedVariable' + encodeURIComponent(otherUser);
+    var urlParams = new URLSearchParams(window.location.search);
+    var sharedVariable = urlParams.get('sharedVariable');
+    let specificFriend = document.getElementById('dmSpecificFriend');
+    specificFriend.innerText = sharedVariable;
+}
+
+function provideDMs() {
+    console.log('about to fetch');
+    fetch('/user/dms').then((res) => {
+        return res.text();
+    }).then((jsonStr) => {
+        let jsonObj = JSON.parse(jsonStr);
+        let dmList = jsonObj.dms;
+        let htmlStr = '';
+        for(let i = 0; i < dmList.length; i++) {
+            htmlStr = htmlStr + `<p><strong>` + dmList[i].chatName + `</strong></p>`
+            + `<input type="button" value="" id="dmHomeOpenButton${i}"
+            name = "dmHomeOpenButton${i}" onclick="openMessage(${i})"><br>`
+        }
+        let content = document.getElementById('dmHomeExistingMessages');
+        content.innerHTML = htmlStr;
+    })
+}
