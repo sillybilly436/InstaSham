@@ -161,6 +161,8 @@ app.post('/dm', (req,res) => {
     } else {
       let comboNames = user1 + user2 + user2 + user1;
       let chatObj = {chatName: comboNames, chats: []};
+      let chatObj1 = {chatName: user2, chats: []};
+      let chatObj2 = {chatName: user1, chats: []};
       let newChat = new dmData(chatObj);
       newChat.save()
       .then(() => {
@@ -168,19 +170,29 @@ app.post('/dm', (req,res) => {
         query1.then((resOne) => {
           let user = resOne[0];
           let messages1 = user.directMessages;
-          messages1.push(chatObj)
+          messages1.push(chatObj1)
           user.save();
         })
         let query2 = userData.find({username: user2})
         query2.then((resTwo) => {
           let user = resTwo[0];
           let messages2 = user.directMessages;
-          messages2.push(chatObj)
+          messages2.push(chatObj2)
           user.save();
-          res.end("Successful");
+          res.end("To" + user.username);
         })
       })
     }
+  })
+})
+
+app.get('/user/dms', (req, res) => {
+  let currUser = req.cookies.login.username;
+  let p1 = userData.find({username: currUser}).exec()
+  p1.then((users) => {
+    let user = users[0];
+    let messages = {dms: user.directMessages}
+    res.end(JSON.stringify(messages));
   })
 })
 
