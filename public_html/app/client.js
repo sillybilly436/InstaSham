@@ -231,6 +231,7 @@ function sendDM() {
         body: JSON.stringify(dmBody),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
+        loadDMPage();
         return res.text();
     });
 }
