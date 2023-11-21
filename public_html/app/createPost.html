@@ -39,17 +39,21 @@
                         <div>Tagged Users</div>
                         <!-- added as user adds people to tag -->
                         <div class="userBox" onclick="removeUserTag('username')">
-                            <img class="inTextPfp" src="'imgref'" alt="'username' pfp">
+                            <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp">
                             <div class="username">'username'</div>
-                            <div id="createTagStart">Search Users To Tag</div>
                         </div>
+                        <div id="createTagStart" class="userBox">
+                            <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp">
+                            <div class="username" id="createTagStart">Search Users To Tag</div>
+                        </div>
+                        
                     </div>
                     <label for="userTagSearch">Search Users</label>
                     <input type="text" id="userTagSearch" oninput="tagSearchUser()">
                     <div id="userTagList" onload="recomendedTags()">
                         <!-- ~5 of these created for the first 5 recomended users to add to the tags -->
                         <div class="userBox" onclick="addUserTag('username')">
-                            <img class="inTextPfp" src="'imgref'" alt="'username' pfp" for="'username'">
+                            <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp" for="'username'">
                             <div class="username">'username'</div>
                         </div>
                     </div>

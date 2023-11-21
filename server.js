@@ -28,6 +28,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var usernameSchema = new mongoose.Schema({
     username: String,
+    profilePic: [],
     password: String,
     salt: String,
     friends: [],
@@ -133,6 +134,16 @@ app.post('/upload', upload.single('photo'), (req, res) => {
   }
 })
 */
+
+app.post('/search/users', (req,res) => {
+  let username = req.body.name;
+  console.log(username);
+  let p1 = userData.find({username: {$regex: username}}).exec();
+  p1.then((usersFound) => {
+    console.log(usersFound);
+    res.end(JSON.stringify(usersFound));
+  })
+});
 
 // searches users for match with input string
 app.post('/find/friends', (req,res) => {
