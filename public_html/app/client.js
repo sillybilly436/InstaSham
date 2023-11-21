@@ -132,7 +132,7 @@ function loadDMPage() {
     urlParam = '' + urlParam;
     urlParam = urlParam.substring(0, urlParam.length-1);
     specificFriend.innerText = urlParam;
-    fetch('/dms/load/:urlParam').then((res) => {
+    fetch(`/dms/load/${urlParam}`).then((res) => {
         return res.text();
     }).then((jsonStr) => {
         let jsonObj = JSON.parse(jsonStr);

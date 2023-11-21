@@ -235,11 +235,13 @@ app.get('/get/items', (req,res) => {
 // searches for messages between users
 app.get('/dms/load/:name', (req, res) => {
   let user1 = req.params.name;
+  console.log(user1);
   let user2 = req.cookies.login.username;
   let names = user1 + user2;
   let query = dmData.find({chatName: {$regex: names}});
   query.then((item) => {
     let chatObj = item[0];
+    //console.log(chatObj);
     let retObj = {chatList: chatObj.chats};
     res.end(JSON.stringify(retObj));
   })
