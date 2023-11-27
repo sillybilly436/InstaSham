@@ -96,7 +96,7 @@ Stlye for the create post page
     grid-column: 1;
     display: grid;
     grid-template-columns: 100vw;
-    grid-template-rows: 28vh 20vh 24vh 4vh;
+    grid-template-rows: 30vh 20vh 22vh 4vh;
 }
 
 a {
@@ -139,7 +139,7 @@ a {
 }
 
 #createCaption {
-    height: 16vw;
+    height: 16vh;
     width: 90%;
     border: 2px yellow solid;
     background-color: navy;
@@ -156,10 +156,13 @@ a {
 
 .inTextPfp {
     float: left;
+    height: 2vh;
+    aspect-ratio: 1 / 1;
 }
 
 .username {
     float: right;
+    height:2vh
 }
 
 #createPost {

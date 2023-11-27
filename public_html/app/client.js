@@ -3,22 +3,95 @@
  * Description:
  */
 
-var files = {};
-
+/**
+ * Javascript for createPost
+ */
 function previewImg() {
     let uploadImg = document.getElementById('uploadImg');
-    const [file] = uploadImg.files;
-    if (file) {
-        files += file;
-        console.log(file);
-        console.log(files);
-        let current = document.getElementById("previewPhotos");
-        let oldHTML = current.innerHTML;
-        let newHTML = '<img class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
-        current.innerHTML = newHTML + oldHTML;
+    var files = uploadImg.files;
+    if (files) {
+        for (i = 0; i < files.length; i++) {
+            let file = files[i];
+            console.log(file);
+            let current = document.getElementById("previewPhotos");
+            let oldHTML = current.innerHTML;
+            let newHTML = '<img id="file' + i + '" class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
+            current.innerHTML = newHTML + oldHTML;
+        }
     }
 }
 
+function removeImg() {
+    //used to remove a previewed img from the list of files to upload for the post
+}
+
+function recomendedTags() {
+    //used on load to serve a list of tags of users friends
+}
+
+function tagSearchUser() {
+    let searchName = { name: document.getElementById('userTagSearch').value };
+    fetch("/search/users", {
+        method:'POST',
+        body: JSON.stringify(searchName),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        return res.text();
+    }).then((text) => {
+        console.log(text);
+        let usersObj = JSON.parse(text);
+        let currKeys = Object.keys(usersObj);
+        let htmlStr = '';
+        for(let i = 0; i < 5; i++) {
+            if (currKeys[i]) {
+                let currKey = currKeys[i];
+                let currName = '' + usersObj[currKey];
+                htmlStr +=
+                '<div class="userBox" onclick="addUserTag(' + usersObj.username + ')">' +
+                    '<img class="inTextPfp" src="' + userObj.profilePic + '" alt="' + userObj.username + ' pfp" for="' + userObj.username + '">' + 
+                    '<div class="username">' + usersObj.username + '</div>' + 
+                '</div>'; 
+            } else {
+                htmlStr += '<div>...<div>';
+                break;
+            }
+        }
+        document.getElementById('userTagList').innerHTML = htmlStr;
+    })
+}
+
+function addUserTag(username) {
+    
+}
+
+function removeUserTag(username){
+    let p = fetch("/", {
+        method: 'POST',
+        body: JSON.stringify(userData),
+        headers: { 'Content-Type': 'application/json'}
+    });
+    p.then((data) => {
+        return data.text();
+    }).then((text) => {
+        if (text.startsWith('Success')) {
+            redirectHome();
+        } else {
+            //window.location.href = '/index.html';
+            document.getElementById('login_error').innerText = text;
+        }
+    });
+    p.catch((err) => {
+        console.log(err);
+    });
+}
+
+function createPost() {
+
+}
+
+/**
+ * Javascript for _
+ */
 function searchFriends() {
     let searchName = { name: document.getElementById('dmHomeSearch').value };
     fetch('/find/friends', {
@@ -157,6 +230,7 @@ function sendDM() {
         body: JSON.stringify(dmBody),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
+        loadDMPage();
         return res.text();
     });
 }
