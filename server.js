@@ -39,6 +39,7 @@ var postSchema = new mongoose.Schema({
     username: String,
     image: String,
     caption: String,
+    comments: [],
     tags: [],
     time: Number,
     likes: Number
@@ -266,5 +267,17 @@ app.post('/dms/post', (req, res) => {
     res.end();
   })
 })
+
+app.get('/search/posts/:username/:caption/:image/:newComment', (req,res) => {
+  let query = postData.find({caption:{$regex:req.params.caption}, image:{$regex:req.params.image}, username:{$regex:req.params.username}}).exec();
+  query.then((results) => {
+    let post = results[0];
+    let allComments = post.comments;
+    allComments.push(req.params.newComment);
+      const formattedJSON = JSON.stringify(results, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
+  })
+});
 
 app.listen(port, () => { console.log('server has started'); });

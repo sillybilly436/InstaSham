@@ -79,7 +79,6 @@ function addItem() {
 }
 
 function getPosts() {
-    let keyword = document.getElementById('searchInput').value;
     fetch(`/get/items`).then((res) => {
         return res.text();
     }).then((res) => {
@@ -95,8 +94,8 @@ function getPosts() {
             buttonIndex++;
         }
         console.log(htmlStr)
-        let right = document.getElementById('rightSide')
-        right.innerHTML = htmlStr;
+        let content = document.getElementById('userContent')
+        content.innerHTML = htmlStr;
     })
 }
 
@@ -160,4 +159,16 @@ function sendDM() {
     }).then((res) => {
         return res.text();
     });
+}
+
+function addComment() {
+    let comment = Document.getElementById("specificCommentButt");
+    let username = Document.getElementById("specificUsername");
+    let caption = Document.getElementById("specificCaption");
+    let pic = Document.getElementById("specificPic");
+    //Make comment be created with + instead of spaces 
+    fetch(`/search/posts/${username}/${caption}/${pic}/${newComment}`).then((res) => {
+        return res.text();
+    })
+
 }
