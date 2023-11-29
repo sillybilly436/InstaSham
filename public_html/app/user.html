@@ -15,16 +15,18 @@
         <link type="text/css" rel="stylesheet" href="style.css">
         <script src="client.js"></script>
     </head>
-    <body>
+    <body onload="fillUserPage()">
         <div id="userContainer">
             <div class="shamBanner">InstaSham</div>
             <div id="userContent">
+                <input id="userSearchFriend" placeholder="Search here for friends!"
+                oninput="searchPeople()">
                 <span id="userUsername">
                 <img id="userProfilePic" src="./images/blankPic.png" alt="image">
-                <div>Username</div>
+                <div id="userUsernameSpot"></div>
                 </span>
-                <p>This is the bio</p>
-                <div id="userPosts">POSTS THE USER HAS CREATED</div>
+                <p id="userBioSpot"></p>
+                <div id="userPostsSpot">POSTS THE USER HAS CREATED</div>
             </div>
             <div class="navBar">
                 <a href="./home.html">Home</a>

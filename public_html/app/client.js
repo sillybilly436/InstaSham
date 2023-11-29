@@ -246,3 +246,11 @@ function addComment() {
     })
 
 }
+
+function fillUserPage() {
+    
+}
+
+function searchPeople() {
+
+}
