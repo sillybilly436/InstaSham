@@ -349,4 +349,17 @@ app.get('/get/userInfo', (req, res) => {
   })
 })
 
+app.post('/new/bio', (req, res) => {
+  let newBio = req.body.bio;
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser});
+  query.then((user) => {
+    let currPerson = user[0];
+    let oldBio = currPerson.bio;
+    oldBio = newBio;
+    currPerson.save()
+    res.end();
+  })
+})
+
 app.listen(port, () => { console.log('server has started'); });

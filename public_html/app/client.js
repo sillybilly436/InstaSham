@@ -317,4 +317,23 @@ function fillUserPage() {
 function openChangeBio() {
     let bioSpot = document.getElementById('userBioSpot')
     bioSpot.innerHTML = '<textarea id="userBio"></textarea>'
+    let bioButton = document.getElementById('userButtonSpot')
+    bioButton.innerHTML = `<input type="button" value="Click to confirm bio change" id="userChangeBio"
+                    name="userChangeBio" onclick="closeChangeBio()">`
+}
+
+function closeChangeBio() {
+    let newBioWords = document.getElementById('userBio').innerText
+    let newBio = {bio: newBioWords};
+    fetch('/new/bio', {
+        method:'POST',
+        body: JSON.stringify(newBio),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        let bioSpot = document.getElementById('userBioSpot')
+        bioSpot.innerHTML = newBioWords;
+        let bioButton = document.getElementById('userButtonSpot')
+        bioButton.innerHTML = `<input type="button" value="Click to change bio" id="userChangeBio"
+        name="userChangeBio" onclick="openChangeBio()">`
+    })
 }
