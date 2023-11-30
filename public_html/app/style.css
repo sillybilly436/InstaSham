@@ -75,12 +75,36 @@ html, body {
 
 #userProfilePic {
     border-radius: 50%;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
 }
 
 #userContent {
     grid-row: 2 / 3;
     grid-column: 1;
     overflow-y: scroll;
+    color: white;
+    display: grid;
+    grid-template-columns: 20vw 60vw 20vw;
+    grid-template-rows: 76vh;
+}
+
+#userInfoSpot {
+    grid-row: 1;
+    grid-column: 1 / 2;
+}
+
+#userPostSpot {
+    grid-row: 1;
+    grid-column: 2 / 3;
+    margin-left: auto;
+}
+
+#userSearchFriend {
+    grid-row: 1;
+    grid-column: 3;
 }
 
 a {
@@ -242,10 +266,6 @@ a {
     max-width: 3%;
     border-radius: 50%;
     height: auto;
-}
-
-#userContent {
-    color: white;
 }
 
 #dmHomeExistingMessages {
