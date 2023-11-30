@@ -102,9 +102,22 @@ html, body {
     margin-left: auto;
 }
 
-#userSearchFriend {
+#userFriendSpot {
     grid-row: 1;
     grid-column: 3;
+    display: grid;
+    grid-template-columns: 33vw;
+    grid-template-rows: 38vh 38vh;
+}
+
+#userSearchContain {
+    grid-row: 1 / 2;
+    grid-column: 1;
+}
+
+#userListDisplay {
+    grid-row: 2;
+    grid-column: 1;
 }
 
 a {

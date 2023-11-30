@@ -26,9 +26,15 @@
                 </div>
                 <div id="userPostsSpot">POSTS THE USER HAS CREATED</div>
                 <div id="userFriendSpot">
-                    <input id="userSearchFriend" placeholder="Search here for friends!"
-                    oninput="searchPeople()">
-                    <div id="userSearchResults"></div>
+                    <div id="userSearchContain">
+                        <input id="userSearchFriend" placeholder="Search here for friends!"
+                        oninput="searchPeople()">
+                        <div id="userSearchResults"></div>
+                    </div>
+                    <div id="userListDisplay">
+                        <input type="button" id="userFriendButton" name="userFriendButton"
+                        value="Click here to see friends" onclick="seeFriends()">
+                    </div>
                 </div>
             </div>
             <div class="navBar">

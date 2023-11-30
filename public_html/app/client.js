@@ -286,3 +286,18 @@ function addFriend(elementNum) {
         addButton.value = 'Added!';
     })
 }
+
+function seeFriends() {
+    fetch('/view/friends').then((res) => {
+        return res.text();
+    }).then((jsonStr) => {
+        let jsonObj = JSON.parse(jsonStr);
+        let friendsList = jsonObj.people;
+        let htmlStr = '<strong>Friends:</string><br>';
+        for(let i = 0; i < friendsList.length; i++) {
+            htmlStr = htmlStr + `<p><strong id='friend${i}'>` + friendsList[i] + `</strong></p>`
+        }
+        let display = document.getElementById('userListDisplay');
+        display.innerHTML = htmlStr;
+    })
+}

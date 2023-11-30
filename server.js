@@ -314,6 +314,15 @@ app.post('/add/friend', (req, res) => {
     currUser.save();
     res.end()
   })
+});
+
+app.get('/view/friends', (req, res) => {
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser}).exec();
+  query.then((person) => {
+    let retObj = {people:person[0].friends};
+    res.end(JSON.stringify(retObj));
+  })
 })
 
 app.listen(port, () => { console.log('server has started'); });
