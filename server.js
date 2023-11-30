@@ -303,4 +303,17 @@ app.get('/search/users/:currName', (req, res) => {
   })
 })
 
+app.post('/add/friend', (req, res) => {
+  let user2 = req.body.friend;
+  let user1 = req.cookies.login.username;
+  let query1 = userData.find({username:user1}).exec();
+  query1.then((person) => {
+    let currUser = person[0];
+    let friendsList = currUser.friends;
+    friendsList.push(user2);
+    currUser.save();
+    res.end()
+  })
+})
+
 app.listen(port, () => { console.log('server has started'); });

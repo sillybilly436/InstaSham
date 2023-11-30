@@ -275,3 +275,14 @@ function searchPeople() {
     }
 }
 
+function addFriend(elementNum) {
+    let friend2add = {friend: document.getElementById(`user${elementNum}`).innerText};
+    fetch('/add/friend', {
+        method:'POST',
+        body: JSON.stringify(friend2add),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        let addButton = document.getElementById(`userNameList${elementNum}`);
+        addButton.value = 'Added!';
+    })
+}
