@@ -32,7 +32,8 @@ var usernameSchema = new mongoose.Schema({
     password: String,
     salt: String,
     friends: [],
-    directMessages: []
+    directMessages: [],
+    bio: String
 });
 var userData = mongoose.model('userData', usernameSchema);
 
@@ -298,7 +299,19 @@ app.get('/search/users/:currName', (req, res) => {
     for(let i = 0; i < names.length; i++) {
       namesList.push(names[i].username);
     }
-    let retObj = {names: namesList};
+  })
+  let query2 = userData.find({username: req.cookies.login.username})
+  query2.then((user) => {
+    let fList = user[0].friends;
+    let nameSet = new Set(namesList);
+    for(let i = 0; i < fList.length; i++) {
+      if(nameSet.has(fList[i])) {
+        let namesList = namesList.filter(function (name) {
+          return name != fList[i];
+        });
+      }
+    }
+    let retObj = { names: namesList };
     res.end(JSON.stringify(retObj));
   })
 })
@@ -321,6 +334,17 @@ app.get('/view/friends', (req, res) => {
   let query = userData.find({username:currUser}).exec();
   query.then((person) => {
     let retObj = {people:person[0].friends};
+    res.end(JSON.stringify(retObj));
+  })
+})
+
+app.get('/get/userInfo', (req, res) => {
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser}).exec();
+  query.then((user) => {
+    let userInfo = user[0];
+    // WILL NEED TO COME BACK AND SEND PROFILE PIC TOO
+    let retObj = {username: userInfo.username, bio: userInfo.bio}
     res.end(JSON.stringify(retObj));
   })
 })

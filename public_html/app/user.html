@@ -22,18 +22,20 @@
                 <div id="userInfoSpot">
                     <img id="userProfilePic" src="./images/blankPic.png" alt="image">
                     <div id="userUsernameSpot"></div>
-                    <p id="userBioSpot"></p>
+                    <div id="userBioSpot"></div>
+                    <input type="button" value="Click to change bio" id="userChangeBio"
+                    name="userChangeBio" onclick="openChangeBio()">
                 </div>
                 <div id="userPostsSpot">POSTS THE USER HAS CREATED</div>
                 <div id="userFriendSpot">
                     <div id="userSearchContain">
-                        <input id="userSearchFriend" placeholder="Search here for friends!"
+                        <input id="userSearchFriend" placeholder="Search here for new friends!"
                         oninput="searchPeople()">
                         <div id="userSearchResults"></div>
                     </div>
                     <div id="userListDisplay">
                         <input type="button" id="userFriendButton" name="userFriendButton"
-                        value="Click here to see friends" onclick="seeFriends()">
+                        value="Click here to see existing friends" onclick="seeFriends()">
                     </div>
                 </div>
             </div>

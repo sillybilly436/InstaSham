@@ -301,3 +301,20 @@ function seeFriends() {
         display.innerHTML = htmlStr;
     })
 }
+
+function fillUserPage() {
+    fetch('/get/userInfo').then((res) => {
+        return res.text();
+    }).then((jsonStr) => {
+        let jsonObj = JSON.parse(jsonStr);
+        let nameSpot = document.getElementById('userUsernameSpot')
+        nameSpot.innerText = jsonObj.username;
+        let bioSpot = document.getElementById('userBioSpot');
+        bioSpot.innerText = jsonObj.bio;
+    })
+}
+
+function openChangeBio() {
+    let bioSpot = document.getElementById('userBioSpot')
+    bioSpot.innerHTML = '<textarea id="userBio"></textarea>'
+}
