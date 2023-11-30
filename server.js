@@ -291,4 +291,16 @@ app.get('/search/posts/:username/:caption/:image/:newComment', (req,res) => {
   })
 });
 
+app.get('/search/users/:currName', (req, res) => {
+  let query = userData.find({username: {$regex: req.params.currName}}).exec();
+  let namesList = [];
+  query.then((names) => {
+    for(let i = 0; i < names.length; i++) {
+      namesList.push(names[i].username);
+    }
+    let retObj = {names: namesList};
+    res.end(JSON.stringify(retObj));
+  })
+})
+
 app.listen(port, () => { console.log('server has started'); });

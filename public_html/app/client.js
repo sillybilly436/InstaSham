@@ -252,5 +252,26 @@ function fillUserPage() {
 }
 
 function searchPeople() {
-
+    let currName = document.getElementById('userSearchFriend').value;
+    currName = '' + currName;
+    if(currName.length > 0) {
+        fetch(`/search/users/${currName}`).then((res) => {
+            return res.text()
+        }).then((jsonStr) => {
+            let jsonObj = JSON.parse(jsonStr);
+            let namesList = jsonObj.names;
+            let htmlStr = '';
+            for(let i = 0; i < namesList.length; i++) {
+                htmlStr = htmlStr + `<p><strong id='user${i}'>` + namesList[i] + `</strong></p>`
+                + `<input type="button" value="Add ${namesList[i]} as a friend" id="userNameList${i}"
+                name = "userNameList${i}" onclick="addFriend(${i})"><br>`
+            }
+            let results = document.getElementById('userSearchResults');
+            results.innerHTML = htmlStr;
+        });
+    } else {
+        let results = document.getElementById('userSearchResults');
+        results.innerHTML = '';
+    }
 }
+
