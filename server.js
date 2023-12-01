@@ -1,7 +1,3 @@
-/**
- * Names: Billy Dolny, Ben Curtis, Bronson Housmans
- * Description:
- */
 
 const mongoose = require('mongoose');
 const express = require('express');
@@ -139,7 +135,7 @@ app.post('/upload', upload.single('photo'), (req, res) => {
 
 app.post('/search/users', (req,res) => {
   let username = req.body.name;
-  console.log(`Username is ${username}`);
+  console.log(username);
   let p1 = userData.find({username: {$regex: username}}).exec();
   p1.then((usersFound) => {
     console.log(usersFound);
@@ -208,8 +204,35 @@ app.get('/user/dms', (req, res) => {
     res.end(JSON.stringify(messages));
   })
 })
+app.post('/add/item', (req,res) => {
+  let pTitle = req.body.title;
+  let pDesc = req.body.description;
+  let pImg = req.body.image;
+  let pTags = req.body.tags;
+  let pUser = req.cookies.login.username;
+  let itemObj = {title: pTitle, description: pDesc, image: pImg, tags: pTags};
+      let item = new itemData(itemObj);
+      item.save()
+          .then(() => {
+              console.log(item); // You can log the saved message here
+              let query = userData.find({username:{$regex:pUser}}).exec();
+              query.then((documents) => {
+                  let user = documents[0];
+                  console.log(user);
+                  let list = user.listings
+                  list.push(itemObj);
+                  console.log(user);
+                  user.save();
+                  res.end("Successful");
+              });
+          })
+          .catch((error) => {
+              console.error("Error saving message:", error);
+              res.status(500).end("Error saving message.");
+          });
+});
 
-app.get('/get/posts', (req,res) => {
+app.get('/get/items', (req,res) => {
   let items = itemData.find({}).exec();
   items.then((results) => {
       const formattedJSON = JSON.stringify(results, null, 2);
@@ -253,30 +276,12 @@ app.post('/dms/post', (req, res) => {
   })
 })
 
-app.get('/add/comment/:username/:caption/:image/:newComment', (req,res) => {
+app.get('/search/posts/:username/:caption/:image/:newComment', (req,res) => {
   let query = postData.find({caption:{$regex:req.params.caption}, image:{$regex:req.params.image}, username:{$regex:req.params.username}}).exec();
-  console.log("ADD COMMENT SECTION");
-  console.log(query);
   query.then((results) => {
-    console.log(results);
     let post = results[0];
-    console.log(post);
     let allComments = post.comments;
-    let com = req.params.newComment.replaceAll("+", " ");
-    let newCom = `<strong>${req.params.username}:</strong> ${com}`;
-    allComments.push(` <div id="specificComments">${newCom}</div>`);
-    post.comments = allComments;
-    post.save();
-  })
-});
-
-app.post('/search/post', (req,res) => {
-  console.log(`caption: ${req.body.caption}`);
-  console.log(`image: ${req.body.image}`);
-  console.log(`username: ${req.body.username}`);
-  let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
-  query.then((results) => {
-    let post = results[0];
+    allComments.push(req.params.newComment);
       const formattedJSON = JSON.stringify(results, null, 2);
       res.setHeader('Content-Type', 'application/json');
       res.end(formattedJSON);
@@ -352,75 +357,42 @@ app.post('/new/bio', (req, res) => {
     res.end();
   })
 })
-
-app.get('/search/users/:currName', (req, res) => {
-  let query = userData.find({username: {$regex: req.params.currName}}).exec();
-  let namesList = [];
-  query.then((names) => {
-    for(let i = 0; i < names.length; i++) {
-      namesList.push(names[i].username);
-    }
-  })
-  let query2 = userData.find({username: req.cookies.login.username})
-  query2.then((user) => {
-    let fList = user[0].friends;
-    let nameSet = new Set(namesList);
-    for(let i = 0; i < fList.length; i++) {
-      if(nameSet.has(fList[i])) {
-        let namesList = namesList.filter(function (name) {
-          return name != fList[i];
-        });
-      }
-    }
-    let retObj = { names: namesList };
-    res.end(JSON.stringify(retObj));
-  })
-})
-
-app.post('/add/friend', (req, res) => {
-  let user2 = req.body.friend;
-  let user1 = req.cookies.login.username;
-  let query1 = userData.find({username:user1}).exec();
-  query1.then((person) => {
-    let currUser = person[0];
-    let friendsList = currUser.friends;
-    friendsList.push(user2);
-    currUser.save();
-    res.end()
+app.get('/get/posts', (req,res) => {
+  let items = itemData.find({}).exec();
+  items.then((results) => {
+      const formattedJSON = JSON.stringify(results, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
+  });
+});
+app.get('/add/comment/:username/:caption/:image/:newComment', (req,res) => {
+  let query = postData.find({caption:{$regex:req.params.caption}, image:{$regex:req.params.image}, username:{$regex:req.params.username}}).exec();
+  console.log("ADD COMMENT SECTION");
+  console.log(query);
+  query.then((results) => {
+    console.log(results);
+    let post = results[0];
+    console.log(post);
+    let allComments = post.comments;
+    let com = req.params.newComment.replaceAll("+", " ");
+    let newCom = `<strong>${req.params.username}:</strong> ${com}`;
+    allComments.push(` <div id="specificComments">${newCom}</div>`);
+    post.comments = allComments;
+    post.save();
   })
 });
 
-app.get('/view/friends', (req, res) => {
-  let currUser = req.cookies.login.username;
-  let query = userData.find({username:currUser}).exec();
-  query.then((person) => {
-    let retObj = {people:person[0].friends};
-    res.end(JSON.stringify(retObj));
+app.post('/search/post', (req,res) => {
+  console.log(`caption: ${req.body.caption}`);
+  console.log(`image: ${req.body.image}`);
+  console.log(`username: ${req.body.username}`);
+  let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
+  query.then((results) => {
+    let post = results[0];
+      const formattedJSON = JSON.stringify(results, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
   })
-})
-
-app.get('/get/userInfo', (req, res) => {
-  let currUser = req.cookies.login.username;
-  let query = userData.find({username:currUser}).exec();
-  query.then((user) => {
-    let userInfo = user[0];
-    // WILL NEED TO COME BACK AND SEND PROFILE PIC TOO
-    let retObj = {username: userInfo.username, bio: userInfo.bio}
-    res.end(JSON.stringify(retObj));
-  })
-})
-
-app.post('/new/bio', (req, res) => {
-  let newBio = req.body.bio;
-  let currUser = req.cookies.login.username;
-  let query = userData.find({username:currUser});
-  query.then((user) => {
-    let currPerson = user[0];
-    let oldBio = currPerson.bio;
-    oldBio = newBio;
-    currPerson.save()
-    res.end();
-  })
-})
+});
 
 app.listen(port, () => { console.log('server has started: http://127.0.0.1:3000/'); });
