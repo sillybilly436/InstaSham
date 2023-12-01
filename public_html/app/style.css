@@ -31,6 +31,18 @@ html, body {
     grid-row: 2 / 3;
     grid-column: 1;
     overflow-y: scroll;
+    margin-left: 3%;
+}
+
+#dmHomeTitle, #dmHomeSearch {
+    margin-bottom: 3%;
+}
+
+#dmHomeExistingMessages {
+    border: 3px solid white;
+    margin-left: 3%;
+    margin-right: 60%;
+    margin-top: 3%;
 }
 
 #specificContainer {
@@ -47,8 +59,65 @@ html, body {
     font-size: 200%;
 }
 
+#userContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+#userSearchFriend {
+    grid-row: 2 / 3;
+    grid-column: 1;
+    margin-top: 3%;
+    width: 200px;
+    height: 20px;
+}
+
+#userProfilePic {
+    border-radius: 50%;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+}
+
 #userContent {
+    grid-row: 2 / 3;
+    grid-column: 1;
     overflow-y: scroll;
+    color: white;
+    display: grid;
+    grid-template-columns: 20vw 60vw 20vw;
+    grid-template-rows: 76vh;
+}
+
+#userInfoSpot {
+    grid-row: 1;
+    grid-column: 1 / 2;
+}
+
+#userPostSpot {
+    grid-row: 1;
+    grid-column: 2 / 3;
+    margin-left: auto;
+}
+
+#userFriendSpot {
+    grid-row: 1;
+    grid-column: 3;
+    display: grid;
+    grid-template-columns: 33vw;
+    grid-template-rows: 38vh 38vh;
+}
+
+#userSearchContain {
+    grid-row: 1 / 2;
+    grid-column: 1;
+}
+
+#userListDisplay {
+    grid-row: 2;
+    grid-column: 1;
 }
 
 a {
@@ -208,10 +277,6 @@ Stlye for the create post page
     max-width: 3%;
     border-radius: 50%;
     height: auto;
-}
-
-#userContent {
-    color: white;
 }
 
 #dmHomeExistingMessages {

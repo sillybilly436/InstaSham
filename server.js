@@ -32,7 +32,8 @@ var usernameSchema = new mongoose.Schema({
     password: String,
     salt: String,
     friends: [],
-    directMessages: []
+    directMessages: [],
+    bio: String
 });
 var userData = mongoose.model('userData', usernameSchema);
 
@@ -281,5 +282,145 @@ app.post('/search/post', (req,res) => {
       res.end(formattedJSON);
   })
 });
+
+app.get('/search/users/:currName', (req, res) => {
+  let query = userData.find({username: {$regex: req.params.currName}}).exec();
+  let namesList = [];
+  query.then((names) => {
+    for(let i = 0; i < names.length; i++) {
+      namesList.push(names[i].username);
+    }
+  })
+  let query2 = userData.find({username: req.cookies.login.username})
+  query2.then((user) => {
+    let fList = user[0].friends;
+    let nameSet = new Set(namesList);
+    for(let i = 0; i < fList.length; i++) {
+      if(nameSet.has(fList[i])) {
+        let namesList = namesList.filter(function (name) {
+          return name != fList[i];
+        });
+      }
+    }
+    let retObj = { names: namesList };
+    res.end(JSON.stringify(retObj));
+  })
+})
+
+app.post('/add/friend', (req, res) => {
+  let user2 = req.body.friend;
+  let user1 = req.cookies.login.username;
+  let query1 = userData.find({username:user1}).exec();
+  query1.then((person) => {
+    let currUser = person[0];
+    let friendsList = currUser.friends;
+    friendsList.push(user2);
+    currUser.save();
+    res.end()
+  })
+});
+
+app.get('/view/friends', (req, res) => {
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser}).exec();
+  query.then((person) => {
+    let retObj = {people:person[0].friends};
+    res.end(JSON.stringify(retObj));
+  })
+})
+
+app.get('/get/userInfo', (req, res) => {
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser}).exec();
+  query.then((user) => {
+    let userInfo = user[0];
+    // WILL NEED TO COME BACK AND SEND PROFILE PIC TOO
+    let retObj = {username: userInfo.username, bio: userInfo.bio}
+    res.end(JSON.stringify(retObj));
+  })
+})
+
+app.post('/new/bio', (req, res) => {
+  let newBio = req.body.bio;
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser});
+  query.then((user) => {
+    let currPerson = user[0];
+    let oldBio = currPerson.bio;
+    oldBio = newBio;
+    currPerson.save()
+    res.end();
+  })
+})
+
+app.get('/search/users/:currName', (req, res) => {
+  let query = userData.find({username: {$regex: req.params.currName}}).exec();
+  let namesList = [];
+  query.then((names) => {
+    for(let i = 0; i < names.length; i++) {
+      namesList.push(names[i].username);
+    }
+  })
+  let query2 = userData.find({username: req.cookies.login.username})
+  query2.then((user) => {
+    let fList = user[0].friends;
+    let nameSet = new Set(namesList);
+    for(let i = 0; i < fList.length; i++) {
+      if(nameSet.has(fList[i])) {
+        let namesList = namesList.filter(function (name) {
+          return name != fList[i];
+        });
+      }
+    }
+    let retObj = { names: namesList };
+    res.end(JSON.stringify(retObj));
+  })
+})
+
+app.post('/add/friend', (req, res) => {
+  let user2 = req.body.friend;
+  let user1 = req.cookies.login.username;
+  let query1 = userData.find({username:user1}).exec();
+  query1.then((person) => {
+    let currUser = person[0];
+    let friendsList = currUser.friends;
+    friendsList.push(user2);
+    currUser.save();
+    res.end()
+  })
+});
+
+app.get('/view/friends', (req, res) => {
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser}).exec();
+  query.then((person) => {
+    let retObj = {people:person[0].friends};
+    res.end(JSON.stringify(retObj));
+  })
+})
+
+app.get('/get/userInfo', (req, res) => {
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser}).exec();
+  query.then((user) => {
+    let userInfo = user[0];
+    // WILL NEED TO COME BACK AND SEND PROFILE PIC TOO
+    let retObj = {username: userInfo.username, bio: userInfo.bio}
+    res.end(JSON.stringify(retObj));
+  })
+})
+
+app.post('/new/bio', (req, res) => {
+  let newBio = req.body.bio;
+  let currUser = req.cookies.login.username;
+  let query = userData.find({username:currUser});
+  query.then((user) => {
+    let currPerson = user[0];
+    let oldBio = currPerson.bio;
+    oldBio = newBio;
+    currPerson.save()
+    res.end();
+  })
+})
 
 app.listen(port, () => { console.log('server has started: http://127.0.0.1:3000/'); });

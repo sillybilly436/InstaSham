@@ -326,3 +326,95 @@ function specificPost() {
 }
 
 
+
+
+function fillUserPage() {
+    
+}
+
+function searchPeople() {
+    let currName = document.getElementById('userSearchFriend').value;
+    currName = '' + currName;
+    if(currName.length > 0) {
+        fetch(`/search/users/${currName}`).then((res) => {
+            return res.text()
+        }).then((jsonStr) => {
+            let jsonObj = JSON.parse(jsonStr);
+            let namesList = jsonObj.names;
+            let htmlStr = '';
+            for(let i = 0; i < namesList.length; i++) {
+                htmlStr = htmlStr + `<p><strong id='user${i}'>` + namesList[i] + `</strong></p>`
+                + `<input type="button" value="Add ${namesList[i]} as a friend" id="userNameList${i}"
+                name = "userNameList${i}" onclick="addFriend(${i})"><br>`
+            }
+            let results = document.getElementById('userSearchResults');
+            results.innerHTML = htmlStr;
+        });
+    } else {
+        let results = document.getElementById('userSearchResults');
+        results.innerHTML = '';
+    }
+}
+
+function addFriend(elementNum) {
+    let friend2add = {friend: document.getElementById(`user${elementNum}`).innerText};
+    fetch('/add/friend', {
+        method:'POST',
+        body: JSON.stringify(friend2add),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        let addButton = document.getElementById(`userNameList${elementNum}`);
+        addButton.value = 'Added!';
+    })
+}
+
+function seeFriends() {
+    fetch('/view/friends').then((res) => {
+        return res.text();
+    }).then((jsonStr) => {
+        let jsonObj = JSON.parse(jsonStr);
+        let friendsList = jsonObj.people;
+        let htmlStr = '<strong>Friends:</string><br>';
+        for(let i = 0; i < friendsList.length; i++) {
+            htmlStr = htmlStr + `<p><strong id='friend${i}'>` + friendsList[i] + `</strong></p>`
+        }
+        let display = document.getElementById('userListDisplay');
+        display.innerHTML = htmlStr;
+    })
+}
+
+function fillUserPage() {
+    fetch('/get/userInfo').then((res) => {
+        return res.text();
+    }).then((jsonStr) => {
+        let jsonObj = JSON.parse(jsonStr);
+        let nameSpot = document.getElementById('userUsernameSpot')
+        nameSpot.innerText = jsonObj.username;
+        let bioSpot = document.getElementById('userBioSpot');
+        bioSpot.innerText = jsonObj.bio;
+    })
+}
+
+function openChangeBio() {
+    let bioSpot = document.getElementById('userBioSpot')
+    bioSpot.innerHTML = '<textarea id="userBio"></textarea>'
+    let bioButton = document.getElementById('userButtonSpot')
+    bioButton.innerHTML = `<input type="button" value="Click to confirm bio change" id="userChangeBio"
+                    name="userChangeBio" onclick="closeChangeBio()">`
+}
+
+function closeChangeBio() {
+    let newBioWords = document.getElementById('userBio').innerText
+    let newBio = {bio: newBioWords};
+    fetch('/new/bio', {
+        method:'POST',
+        body: JSON.stringify(newBio),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        let bioSpot = document.getElementById('userBioSpot')
+        bioSpot.innerHTML = newBioWords;
+        let bioButton = document.getElementById('userButtonSpot')
+        bioButton.innerHTML = `<input type="button" value="Click to change bio" id="userChangeBio"
+        name="userChangeBio" onclick="openChangeBio()">`
+    })
+}
