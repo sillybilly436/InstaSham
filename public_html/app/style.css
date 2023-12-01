@@ -52,7 +52,8 @@ html, body {
 }
 
 a {
-    padding: 30px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 #dmSpecificContainer {
@@ -99,9 +100,6 @@ Stlye for the create post page
     grid-template-rows: 30vh 20vh 22vh 4vh;
 }
 
-a {
-    margin-top: 50%;
-}
 
 #previewPhotos {
     height: 26vh;

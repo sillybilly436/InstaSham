@@ -152,7 +152,7 @@ function addItem() {
 }
 
 function getPosts() {
-    fetch(`/get/items`).then((res) => {
+    fetch(`/get/posts`).then((res) => {
         return res.text();
     }).then((res) => {
         return JSON.parse(res);
@@ -235,14 +235,94 @@ function sendDM() {
     });
 }
 
-function addComment() {
-    let comment = Document.getElementById("specificCommentButt");
-    let username = Document.getElementById("specificUsername");
-    let caption = Document.getElementById("specificCaption");
-    let pic = Document.getElementById("specificPic");
-    //Make comment be created with + instead of spaces 
-    fetch(`/search/posts/${username}/${caption}/${pic}/${newComment}`).then((res) => {
-        return res.text();
-    })
+function addComment(){
+    let username = document.getElementById("specificUsername").innerText;
+    let caption = document.getElementById("specificCaption").innerText;
+    caption = caption.replaceAll(" ", "+");
+    let pic = document.getElementById("specificPic").alt;
+    let newComment = document.getElementById("specificYourComment").value;
+    newComment = newComment.replaceAll(" ", "+");
 
+    fetch(`/add/comment/${username}/${caption}/${pic}/${newComment}`).then((res) => {
+        return res.text();
+    });
+    redirectSpecific();
 }
+
+function redirectSpecific(){
+    console.log("redirecting to specific");
+    window.location.href = '/app/specificPost.html'
+}
+
+function specificPost() {
+    // let username = Document.getElementById("specificUsername");
+    // let caption = Document.getElementById("specificCaption");
+    // caption = caption.replaceAll(" ", "+");
+    // let pic = Document.getElementById("specificPic");
+    let ausername = "billy";
+    let acaption = "hello";
+    let apic = "kirby.png";
+    //Make comment be created with + instead of spaces 
+    let proPic = null;
+    var findUserBody = {name: ausername};
+    fetch('/search/users', {
+    method:'POST',
+    body: JSON.stringify(findUserBody),
+    headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+    return res.text();
+    }).then((res) => {
+        console.log(res);
+        return JSON.parse(res);
+    }).then((retObj) => {
+        console.log(retObj);
+        console.log(retObj[0].profilePic[0]);
+        proPic = retObj[0].profilePic[0];
+    
+        console.log(`this is proPic: ${proPic}`);
+        var specificPostBody = {caption: acaption, image: apic, username: ausername};
+        fetch(`/search/post`, {
+        method:'POST',
+        body: JSON.stringify(specificPostBody),
+        headers: {'Content-Type': 'application/json'}
+        }).then((res) => {
+            return res.text();
+        }).then((res) => {
+            return JSON.parse(res);
+        }).then((retObj) => {
+            let htmlStr = '';
+            for(jsonObj of retObj) {
+                console.log(jsonObj);
+
+                // WILL NEED TO ADD USER INFO TO POST DATA
+                // ALSO WILL PROB NEED LOOP TO SEE ALL COMMENTS.
+                //MAKE ANOTHER FUNCTION TO CREATE THE SPECIFIC POST
+                htmlStr = htmlStr + `<span><img id="specificProfilePic" src="./images/${proPic}" alt="profilePic">
+                <div id="specificUsername">${jsonObj.username}</div></span>
+                <center><img id="specificPic" src="./images/${jsonObj.image}" alt="${jsonObj.image}">
+                <p id="specificCaption">${jsonObj.caption}</p><p>${jsonObj.likes} Likes and ${jsonObj.comments.length} Comments</p>`
+                for (tag of jsonObj.tags){
+                    htmlStr = htmlStr + `${tag} `
+                }
+                htmlStr.substring(0,htmlStr.length-2);
+                htmlStr = htmlStr + `<br>`;
+                console.log(jsonObj);
+                htmlStr = htmlStr + "<p><strong>COMMENTS:</strong></p>"
+                for(comment of jsonObj.comments) {
+                    htmlStr = htmlStr + `${comment}`;
+                }
+                htmlStr = htmlStr + `<br>`;
+
+                htmlStr = htmlStr + `<input type="text" placeholder="Type your comment here!" id="specificYourComment">
+                <input type="button" value="Add Comment" id="specificCommentButt" onclick="addComment();"></center>`;
+                htmlStr = htmlStr + `<br>`;
+                console.log(jsonObj);
+            }
+            console.log(htmlStr)
+            let content = document.getElementById('userContent')
+            content.innerHTML = htmlStr;
+        });
+});
+}
+
+
