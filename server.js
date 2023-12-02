@@ -1,7 +1,3 @@
-/**
- * Names: Billy Dolny, Ben Curtis, Bronson Housmans
- * Description:
- */
 
 const mongoose = require('mongoose');
 const express = require('express');
@@ -361,5 +357,42 @@ app.post('/new/bio', (req, res) => {
     res.end();
   })
 })
+app.get('/get/posts', (req,res) => {
+  let items = itemData.find({}).exec();
+  items.then((results) => {
+      const formattedJSON = JSON.stringify(results, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
+  });
+});
+app.get('/add/comment/:username/:caption/:image/:newComment', (req,res) => {
+  let query = postData.find({caption:{$regex:req.params.caption}, image:{$regex:req.params.image}, username:{$regex:req.params.username}}).exec();
+  console.log("ADD COMMENT SECTION");
+  console.log(query);
+  query.then((results) => {
+    console.log(results);
+    let post = results[0];
+    console.log(post);
+    let allComments = post.comments;
+    let com = req.params.newComment.replaceAll("+", " ");
+    let newCom = `<strong>${req.params.username}:</strong> ${com}`;
+    allComments.push(` <div id="specificComments">${newCom}</div>`);
+    post.comments = allComments;
+    post.save();
+  })
+});
 
-app.listen(port, () => { console.log('server has started'); });
+app.post('/search/post', (req,res) => {
+  console.log(`caption: ${req.body.caption}`);
+  console.log(`image: ${req.body.image}`);
+  console.log(`username: ${req.body.username}`);
+  let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
+  query.then((results) => {
+    let post = results[0];
+      const formattedJSON = JSON.stringify(results, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
+  })
+});
+
+app.listen(port, () => { console.log('server has started: http://127.0.0.1:3000/'); });
