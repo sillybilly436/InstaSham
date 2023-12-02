@@ -323,7 +323,7 @@ function openChangeBio() {
 }
 
 function closeChangeBio() {
-    let newBioWords = document.getElementById('userBio').innerText
+    let newBioWords = document.getElementById('userBio').value
     let newBio = {bio: newBioWords};
     fetch('/new/bio', {
         method:'POST',
@@ -335,5 +335,6 @@ function closeChangeBio() {
         let bioButton = document.getElementById('userButtonSpot')
         bioButton.innerHTML = `<input type="button" value="Click to change bio" id="userChangeBio"
         name="userChangeBio" onclick="openChangeBio()">`
+        location.reload();
     })
 }
