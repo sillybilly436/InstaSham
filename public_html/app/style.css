@@ -288,3 +288,19 @@ Stlye for the create post page
 #dmHomeExistingMessages {
     margin-bottom: 4%;
 }
+
+#helpContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+#helpDesc {
+    margin-left: 15%;
+    margin-top: 2%;
+    margin-right: 15%;
+    margin-bottom: 2%;
+    font-size: 22px;
+    color: white;
+    overflow-y: scroll;
+}
