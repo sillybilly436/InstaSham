@@ -38,7 +38,7 @@ var userData = mongoose.model('userData', usernameSchema);
 
 var postSchema = new mongoose.Schema({
     username: String,
-    image: String,
+    image: [],
     caption: String,
     comments: [],
     tags: [],
@@ -124,24 +124,54 @@ app.post('/user/login', (req, res) => {
 Testing multer to add img
 */
 
-//const multer = require('multer');
-//const upload = multer({dest: 'public_html/app/uploads/images'});
-/** 
-app.post('/upload', upload.single('photo'), (req, res) => {
-  if(req.file) {
-    res.json(req.file);
-  } else {
-    throw 'error';
+const multer = require('multer');
+//const upload = multer({ dest: 'public_html/app/uploads'});
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public_html/app/uploads');
+  }, 
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
   }
 })
-*/
+var upload = multer({ storage: storage });
+
+// app.use('/create/post', express.static('uploads'));
+
+app.post('/create/post', upload.array('img'), (req, res) => {
+  console.log("Entered Create Post");
+  let data = req.body;
+  let imgs = req.files;
+  let paths = [];
+  for (let i = 0; i < imgs.length; i++) {
+    paths.push(imgs[i].path);
+  }
+  console.log(data);
+  console.log(imgs);
+  let newPost = new postData({
+    username: data.username,
+    image: paths,
+    caption: data.caption,
+    time: Date.now(),
+    likes: 0,
+    comments: [],
+    tags: data.tagged,
+  })
+  newPost.save().then( (doc) => {
+    console.log(doc);
+    res.end("post created");
+  }).catch( (err) => { 
+    console.log(err);
+    res.end('Failed to create new post.');
+  });
+})
+
 
 app.post('/search/users', (req,res) => {
   let username = req.body.name;
-  console.log(username);
   let p1 = userData.find({username: {$regex: username}}).exec();
   p1.then((usersFound) => {
-    console.log(usersFound);
     res.end(JSON.stringify(usersFound));
   })
 });

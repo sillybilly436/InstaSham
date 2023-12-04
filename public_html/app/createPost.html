@@ -3,73 +3,61 @@
     <head>
         <title>Create Post</title>
         <link rel="stylesheet" type="text/css" href="./style.css">
-        <script src="./client.js"></script>
     </head>
-    <body>
-        <!--form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" accept="image/*" name="photo" >
-            <input type="submit" value="upload">
-        </form-->
+    <body onload="tagSearchUser()">
         <div id="createPostContainer">
-            <div class="shamBanner">InstaSham</div>
+            <form id="uploadForm">
+                <div class="shamBanner">InstaSham</div>
 
-            <div id="createPostContent">
-                <div id="addPhotoBox">
-                    <div class="createPostTitles">Add Photos To Your Post</div>
-                    <div id="previewPhotos">
-                        <!--odd bug, previewed imgs have less of a margin?-->
-                        <form id="uploadFiles" class="createPostImgs" action="/postImg" method="post" enctype="multipart/form-data">
-                            <label>
-                                <input type="file" accept="image/*" id="uploadImg" name="uploadedImgs" onchange="previewImg()" multiple>
-                                <img src="./images/addImg.png" alt="addImg" id="uploadImgImg">
-                            </label>
-                        </form>
-                    </div>
-                </div>
-
-                <div id="createCaptionBox">
-                    <div class="createPostTitles">Add A Caption To Your Post</div>
-                    <textarea id="createCaption"></textarea>
-                </div>
-
-                <!-- finds users for the client, then allows the user to click on any user to add them to the taged users for a post -->
-                <div id="createUserTagBox">
-                    <div class="createPostTitles">Tag Others In Your Post</div>
-                    <div id="tagedUsers">
-                        <div>Tagged Users</div>
-                        <!-- added as user adds people to tag -->
-                        <div class="userBox" onclick="removeUserTag('username')">
-                            <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp">
-                            <div class="username">'username'</div>
-                        </div>
-                        <div id="createTagStart" class="userBox">
-                            <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp">
-                            <div class="username" id="createTagStart">Search Users To Tag</div>
-                        </div>
-                        
-                    </div>
-                    <label for="userTagSearch">Search Users</label>
-                    <input type="text" id="userTagSearch" oninput="tagSearchUser()">
-                    <div id="userTagList" onload="recomendedTags()">
-                        <!-- ~5 of these created for the first 5 recomended users to add to the tags -->
-                        <div class="userBox" onclick="addUserTag('username')">
-                            <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp" for="'username'">
-                            <div class="username">'username'</div>
+                <div id="createPostContent">
+                    <div id="addPhotoBox">
+                        <div class="createPostTitles">Add Photos To Your Post</div>
+                        <div id="previewPhotos">
+                                <label id="labels" class="createPostImgs">
+                                    <input type="file" accept="image/*" id="uploadImgs" class="invis" name="uploadedImgs" onchange="previewImg()" multiple>
+                                    <img src="./images/addImg.png" alt="addImg" id="uploadImgImg">
+                                </label>
                         </div>
                     </div>
+
+                    <div id="createCaptionBox">
+                        <div class="createPostTitles">Add A Caption To Your Post</div>
+                        <textarea id="createCaption"></textarea>
+                    </div>
+
+                    <!-- finds users for the client, then allows the user to click on any user to add them to the taged users for a post -->
+                    <div id="createUserTagBox">
+                        <div class="createPostTitles">Tag Others In Your Post</div>
+                        <div id="taggedUsers">
+                            <div>Tagged Users</div>
+                            <!-- added as user adds people to tag -->
+                            <div id="createTagStart" class="userBox">
+                                <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp">
+                                <div class="username" id="createTagStart">Search Users To Tag</div>
+                            </div>
+                        </div>
+                        <label for="userTagSearch">Search Users</label>
+                        <input type="text" id="userTagSearch" oninput="tagSearchUser()">
+                        <div id="userTagList">
+                            <!-- ~5 of these created for the first 5 recomended users to add to the tags -->
+                            <div class="userBox" onclick="addUserTag('username')">
+                                <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp" for="'username'">
+                                <div class="username">'username'</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button value="upload" id="createPost">Post</button>
                 </div>
-
-                <button id="createPost" onclick="createPost()">Post</button>
-            </div>
-
-            <div class="navBar">
-                <a href="./home.html">Home</a>
-                <a href="./user.html">User</a>
-                <a href="./createPost.html">Create Post</a>
-                <a href="./global.html">Global</a>
-                <a href="./dmHome.html">Direct Messages</a>
-            </div>
+            </form>
+                <div class="navBar">
+                    <!-- <a href="./home.html">Home</a>
+                    <a href="./user.html">User</a>
+                    <a href="./createPost.html">Create Post</a>
+                    <a href="./global.html">Global</a>
+                    <a href="./dmHome.html">Direct Messages</a> -->
+                </div>
+            
         </div>
-
     </body>
+    <script src="./client.js"></script>
 </html>
