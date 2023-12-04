@@ -374,13 +374,17 @@ function seeFriends() {
     }).then((jsonStr) => {
         let jsonObj = JSON.parse(jsonStr);
         let friendsList = jsonObj.people;
-        let htmlStr = '<strong>Friends:</string><br>';
+        let htmlStr = '<strong>Friends:</string><br><br>';
         for(let i = 0; i < friendsList.length; i++) {
-            htmlStr = htmlStr + `<p><strong id='friend${i}'>` + friendsList[i] + `</strong></p>`
+            htmlStr = htmlStr + `<a href="/app/user.html" id="friend${i}" onclick="openNewUserPage(${i})">` + friendsList[i] + `</a><br><br>`
         }
         let display = document.getElementById('userListDisplay');
         display.innerHTML = htmlStr;
     })
+}
+
+function openNewUserPage(elementNum) {
+    let nextPageUser = document.getElementById(`friend${elementNum}`).innerHTML;
 }
 
 function fillUserPage() {
@@ -392,7 +396,7 @@ function fillUserPage() {
         nameSpot.innerText = jsonObj.username;
         let bioSpot = document.getElementById('userBioSpot');
         bioSpot.innerText = jsonObj.bio;
-    })
+    }) 
 }
 
 function openChangeBio() {
