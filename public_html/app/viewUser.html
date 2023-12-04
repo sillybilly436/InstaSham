@@ -1,0 +1,47 @@
+<!--
+    Name: Bronson Housmans, Billy Dolny, and Ben Curtis
+    Project: InstaSham
+    Description: 
+-->
+
+<!DOCTYPE html>
+<html id="loginHTML" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Instasham</title>
+        <link type="text/css" rel="stylesheet" href="style.css">
+        <script src="client.js"></script>
+    </head>
+    <body onload="fillViewUserPage()">
+        <div id="viewUserContainer">
+            <div class="shamBanner">InstaSham</div>
+            <div id="viewUserContent">
+                <div id="viewUserInfoSpot">
+                    <img id="viewUserProfilePic" src="./images/blankPic.png" alt="image">
+                    <div id="viewUserUsernameSpot"></div>
+                    <div id="viewUserBioSpot"></div><br>
+                </div>
+                <div id="viewUserPostsSpot">POSTS THE USER HAS CREATED</div>
+                <div id="viewUserFriendSpot">
+                    <div id="viewUserSearchContain">
+                        <input id="viewUserSearchFriend" placeholder="Search here for new friends!"
+                        oninput="searchPeople('viewUserSearchFriend', 'viewUserSearchResults')">
+                        <div id="viewUserSearchResults"></div>
+                    </div>
+                    <div id="viewUserListDisplay">
+                        <input type="button" id="viewUserFriendButton" name="viewUserFriendButton"
+                        value="Click here to see existing friends" onclick="seeFriends('viewUserListDisplay')">
+                    </div>
+                </div>
+            </div>
+            <div class="navBar">
+                <a href="./home.html">Home</a>
+                <a href="./user.html">User</a>
+                <a href="./createPost.html">Create Post</a>
+                <a href="./global.html">Global</a>
+                <a href="./dmHome.html">Direct Messages</a>
+                <a href="./help.html">Help</a>
+            </div>
+        </div>
+    </body>
+</html>
