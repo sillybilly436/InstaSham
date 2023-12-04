@@ -32,12 +32,12 @@
                 <div id="userFriendSpot">
                     <div id="userSearchContain">
                         <input id="userSearchFriend" placeholder="Search here for new friends!"
-                        oninput="searchPeople()">
+                        oninput="searchPeople('userSearchFriend', 'userSearchResults')">
                         <div id="userSearchResults"></div>
                     </div>
                     <div id="userListDisplay">
                         <input type="button" id="userFriendButton" name="userFriendButton"
-                        value="Click here to see existing friends" onclick="seeFriends()">
+                        value="Click here to see existing friends" onclick="seeFriends('userListDisplay')">
                     </div>
                 </div>
             </div>

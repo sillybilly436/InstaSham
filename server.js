@@ -381,6 +381,17 @@ app.get('/get/userInfo', (req, res) => {
   })
 })
 
+app.get('/get/viewUserInfo/:name', (req, res) => {
+  let findName = req.params.name;
+  let query = userData.find({username:findName}).exec();
+  query.then((user) => {
+    let userInfo = user[0];
+    // WILL NEED TO COME BACK AND SEND PROFILE PIC TOO
+    let retObj = {username: userInfo.username, bio: userInfo.bio}
+    res.end(JSON.stringify(retObj));
+  })
+})
+
 app.post('/new/bio', (req, res) => {
   let newBio = req.body.bio;
   let currUser = req.cookies.login.username;

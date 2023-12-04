@@ -469,15 +469,8 @@ function specificPost() {
 });
 }
 
-
-
-
-function fillUserPage() {
-    
-}
-
-function searchPeople() {
-    let currName = document.getElementById('userSearchFriend').value;
+function searchPeople(searchFriend, searchResults) {
+    let currName = document.getElementById(searchFriend).value;
     currName = '' + currName;
     if(currName.length > 0) {
         fetch(`/search/users/${currName}`).then((res) => {
@@ -491,11 +484,11 @@ function searchPeople() {
                 + `<input type="button" value="Add ${namesList[i]} as a friend" id="userNameList${i}"
                 name = "userNameList${i}" onclick="addFriend(${i})"><br>`
             }
-            let results = document.getElementById('userSearchResults');
+            let results = document.getElementById(searchResults);
             results.innerHTML = htmlStr;
         });
     } else {
-        let results = document.getElementById('userSearchResults');
+        let results = document.getElementById(searchResults);
         results.innerHTML = '';
     }
 }
@@ -512,23 +505,39 @@ function addFriend(elementNum) {
     })
 }
 
-function seeFriends() {
+function seeFriends(pageName) {
     fetch('/view/friends').then((res) => {
         return res.text();
     }).then((jsonStr) => {
         let jsonObj = JSON.parse(jsonStr);
         let friendsList = jsonObj.people;
-        let htmlStr = '<strong>Friends:</string><br><br>';
+        let htmlStr = '<strong>Friends (click on name to view their page):</string><br><br>';
         for(let i = 0; i < friendsList.length; i++) {
-            htmlStr = htmlStr + `<a href="/app/user.html" id="friend${i}" onclick="openNewUserPage(${i})">` + friendsList[i] + `</a><br><br>`
+            htmlStr = htmlStr + `<p id="friend${i}" onclick="openNewUserPage(${i})">` + friendsList[i] + `</p><br><br>`
         }
-        let display = document.getElementById('userListDisplay');
+        let display = document.getElementById(pageName);
         display.innerHTML = htmlStr;
     })
 }
 
 function openNewUserPage(elementNum) {
-    let nextPageUser = document.getElementById(`friend${elementNum}`).innerHTML;
+    let nextPageUser = '' + document.getElementById(`friend${elementNum}`).innerHTML;
+    window.location.href = '/app/viewUser.html?' + encodeURIComponent(nextPageUser);
+}
+
+function fillViewUserPage() {
+    var urlParam = new URLSearchParams(window.location.search);
+    urlParam = '' + urlParam;
+    urlParam = urlParam.substring(0, urlParam.length-1);
+    fetch(`/get/viewUserInfo/${urlParam}`).then((res) => {
+        return res.text();
+    }) .then((jsonStr) => {
+        let jsonObj = JSON.parse(jsonStr);
+        let nameSpot = document.getElementById('viewUserUsernameSpot')
+        nameSpot.innerText = jsonObj.username;
+        let bioSpot = document.getElementById('viewUserBioSpot');
+        bioSpot.innerText = jsonObj.bio;
+    })
 }
 
 function fillUserPage() {
