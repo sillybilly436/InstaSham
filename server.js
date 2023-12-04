@@ -27,9 +27,9 @@ var usernameSchema = new mongoose.Schema({
     profilePic: [],
     password: String,
     salt: String,
+    bio: String,
     friends: [],
-    directMessages: [],
-    bio: String
+    directMessages: []
 });
 var userData = mongoose.model('userData', usernameSchema);
 
@@ -74,7 +74,8 @@ app.post('/user/create', (req, res) => {
           username: req.body.username,
           password: newHash,
           salt: newSalt,
-          friends: []
+          friends: [],
+          bio: "Fill in bio"
         });
         newUser.save().then( (doc) => { 
             res.end('Created new account!');
@@ -325,7 +326,7 @@ app.get('/search/users/:currName', (req, res) => {
     let nameSet = new Set(namesList);
     for(let i = 0; i < fList.length; i++) {
       if(nameSet.has(fList[i])) {
-        let namesList = namesList.filter(function (name) {
+          namesList = namesList.filter(function (name) {
           return name != fList[i];
         });
       }
@@ -386,9 +387,8 @@ app.post('/new/bio', (req, res) => {
   let query = userData.find({username:currUser});
   query.then((user) => {
     let currPerson = user[0];
-    let oldBio = currPerson.bio;
-    oldBio = newBio;
-    currPerson.save()
+    currPerson.bio = newBio;
+    currPerson.save();
     res.end();
   })
 })
