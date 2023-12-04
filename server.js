@@ -276,6 +276,29 @@ app.post('/dms/post', (req, res) => {
   })
 })
 
+app.post(`/search/friend/posts`, (req, res) => {
+  let friendlist = req.body.friends;
+  console.log(friendlist);
+  let fullArr = [];
+  
+  Promise.all(
+    friendlist.map((friend) => {
+      return postData.find({ username: { $regex: friend } });
+    })
+  )
+    .then((results) => {
+      // results is an array of items from each query
+      fullArr = fullArr.concat(...results);
+      // shuffle(fullArr);
+      console.log(fullArr);
+      res.end(JSON.stringify(fullArr));
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 app.get('/search/posts/:username/:caption/:image/:newComment', (req,res) => {
   let query = postData.find({caption:{$regex:req.params.caption}, image:{$regex:req.params.image}, username:{$regex:req.params.username}}).exec();
   query.then((results) => {
@@ -311,6 +334,18 @@ app.get('/search/users/:currName', (req, res) => {
     res.end(JSON.stringify(retObj));
   })
 })
+
+app.get(`/find/your/user`, (req, res) => {
+  let name = req.cookies.login.username;
+  let query1 = userData.find({username:name}).exec();
+  query1.then((person) => {
+    let curUser = person[0];
+    console.log(curUser)
+    res.end(JSON.stringify(curUser));
+  })
+});
+
+
 
 app.post('/add/friend', (req, res) => {
   let user2 = req.body.friend;
@@ -366,6 +401,7 @@ app.get('/get/posts', (req,res) => {
   });
 });
 app.get('/add/comment/:username/:caption/:image/:newComment', (req,res) => {
+  let mainName = req.cookies.login.username;
   let query = postData.find({caption:{$regex:req.params.caption}, image:{$regex:req.params.image}, username:{$regex:req.params.username}}).exec();
   console.log("ADD COMMENT SECTION");
   console.log(query);
@@ -375,11 +411,18 @@ app.get('/add/comment/:username/:caption/:image/:newComment', (req,res) => {
     console.log(post);
     let allComments = post.comments;
     let com = req.params.newComment.replaceAll("+", " ");
-    let newCom = `<strong>${req.params.username}:</strong> ${com}`;
+    let newCom = `<strong>${mainName}:</strong> ${com}`;
     allComments.push(` <div id="specificComments">${newCom}</div>`);
     post.comments = allComments;
-    post.save();
+    post.save()
+    .then(() => {
+    const formattedJSON = JSON.stringify(post, null, 2);
+    console.log(formattedJSON);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
+    });
   })
+
 });
 
 app.post('/search/post', (req,res) => {
@@ -389,6 +432,22 @@ app.post('/search/post', (req,res) => {
   let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     let post = results[0];
+      const formattedJSON = JSON.stringify(results, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
+  })
+});
+
+app.post('/add/like', (req,res) => {
+  console.log(`caption: ${req.body.caption}`);
+  console.log(`image: ${req.body.image}`);
+  console.log(`username: ${req.body.username}`);
+  let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
+  query.then((results) => {
+    let post = results[0];
+    post.likes = post.likes+1;
+    post.save()
+    console.log(post);
       const formattedJSON = JSON.stringify(results, null, 2);
       res.setHeader('Content-Type', 'application/json');
       res.end(formattedJSON);

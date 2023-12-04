@@ -267,14 +267,20 @@ Stlye for the create post page
   height: auto;
 }
 
+.homeProPic {
+    max-width: 5%;
+    border-radius: 50%;
+  height: auto;
+}
+
 #specificProfilePic {
-    max-width: 10%;
+    max-width: 50%;
     border-radius: 50%;
     height: auto;
 }
 
 #homeProfilePic {
-    max-width: 3%;
+    max-width: 10%;
     border-radius: 50%;
     height: auto;
 }
