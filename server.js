@@ -40,7 +40,7 @@ var postSchema = new mongoose.Schema({
     comments: [],
     tags: [],
     time: Number,
-    likes: Number
+    likes: []
 });
 var postData = mongoose.model('postData', postSchema);
 
@@ -152,7 +152,7 @@ app.post('/create/post', upload.array('img'), (req, res) => {
     image: paths,
     caption: data.caption,
     time: Date.now(),
-    likes: 0,
+    likes: [],
     comments: [],
     tags: data.tagged,
   })
@@ -330,14 +330,16 @@ app.post(`/search/friend/posts`, (req, res) => {
     });
 });
 
-app.get('/search/posts/:username/:caption/:image/:newComment', (req,res) => {
-  let query = postData.find({caption:{$regex:req.params.caption}, image:{$regex:req.params.image}, username:{$regex:req.params.username}}).exec();
+app.post('/add/comment/', (req,res) => {
+  let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     let post = results[0];
     let allComments = post.comments;
-    allComments.push(req.params.newComment);
-      const formattedJSON = JSON.stringify(results, null, 2);
+    allComments.push(req.body.newCom);
+    post.save();
+      const formattedJSON = JSON.stringify(results[0], null, 2);
       res.setHeader('Content-Type', 'application/json');
+      console.log(formattedJSON);
       res.end(formattedJSON);
   })
 });
@@ -441,30 +443,8 @@ app.get('/get/posts', (req,res) => {
       res.end(formattedJSON);
   });
 });
-app.get('/add/comment/:username/:caption/:image/:newComment', (req,res) => {
-  let mainName = req.cookies.login.username;
-  let query = postData.find({caption:{$regex:req.params.caption}, image:{$regex:req.params.image}, username:{$regex:req.params.username}}).exec();
-  console.log("ADD COMMENT SECTION");
-  console.log(query);
-  query.then((results) => {
-    console.log(results);
-    let post = results[0];
-    console.log(post);
-    let allComments = post.comments;
-    let com = req.params.newComment.replaceAll("+", " ");
-    let newCom = `<strong>${mainName}:</strong> ${com}`;
-    allComments.push(` <div id="specificComments">${newCom}</div>`);
-    post.comments = allComments;
-    post.save()
-    .then(() => {
-    const formattedJSON = JSON.stringify(post, null, 2);
-    console.log(formattedJSON);
-      res.setHeader('Content-Type', 'application/json');
-      res.end(formattedJSON);
-    });
-  })
 
-});
+
 
 app.post('/search/post', (req,res) => {
   console.log(`caption: ${req.body.caption}`);
@@ -475,18 +455,25 @@ app.post('/search/post', (req,res) => {
     let post = results[0];
       const formattedJSON = JSON.stringify(results, null, 2);
       res.setHeader('Content-Type', 'application/json');
+      console.log(formattedJSON);
       res.end(formattedJSON);
   })
 });
 
 app.post('/add/like', (req,res) => {
+  myUser = req.cookies.login.username;
   console.log(`caption: ${req.body.caption}`);
   console.log(`image: ${req.body.image}`);
   console.log(`username: ${req.body.username}`);
   let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     let post = results[0];
-    post.likes = post.likes+1;
+    if (post.likes.includes(myUser)){
+      const index = post.likes.indexOf(myUser);
+      post.likes.splice(index, 1);
+    } else {
+      post.likes.push(myUser);
+    }
     post.save()
     console.log(post);
       const formattedJSON = JSON.stringify(results, null, 2);

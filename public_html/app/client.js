@@ -137,10 +137,14 @@ function createPost(e) {
 
 function likeSpecific(){
     let likeCom = document.getElementById(`likeCom`);
+    picture = document.getElementById(`specificPic`);
+    idxArr = picture.alt.split(" ");
+    idx = idxArr.pop();
+    pic = idxArr.join(" ");
     let postbody = {
         username: document.getElementById(`specificUsername`).innerText,
         caption: document.getElementById(`specificCaption`).innerText,
-        image: document.getElementById(`specificPic`).alt,
+        image: pic,
         };
     fetch(`/add/like`, {
             method: 'POST',
@@ -153,7 +157,7 @@ function likeSpecific(){
             return JSON.parse(result);
         }).then((retObj) => {
             console.log(likeCom);
-            likeCom.innerText = `${retObj[0].likes} Likes and ${retObj[0].comments.length} Comments`
+            likeCom.innerText = `${retObj[0].likes.length} Likes and ${retObj[0].comments.length} Comments`
 
         });
 
@@ -161,11 +165,15 @@ function likeSpecific(){
 }
 
 function likePost(index){
-    let likeCom = document.getElementById(`homeLikeCom${index}`)
+    let likeCom = document.getElementById(`homeLikeCom${index}`);
+    picture = document.getElementById(`postPic${index}`);
+    idxArr = picture.alt.split(" ");
+    idx = idxArr.pop();
+    pic = idxArr.join(" ");
     let postbody = {
         username: document.getElementById(`homeName${index}`).innerText,
         caption: document.getElementById(`homeCaption${index}`).innerText,
-        image: document.getElementById(`postPic${index}`).alt,
+        image: pic,
         };
     fetch(`/add/like`, {
             method: 'POST',
@@ -178,7 +186,7 @@ function likePost(index){
             return JSON.parse(result);
         }).then((retObj) => {
             console.log(likeCom);
-            likeCom.innerText = `${retObj[0].likes} Likes and ${retObj[0].comments.length} Comments`
+            likeCom.innerText = `${retObj[0].likes.length} Likes and ${retObj[0].comments.length} Comments`
 
         });
 }
@@ -236,20 +244,38 @@ function homefeed(){
 
                 
                 htmlStr = htmlStr + `<center> <span><img class="homeProPic" id="homeProfilePic${index}" src="./images/${friendProPic}" alt="${friendProPic}"><span id="homeName${index}">${jsonObj.username}</span></span>
-                <div><img id="postPic${index}" src="./images/${jsonObj.image}" alt="${jsonObj.image}"></div>
-                <p id="homeCaption${index}">${jsonObj.caption}</p><p id="homeLikeCom${index}">${jsonObj.likes} Likes and ${jsonObj.comments.length} Comments</p>`
+                <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(0,${index});">
+                <img id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
+                <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
+                <p id="homeCaption${index}">${jsonObj.caption}</p><p id="homeLikeCom${index}">${jsonObj.likes.length} Likes and ${jsonObj.comments.length} Comments</p>`
                 //Add buttons for likes and specific posts
                 htmlStr = htmlStr + `<input type="button" value="Like" class="homeCommentButt" onclick="likePost(${index});">`
-                htmlStr = htmlStr + `<input type="button" value="See Post" class="homeCommentButt" onclick="redirectSpecific(${index});">`
-
+                htmlStr = htmlStr + `<input type="button" value="See Post" class="homeCommentButt" onclick="redirectSpecific(${index});"><br>`
+                
+                htmlStr = htmlStr + `<strong>Tagged: </strong>`;
+                maxtag = jsonObj.tags.length;
+                console.log(`maxtag: ${maxtag}`);
+                if (maxtag > 5){maxtag = 5;}
+                for(var i = 0; i < maxtag; i++) {
+                    var tag = jsonObj.tags;
+                    if (tag == null){
+                        break;
+                    }
+                    htmlStr = htmlStr + `${tag[i]}, `;
+                }
+                htmlStr = htmlStr.substring(0, htmlStr.length-2) + `<br><strong>Comments:</strong><br>`
             
                 console.log(jsonObj);                
                 // Iterate to ony have like 2 show
-                for(var i = 0; i < 2; i++) {
+                maxCom = jsonObj.comments.length;
+                console.log(`maxCom: ${maxCom}`);
+                if (maxCom > 2){maxCom = 2;}
+                for(var i = 0; i < maxCom; i++) {
                     var comments = jsonObj.comments;
-                    htmlStr = htmlStr + `${comments[i]}`;
+                    
+                    htmlStr = htmlStr + `${comments[i]}<br>`;
                 }
-                htmlStr = htmlStr + `<span>...</spand><br>`;
+                htmlStr = htmlStr + `<span>...</span><br>`;
             }
             console.log(htmlStr)
             let content = document.getElementById('homeContent')
@@ -258,7 +284,46 @@ function homefeed(){
 });
 }
 
+function homeSwapPic(dir,index){
+    
+    picture = document.getElementById(`postPic${index}`);
+    idxArr = picture.alt.split(" ");
+    idx = idxArr.pop();
+    pic = idxArr.join(" ");
 
+    let comBody = {
+        username: document.getElementById(`homeName${index}`).innerText,
+        caption: document.getElementById(`homeCaption${index}`).innerText,
+        image: pic,
+    }
+
+    fetch(`/search/post`, {
+        method: 'POST',
+        body: JSON.stringify(comBody),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        console.log(res);
+        return res.text();
+    }).then((results) => {
+        console.log(results);
+        return JSON.parse(results);
+    }).then ((retObj) => {
+        console.log(retObj);
+        console.log(idx);
+        if (dir == 1){
+            idx = idx - 1;
+        } else { idx++;}
+        if (idx < 0){
+            idx = retObj[0].image.length-1;
+        }else if (idx == retObj[0].image.length){
+            idx = 0;
+        }
+        picLoc = retObj[0].image[idx];
+        picture.src = picLoc;
+        picture.alt = picLoc + " "+idx;
+
+    });
+}
 
 
 /**
@@ -300,29 +365,6 @@ function startMessage(userToMessage) {
     });
 }
 
-function addItem() {
-    let item = {
-        description: document.getElementById('createCaption').value,
-        image: document.getElementById('previewPhotos').value,
-        tags: document.getElementById('tags').value,
-        likes: 0,
-        comments : null, 
-    }
-    fetch(`/add/item`, {
-        method: 'POST',
-        body: JSON.stringify(item),
-        headers: {'Content-Type': 'application/json'}
-    }).then((res) => {
-        window.location.href = '/home.html';
-        return res.text();
-    }).then((text) => {
-        window.location.href = '/home.html';
-        return;
-    }).catch((err) => {
-        console.log(err);
-    });
-}
-
 function getPosts() {
     fetch(`/get/posts`).then((res) => {
         return res.text();
@@ -333,7 +375,7 @@ function getPosts() {
         let buttonIndex = 0;
         for(jsonObj of retObj) {
             htmlStr = htmlStr + `<div class='allPosts'><p id='title${buttonIndex}'>${jsonObj.username}</p><p>
-            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.likes} Likes and ${jsonObj.comments} Comments</p>`;
+            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.likes.length} Likes and ${jsonObj.comments} Comments</p>`;
             console.log(jsonObj);
             htmlStr = htmlStr + `<input type='button' id='buyButton name='buyButton' value='View Post' onclick='buyNow(${buttonIndex})'></div>`;
             buttonIndex++;
@@ -408,31 +450,39 @@ function sendDM() {
 }
 
 function addComment(){
-    let username = document.getElementById("specificUsername").innerText;
-    let caption = document.getElementById("specificCaption").innerText;
     let allCom = document.getElementById("allComments");
     let likeCom = document.getElementById("likeCom");
     console.log(allCom);
-    caption = caption.replaceAll(" ", "+");
-    let pic = document.getElementById("specificPic").alt;
     let newComment = document.getElementById("specificYourComment").value;
     newComment = newComment.replaceAll(" ", "+");
-    fetch(`/add/comment/${username}/${caption}/${pic}/${newComment}`).then((res) => {
-        return res.text();
+    let comBody = {
+        username: document.getElementById('specificUsername').innerText,
+        caption: document.getElementById('specificCaption').innerText,
+        image: document.getElementById("specificPic").src,
+        newCom: document.getElementById("specificYourComment").value,
+
+    }
+    fetch(`/add/comment`, {
+        method: 'POST',
+        body: JSON.stringify(comBody),
+        headers: {'Content-Type': 'application/json'}
     }).then((res) => {
         console.log(res);
-        return JSON.parse(res);
+        return res.text();
+    }).then((results) => {
+        console.log(results);
+        return JSON.parse(results);
     }).then((retObj) => {
         let coms = retObj.comments
         console.log(coms);
         htmlStr = ``;
         for (com of coms){
             console.log(com);
-            htmlStr = htmlStr + `${com}`;
+            htmlStr = htmlStr + `${com}<br>`;
         }
         console.log(htmlStr);
         allCom.innerHTML = htmlStr;
-        likeCom.innerText = `${retObj.likes} Likes and ${retObj.comments.length} Comments`;
+        likeCom.innerText = `${retObj.likes.length} Likes and ${retObj.comments.length} Comments`;
         console.log(allCom);
     });
 
@@ -444,7 +494,10 @@ function redirectSpecific(index){
     console.log("redirecting to specific");
     ausername = document.getElementById(`homeName${index}`).innerText;
     acaption = document.getElementById(`homeCaption${index}`).innerText;
-    apic = document.getElementById(`postPic${index}`).alt;
+    apic = document.getElementById(`postPic${index}`);
+    idxArr = apic.alt.split(" ");
+    idx = idxArr.pop();
+    apic = idxArr.join(" ");
     window.location.href = `/app/specificPost.html?username=${encodeURIComponent(ausername)}&caption=${encodeURIComponent(acaption)}&pic=${encodeURIComponent(apic)}&index=${encodeURIComponent(index)}`;
 }
 
@@ -490,20 +543,22 @@ function specificPost() {
                 //MAKE ANOTHER FUNCTION TO CREATE THE SPECIFIC POST
                 htmlStr = htmlStr + `<span><img id="specificProfilePic" src="./images/${proPic}" alt="profilePic">
                 <div id="specificUsername">${jsonObj.username}</div></span>
-                <center><img id="specificPic" src="./images/${jsonObj.image}" alt="${jsonObj.image}">
-                <p id="specificCaption">${jsonObj.caption}</p><p id="likeCom">${jsonObj.likes} Likes and ${jsonObj.comments.length} Comments</p>
-                <input type="button" value="Like!" id="specificLikeButt" onclick="likeSpecific();">`
+                <center><div><input type="button" value="<--" id="specificLikeButt" onclick="swapPic(1);">
+                <img id="specificPic" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
+                <input type="button" value="-->" id="specificLikeButt" onclick="swapPic(0);">
+                <p id="specificCaption">${jsonObj.caption}</p><p id="likeCom">${jsonObj.likes.length} Likes and ${jsonObj.comments.length} Comments</p>
+                <input type="button" value="Like!" id="specificLikeButt" onclick="likeSpecific();"><br> <strong> Tagged: </strong>`
                 for (tag of jsonObj.tags){
-                    htmlStr = htmlStr + `${tag} `
+                    htmlStr = htmlStr + `${tag}, `
                 }
                 htmlStr.substring(0,htmlStr.length-2);
                 htmlStr = htmlStr + `<br>`;
                 console.log(jsonObj);
                 htmlStr = htmlStr + `<p><strong>COMMENTS:</strong></p><div id="allComments">`
                 for(comment of jsonObj.comments) {
-                    htmlStr = htmlStr + `${comment}`;
+                    htmlStr = htmlStr + `${comment}<br>`;
                 }
-                htmlStr = htmlStr + `</div><br>`;
+                htmlStr = htmlStr + `</div>`;
 
                 htmlStr = htmlStr + `<input type="text" placeholder="Type your comment here!" id="specificYourComment">
                 <input type="button" value="Add Comment" id="specificCommentButt" onclick="addComment();"></center>`;
@@ -516,6 +571,48 @@ function specificPost() {
         });
 });
 }
+
+function swapPic(dir){
+    
+    picture = document.getElementById("specificPic");
+    idxArr = picture.alt.split(" ");
+    idx = idxArr.pop();
+    pic = idxArr.join(" ");
+
+    let comBody = {
+        username: document.getElementById('specificUsername').innerText,
+        caption: document.getElementById('specificCaption').innerText,
+        image: pic,
+    }
+
+    fetch(`/search/post`, {
+        method: 'POST',
+        body: JSON.stringify(comBody),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        console.log(res);
+        return res.text();
+    }).then((results) => {
+        console.log(results);
+        return JSON.parse(results);
+    }).then ((retObj) => {
+        console.log(retObj);
+        console.log(idx);
+        if (dir == 1){
+            idx = idx - 1;
+        } else { idx++;}
+        if (idx < 0){
+            idx = retObj[0].image.length-1;
+        }else if (idx == retObj[0].image.length){
+            idx = 0;
+        }
+        picLoc = retObj[0].image[idx];
+        picture.src = picLoc;
+        picture.alt = picLoc + " "+idx;
+
+    });
+}
+
 
 function searchPeople(searchFriend, searchResults) {
     let currName = document.getElementById(searchFriend).value;
