@@ -32,8 +32,13 @@ function previewImg() {
 
 
 function removeImg(img) {
-    console.log(selectedImgs);
-    selectedImgs.splice(selectedImgs.indexOf(img), 1);
+    for(let i = 0; i < selectedImgs.length; i++) {
+        console.log(selectedImgs[i].name);
+        console.log(img);
+        if (selectedImgs[i].name == img) {
+            selectedImgs.splice(i, 1);
+        }
+    }
     console.log(selectedImgs);
     document.getElementById(img).remove();
 }
