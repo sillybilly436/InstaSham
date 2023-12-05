@@ -7,7 +7,8 @@
  * Javascript for createPost
  */
 
-var formData = new FormData();
+var selectedImgs = [];
+
 var j = 0;
 
 function previewImg() {
@@ -16,17 +17,25 @@ function previewImg() {
     if (files) {
         for (i = 0; i < files.length; i++) {
             let file = files[i];
-            console.log(file);
+            console.log(file.name);
             j += 1;
-            formData.append('img', file);
+            selectedImgs.push(file);
             let current = document.getElementById("previewPhotos");
             let oldHTML = current.innerHTML;
-            let newHTML = '<img id="file' + i + '" class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
+            let newHTML = '<img onclick="removeImg(\'' + file.name + '\')" id="' + file.name + '" class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
             current.innerHTML = newHTML + oldHTML;
         }
         // document.getElementById('uploadImgImg').remove();
         // document.getElementById('labels').setAttribute("class", "invis");
     }
+}
+
+
+function removeImg(img) {
+    console.log(selectedImgs);
+    selectedImgs.splice(selectedImgs.indexOf(img), 1);
+    console.log(selectedImgs);
+    document.getElementById(img).remove();
 }
 
 let taggedUsers = [];
@@ -106,7 +115,14 @@ var uploadForm = document.getElementById("uploadForm");
 uploadForm.addEventListener("submit", createPost);
 
 function createPost(e) {
-    
+    console.log("array");
+    console.log(selectedImgs);
+
+    var formData = new FormData();
+    for (let i = 0; i < selectedImgs.length; i++) {
+        formData.append("img", selectedImgs[i]);
+    }
+
     let decoded = decodeURIComponent(document.cookie);
     decoded = decoded.replace("login=j:", "");
     decoded = JSON.parse(decoded); 
@@ -160,8 +176,6 @@ function likeSpecific(){
             likeCom.innerText = `${retObj[0].likes.length} Likes and ${retObj[0].comments.length} Comments`
 
         });
-
-
 }
 
 function likePost(index){
