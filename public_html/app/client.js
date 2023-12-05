@@ -6,30 +6,38 @@
 /**
  * Javascript for createPost
  */
+
+var formData = new FormData();
+var j = 0;
+
 function previewImg() {
-    let uploadImg = document.getElementById('uploadImg');
+    let uploadImg = document.getElementById('uploadImgs');
     var files = uploadImg.files;
     if (files) {
         for (i = 0; i < files.length; i++) {
             let file = files[i];
             console.log(file);
+            j += 1;
+            formData.append('img', file);
             let current = document.getElementById("previewPhotos");
             let oldHTML = current.innerHTML;
             let newHTML = '<img id="file' + i + '" class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
             current.innerHTML = newHTML + oldHTML;
         }
+        // document.getElementById('uploadImgImg').remove();
+        // document.getElementById('labels').setAttribute("class", "invis");
     }
 }
 
-function removeImg() {
-    //used to remove a previewed img from the list of files to upload for the post
-}
-
-function recomendedTags() {
-    //used on load to serve a list of tags of users friends
-}
+let taggedUsers = [];
 
 function tagSearchUser() {
+    if (taggedUsers.length == 0) {
+        let decoded = decodeURIComponent(document.cookie);
+        decoded = decoded.replace("login=j:", "");
+        decoded = JSON.parse(decoded); 
+        taggedUsers.push(decoded.username);
+    }
     let searchName = { name: document.getElementById('userTagSearch').value };
     fetch("/search/users", {
         method:'POST',
@@ -38,19 +46,29 @@ function tagSearchUser() {
     }).then((res) => {
         return res.text();
     }).then((text) => {
-        console.log(text);
         let usersObj = JSON.parse(text);
-        let currKeys = Object.keys(usersObj);
         let htmlStr = '';
-        for(let i = 0; i < 5; i++) {
-            if (currKeys[i]) {
-                let currKey = currKeys[i];
-                let currName = '' + usersObj[currKey];
-                htmlStr +=
-                '<div class="userBox" onclick="addUserTag(' + usersObj.username + ')">' +
-                    '<img class="inTextPfp" src="' + userObj.profilePic + '" alt="' + userObj.username + ' pfp" for="' + userObj.username + '">' + 
-                    '<div class="username">' + usersObj.username + '</div>' + 
-                '</div>'; 
+        let numSearch = 5;
+        for(let i = 0; i < numSearch; i++) {
+            let skip = false;
+            if (usersObj[i]) {
+                for (let j = 0; j < taggedUsers.length; j++) {
+                    console.log(taggedUsers);
+                    console.log(taggedUsers[j]);
+                    if (usersObj[i].username == taggedUsers[j]) {
+                        numSearch += 1;
+                        skip = true;
+                        break;
+                    }
+                }
+                console.log(skip);
+                if (skip == false) {
+                    htmlStr +=
+                        '<div class="userBox" id="' + usersObj[i].username + 'ToTag" onclick="addUserTag(\'' + usersObj[i].username + '\')">' +
+                            '<img class="inTextPfp" src="' + usersObj[i].profilePic + '" alt="' + usersObj[i].username + ' pfp" for="' + usersObj[i].username + '">' + 
+                            '<div class="username">' + usersObj[i].username + '</div>' + 
+                        '</div>';
+                }
             } else {
                 htmlStr += '<div>...<div>';
                 break;
@@ -61,6 +79,59 @@ function tagSearchUser() {
 }
 
 function addUserTag(username) {
+    taggedUsers.push(username);
+    let oldHTML = document.getElementById(username + "ToTag").innerHTML;
+    console.log(oldHTML);
+    document.getElementById(username + "ToTag").remove();
+    let htmlStr =
+        '<div class="userBox" id="' + username + 'Tagged" onclick="removeUserTag(\'' + username + '\')">' +
+            oldHTML +
+        '</div>'; 
+    document.getElementById('taggedUsers').innerHTML += htmlStr;
+    console.log(document.getElementById('taggedUsers'));
+    if (document.getElementById('createTagStart')) {
+        document.getElementById('createTagStart').remove();
+    }
+    tagSearchUser();
+}
+
+function removeUserTag(username) {
+    taggedUsers.splice(taggedUsers.indexOf(username), 1);
+    document.getElementById(username + "Tagged").remove();
+    tagSearchUser();
+}
+
+var uploadForm = document.getElementById("uploadForm");
+
+uploadForm.addEventListener("submit", createPost);
+
+function createPost(e) {
+    
+    let decoded = decodeURIComponent(document.cookie);
+    decoded = decoded.replace("login=j:", "");
+    decoded = JSON.parse(decoded); 
+
+    e.preventDefault();
+    formData.append('username', decoded.username);
+    let files = document.getElementById("uploadImgs");
+    console.log(files.files);
+    for (let i = 0; i < files.files.length; i++) {
+        console.log(files.files[i]);
+        formData.append('img', files.files[i]);
+    }
+    formData.append('caption', document.getElementById("createCaption").value);
+    for (let i = 0; i < taggedUsers.length; i++) {
+        formData.append('tagged', taggedUsers[i]);
+    }
+    for (var key of formData.entries()) {
+        console.log(key[0] + ', ' + key[1]);
+    }
+    fetch("/create/post", {
+        method:'POST',
+        body: formData
+    }).then((res) => {
+        console.log(res.text());
+    })
     
 }
 
@@ -188,30 +259,7 @@ function homefeed(){
 }
 
 
-function removeUserTag(username){
-    let p = fetch("/", {
-        method: 'POST',
-        body: JSON.stringify(userData),
-        headers: { 'Content-Type': 'application/json'}
-    });
-    p.then((data) => {
-        return data.text();
-    }).then((text) => {
-        if (text.startsWith('Success')) {
-            redirectHome();
-        } else {
-            //window.location.href = '/index.html';
-            document.getElementById('login_error').innerText = text;
-        }
-    });
-    p.catch((err) => {
-        console.log(err);
-    });
-}
 
-function createPost() {
-
-}
 
 /**
  * Javascript for _
@@ -469,15 +517,8 @@ function specificPost() {
 });
 }
 
-
-
-
-function fillUserPage() {
-    
-}
-
-function searchPeople() {
-    let currName = document.getElementById('userSearchFriend').value;
+function searchPeople(searchFriend, searchResults) {
+    let currName = document.getElementById(searchFriend).value;
     currName = '' + currName;
     if(currName.length > 0) {
         fetch(`/search/users/${currName}`).then((res) => {
@@ -491,11 +532,11 @@ function searchPeople() {
                 + `<input type="button" value="Add ${namesList[i]} as a friend" id="userNameList${i}"
                 name = "userNameList${i}" onclick="addFriend(${i})"><br>`
             }
-            let results = document.getElementById('userSearchResults');
+            let results = document.getElementById(searchResults);
             results.innerHTML = htmlStr;
         });
     } else {
-        let results = document.getElementById('userSearchResults');
+        let results = document.getElementById(searchResults);
         results.innerHTML = '';
     }
 }
@@ -512,23 +553,39 @@ function addFriend(elementNum) {
     })
 }
 
-function seeFriends() {
+function seeFriends(pageName) {
     fetch('/view/friends').then((res) => {
         return res.text();
     }).then((jsonStr) => {
         let jsonObj = JSON.parse(jsonStr);
         let friendsList = jsonObj.people;
-        let htmlStr = '<strong>Friends:</string><br><br>';
+        let htmlStr = '<strong>Friends (click on name to view their page):</string><br><br>';
         for(let i = 0; i < friendsList.length; i++) {
-            htmlStr = htmlStr + `<a href="/app/user.html" id="friend${i}" onclick="openNewUserPage(${i})">` + friendsList[i] + `</a><br><br>`
+            htmlStr = htmlStr + `<p id="friend${i}" onclick="openNewUserPage(${i})">` + friendsList[i] + `</p><br><br>`
         }
-        let display = document.getElementById('userListDisplay');
+        let display = document.getElementById(pageName);
         display.innerHTML = htmlStr;
     })
 }
 
 function openNewUserPage(elementNum) {
-    let nextPageUser = document.getElementById(`friend${elementNum}`).innerHTML;
+    let nextPageUser = '' + document.getElementById(`friend${elementNum}`).innerHTML;
+    window.location.href = '/app/viewUser.html?' + encodeURIComponent(nextPageUser);
+}
+
+function fillViewUserPage() {
+    var urlParam = new URLSearchParams(window.location.search);
+    urlParam = '' + urlParam;
+    urlParam = urlParam.substring(0, urlParam.length-1);
+    fetch(`/get/viewUserInfo/${urlParam}`).then((res) => {
+        return res.text();
+    }) .then((jsonStr) => {
+        let jsonObj = JSON.parse(jsonStr);
+        let nameSpot = document.getElementById('viewUserUsernameSpot')
+        nameSpot.innerText = jsonObj.username;
+        let bioSpot = document.getElementById('viewUserBioSpot');
+        bioSpot.innerText = jsonObj.bio;
+    })
 }
 
 function fillUserPage() {

@@ -87,7 +87,7 @@ html, body {
     overflow-y: scroll;
     color: white;
     display: grid;
-    grid-template-columns: 20vw 60vw 20vw;
+    grid-template-columns: 25vw 50vw 25vw;
     grid-template-rows: 76vh;
 }
 
@@ -187,7 +187,7 @@ Stlye for the create post page
     height: 100%;
 }
 
-#uploadImg {
+.invis {
     display: none;
 }
 
@@ -225,6 +225,8 @@ Stlye for the create post page
 
 .userBox {
     display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .inTextPfp {
@@ -309,4 +311,71 @@ Stlye for the create post page
     font-size: 22px;
     color: white;
     overflow-y: scroll;
+}
+
+#viewUserContainer {
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-template-rows: 12vh 76vh 12vh;
+}
+
+#viewUserSearchFriend {
+    grid-row: 2 / 3;
+    grid-column: 1;
+    margin-top: 3%;
+    width: 200px;
+    height: 20px;
+}
+
+#viewUserProfilePic {
+    border-radius: 50%;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+}
+
+#viewUserContent {
+    grid-row: 2 / 3;
+    grid-column: 1;
+    overflow-y: scroll;
+    color: white;
+    display: grid;
+    grid-template-columns: 25vw 50vw 25vw;
+    grid-template-rows: 76vh;
+}
+
+#viewUserInfoSpot {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    margin-left: 2%;
+}
+
+#viewUserUsernameSpot {
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+#viewUserPostSpot {
+    grid-row: 1;
+    grid-column: 2 / 3;
+    margin-left: auto;
+}
+
+#viewUserFriendSpot {
+    grid-row: 1;
+    grid-column: 3;
+    display: grid;
+    grid-template-columns: 33vw;
+    grid-template-rows: 38vh 38vh;
+}
+
+#viewUserSearchContain {
+    grid-row: 1 / 2;
+    grid-column: 1;
+}
+
+#viewUserListDisplay {
+    grid-row: 2;
+    grid-column: 1;
 }
