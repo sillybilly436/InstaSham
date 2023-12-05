@@ -146,8 +146,12 @@ function createPost(e) {
         method:'POST',
         body: formData
     }).then((res) => {
-        console.log(res.text());
-    })
+        return res.text();
+    }).then((text) => {
+        if (text == "post created") {
+            window.location.href="/app/home.html";
+        }
+    });
     
 }
 
