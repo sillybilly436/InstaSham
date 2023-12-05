@@ -148,8 +148,10 @@ function createPost(e) {
     }).then((res) => {
         return res.text();
     }).then((text) => {
-        if 
-    })
+        if (text == "post created") {
+            window.location.href="/app/home.html";
+        }
+    });
     
 }
 
