@@ -262,8 +262,8 @@ function homefeed(){
 
                 
                 htmlStr = htmlStr + `<center> <span><img class="homeProPic" id="homeProfilePic${index}" src="./images/${friendProPic}" alt="${friendProPic}"><span id="homeName${index}">${jsonObj.username}</span></span>
-                <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(0,${index});">
-                <img id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
+                <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
+                <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
                 <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
                 <p id="homeCaption${index}">${jsonObj.caption}</p><p id="homeLikeCom${index}">${jsonObj.likes.length} Likes and ${jsonObj.comments.length} Comments</p>`
                 //Add buttons for likes and specific posts
@@ -294,6 +294,7 @@ function homefeed(){
                     htmlStr = htmlStr + `${comments[i]}<br>`;
                 }
                 htmlStr = htmlStr + `<span>...</span><br>`;
+            index += 1;
             }
             console.log(htmlStr)
             let content = document.getElementById('homeContent')
@@ -562,7 +563,7 @@ function specificPost() {
                 htmlStr = htmlStr + `<span><img id="specificProfilePic" src="./images/${proPic}" alt="profilePic">
                 <div id="specificUsername">${jsonObj.username}</div></span>
                 <center><div><input type="button" value="<--" id="specificLikeButt" onclick="swapPic(1);">
-                <img id="specificPic" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
+                <img class="feedPics" id="specificPic" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
                 <input type="button" value="-->" id="specificLikeButt" onclick="swapPic(0);">
                 <p id="specificCaption">${jsonObj.caption}</p><p id="likeCom">${jsonObj.likes.length} Likes and ${jsonObj.comments.length} Comments</p>
                 <input type="button" value="Like!" id="specificLikeButt" onclick="likeSpecific();"><br> <strong> Tagged: </strong>`

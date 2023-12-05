@@ -207,6 +207,13 @@ Stlye for the create post page
     border: 2px yellow solid;
 }
 
+.feedPics {
+    margin: 2px;
+    display: inline-block;
+    height: 50vh;
+    aspect-ratio: 1 / 1;
+}
+
 #createCaptionBox {
     grid-row: 2 / 3;
 }
