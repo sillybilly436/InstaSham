@@ -24,15 +24,20 @@ function previewImg() {
             let newHTML = '<img id="file' + i + '" class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
             current.innerHTML = newHTML + oldHTML;
         }
-        document.getElementById('uploadImgImg').remove();
-        document.getElementById('labels').setAttribute("class", "invis");
+        // document.getElementById('uploadImgImg').remove();
+        // document.getElementById('labels').setAttribute("class", "invis");
     }
 }
 
 let taggedUsers = [];
 
 function tagSearchUser() {
-    console.log("running");
+    if (taggedUsers.length == 0) {
+        let decoded = decodeURIComponent(document.cookie);
+        decoded = decoded.replace("login=j:", "");
+        decoded = JSON.parse(decoded); 
+        taggedUsers.push(decoded.username);
+    }
     let searchName = { name: document.getElementById('userTagSearch').value };
     fetch("/search/users", {
         method:'POST',
@@ -101,9 +106,13 @@ var uploadForm = document.getElementById("uploadForm");
 uploadForm.addEventListener("submit", createPost);
 
 function createPost(e) {
-    console.log("Entered Create Post");
+    
+    let decoded = decodeURIComponent(document.cookie);
+    decoded = decoded.replace("login=j:", "");
+    decoded = JSON.parse(decoded); 
+
     e.preventDefault();
-    formData.append('username', "temp");
+    formData.append('username', decoded.username);
     let files = document.getElementById("uploadImgs");
     console.log(files.files);
     for (let i = 0; i < files.files.length; i++) {
