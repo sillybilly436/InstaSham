@@ -120,8 +120,11 @@ var uploadForm = document.getElementById("uploadForm");
 uploadForm.addEventListener("submit", createPost);
 
 function createPost(e) {
-    console.log("array");
-    console.log(selectedImgs);
+    e.preventDefault();
+    if (selectedImgs.length == 0) {
+        alert("Please Upload An Image");
+        return;
+    }
 
     var formData = new FormData();
     for (let i = 0; i < selectedImgs.length; i++) {
@@ -132,7 +135,6 @@ function createPost(e) {
     decoded = decoded.replace("login=j:", "");
     decoded = JSON.parse(decoded); 
 
-    e.preventDefault();
     formData.append('username', decoded.username);
     let files = document.getElementById("uploadImgs");
     console.log(files.files);
