@@ -263,7 +263,7 @@ function homefeed(){
                     var comments = jsonObj.comments;
                     htmlStr = htmlStr + `${comments[i]}`;
                 }
-                htmlStr = htmlStr + `<br>`;
+                htmlStr = htmlStr + `<span>...</spand><br>`;
             }
             console.log(htmlStr)
             let content = document.getElementById('homeContent')
