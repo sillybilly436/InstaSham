@@ -712,6 +712,7 @@ function fillUserPage() {
         nameSpot.innerText = jsonObj.username;
         let bioSpot = document.getElementById('userBioSpot');
         bioSpot.innerText = jsonObj.bio;
+        userfeed();
     }) 
 }
 
@@ -738,4 +739,125 @@ function closeChangeBio() {
         name="userChangeBio" onclick="openChangeBio()">`
         location.reload();
     })
+}
+
+
+// new work to display feed on user page
+function userfeed(){
+    fetch('/search/own/user').then((res) => {
+    return res.text();
+    }).then((res) => {
+        console.log(res);
+        return JSON.parse(res);
+    }).then((retObj) => {
+        let htmlStr = '';
+        let index = 0;
+        for(jsonObj in retObj) {
+            htmlStr = htmlStr + `<center> <span id="homeName${index}">${jsonObj.username}</span>
+            <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
+            <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
+            <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
+            <p id="homeCaption${index}">${jsonObj.caption}</p><p id="homeLikeCom${index}">${jsonObj.likes.length} Likes and ${jsonObj.comments.length} Comments</p>`
+            //Add buttons for likes and specific posts
+            htmlStr = htmlStr + `<input type="button" value="Like" class="homeCommentButt" onclick="likePost(${index});">`
+            htmlStr = htmlStr + `<input type="button" value="See Post" class="homeCommentButt" onclick="redirectSpecific(${index});"><br>`
+            
+            htmlStr = htmlStr + `<strong>Tagged: </strong>`;
+            maxtag = jsonObj.tags.length;
+            console.log(`maxtag: ${maxtag}`);
+            if (maxtag > 5){maxtag = 5;}
+            for(var i = 0; i < maxtag; i++) {
+                var tag = jsonObj.tags;
+                if (tag == null){
+                    break;
+                }
+                htmlStr = htmlStr + `${tag[i]}, `;
+            }
+            htmlStr = htmlStr.substring(0, htmlStr.length-2) + `<br><strong>Comments:</strong><br>`
+            
+            console.log('line 778');
+            console.log(jsonObj);                
+            // Iterate to ony have like 2 show
+            maxCom = jsonObj.comments.length;
+            console.log(`maxCom: ${maxCom}`);
+            if (maxCom > 2){maxCom = 2;}
+            for(var i = 0; i < maxCom; i++) {
+                var comments = jsonObj.comments;
+                
+                htmlStr = htmlStr + `${comments[i]}<br>`;
+            }
+            htmlStr = htmlStr + `<span>...</span><br>`;
+            index+=1;
+        }
+        let content = document.getElementById('userPostSpot')
+        content.innerHTML = htmlStr;
+    });
+}
+
+function likePost(index){
+    let likeCom = document.getElementById(`homeLikeCom${index}`);
+    picture = document.getElementById(`postPic${index}`);
+    idxArr = picture.alt.split(" ");
+    idx = idxArr.pop();
+    pic = idxArr.join(" ");
+    let postbody = {
+        username: document.getElementById(`homeName${index}`).innerText,
+        caption: document.getElementById(`homeCaption${index}`).innerText,
+        image: pic,
+        };
+    fetch(`/add/like`, {
+            method: 'POST',
+            body: JSON.stringify(postbody),
+            headers: { 'Content-Type': 'application/json'}
+        }).then((res) => {
+            return res.text();
+        }).then((result) => {
+            console.log(result);
+            return JSON.parse(result);
+        }).then((retObj) => {
+            console.log(likeCom);
+            likeCom.innerText = `${retObj[0].likes.length} Likes and ${retObj[0].comments.length} Comments`
+
+        });
+}
+
+function homeSwapPic(dir,index){
+    
+    picture = document.getElementById(`postPic${index}`);
+    idxArr = picture.alt.split(" ");
+    idx = idxArr.pop();
+    pic = idxArr.join(" ");
+
+    let comBody = {
+        username: document.getElementById(`homeName${index}`).innerText,
+        caption: document.getElementById(`homeCaption${index}`).innerText,
+        image: pic,
+    }
+
+    fetch(`/search/post`, {
+        method: 'POST',
+        body: JSON.stringify(comBody),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        console.log(res);
+        return res.text();
+    }).then((results) => {
+        console.log(results);
+        return JSON.parse(results);
+    }).then ((retObj) => {
+        console.log(retObj);
+        console.log(idx);
+        if (dir == 1){
+            idx = idx - 1;
+        } else { idx++;}
+        if (idx < 0){
+            idx = retObj[0].image.length-1;
+        }else if (idx == retObj[0].image.length){
+            idx = 0;
+        }
+        picLoc = retObj[0].image[idx];
+        picture.src = picLoc;
+        picture.alt = picLoc + " "+idx;
+
+    });
 }

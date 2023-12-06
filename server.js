@@ -484,4 +484,13 @@ app.post('/add/like', (req,res) => {
   })
 });
 
+app.get('/search/own/user', (req, res) => {
+  let currUser = req.cookies.login.username;
+  let posts = postData.find({username: currUser}).exec();
+  posts.then((postsItems) => {
+    allUserPosts = {postList: postsItems};
+    res.end(JSON.stringify(allUserPosts));
+  })
+})
+
 app.listen(port, () => { console.log('server has started: http://127.0.0.1:3000/'); });
