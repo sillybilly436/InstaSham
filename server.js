@@ -328,7 +328,7 @@ app.post('/add/comment', (req,res) => {
     console.log(post);
     let allComments = post.comments;
 
-    allComments.push(`<strong>${sender}:</strong>${req.body.newCom}<br>`);
+    allComments.push(`<strong>${sender}: </strong>${req.body.newCom}<br>`);
     post.save();
       const formattedJSON = JSON.stringify(results[0], null, 2);
       res.setHeader('Content-Type', 'application/json');

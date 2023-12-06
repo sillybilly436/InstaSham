@@ -509,7 +509,7 @@ function sendDM() {
 
 function addComment(){
     let personName = null;
-    let htmlStr = null;
+    let htmlStr = "";
     fetch('/find/your/user').then((res) => {
         return res.text();
         }).then((res) => {
