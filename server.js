@@ -409,7 +409,7 @@ app.get('/get/viewUserInfo/:name', (req, res) => {
   query.then((user) => {
     let userInfo = user[0];
     // WILL NEED TO COME BACK AND SEND PROFILE PIC TOO
-    let retObj = {username: userInfo.username, bio: userInfo.bio}
+    let retObj = {username: userInfo.username, bio: userInfo.bio, profilePic: userInfo.profilePic}
     res.end(JSON.stringify(retObj));
   })
 });

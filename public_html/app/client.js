@@ -350,7 +350,7 @@ function searchFriends() {
             for(let i = 0; i < currKeys.length; i++) {
                 let currKey = currKeys[i];
                 let currName = '' + usersObj[currKey];
-                htmlStr = htmlStr + '<p>' + currName + '</p>' + 
+                htmlStr = htmlStr + '<p class="dmHomeNames">' + currName + '</p>' + 
                 `<input type='button' name='dmHomeNewMessage${i}' id='dmHomeNewMessage${i}'
                 onclick='startMessage("${currName}")' value='Send Message'><br>`; 
             }
@@ -742,6 +742,8 @@ function fillViewUserPage() {
         nameSpot.innerText = jsonObj.username;
         let bioSpot = document.getElementById('viewUserBioSpot');
         bioSpot.innerText = jsonObj.bio;
+        let profilePicSpot = document.getElementById('viewUserProfilePic')
+        profilePicSpot.src = jsonObj.profilePic;
         let uName = '' + jsonObj.username;
         viewUserFeed(uName);
     })
