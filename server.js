@@ -449,8 +449,9 @@ app.get('/search/own/user', (req, res) => {
   let currUser = req.cookies.login.username;
   let posts = postData.find({username: currUser}).exec();
   posts.then((postsItems) => {
-    allUserPosts = {postList: postsItems};
-    res.end(JSON.stringify(allUserPosts));
+      const formattedJSON = JSON.stringify(postsItems, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
   })
 })
 
