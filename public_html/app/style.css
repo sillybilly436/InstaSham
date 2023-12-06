@@ -409,3 +409,8 @@ Stlye for the create post page
 .clickOnUsername {
     text-decoration: underline;
 }
+
+#userSearchContain {
+    margin-bottom: 5%;
+    overflow-y: scroll;
+}
