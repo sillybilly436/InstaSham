@@ -24,7 +24,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var usernameSchema = new mongoose.Schema({
     username: String,
-    profilePic: [],
+    profilePic: String,
     password: String,
     salt: String,
     bio: String,
@@ -72,6 +72,7 @@ app.post('/user/create', (req, res) => {
   
         var newUser = new userData({ 
           username: req.body.username,
+          profilePic: ".\\images\\blankPic.png",
           password: newHash,
           salt: newSalt,
           friends: [],
@@ -273,6 +274,28 @@ app.post('/dms/post', (req, res) => {
   })
 })
 
+app.post("/updateProfPic", upload.single('img'), (req, res) => {
+    let username = req.cookies.login.username;
+    let newPic = req.file;
+
+    let path;
+    
+    let currPath = newPic.path;
+    currPath = currPath.replace("public_html/app", ".");
+    currPath = currPath.replace("public_html\\app", ".");
+    path = currPath;
+    let findUser = userData.findOne({ username: username })
+    findUser.then((user) => {
+      user.profilePic = path;
+      user.save();
+    }).then(() => {
+      res.end("updated");
+    }).catch((err) => {
+      console.log(err);
+      res.end("err");
+    })
+})
+
 app.post(`/search/friend/posts`, (req, res) => {
   let friendlist = req.body.friends;
   console.log(friendlist);
@@ -299,8 +322,11 @@ app.post(`/search/friend/posts`, (req, res) => {
 app.post('/add/comment', (req,res) => {
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
+    console.log(results);
     let post = results[0];
+    console.log(post);
     let allComments = post.comments;
+
     allComments.push(req.body.newCom);
     post.save();
       const formattedJSON = JSON.stringify(results[0], null, 2);
@@ -372,7 +398,7 @@ app.get('/get/userInfo', (req, res) => {
   query.then((user) => {
     let userInfo = user[0];
     // WILL NEED TO COME BACK AND SEND PROFILE PIC TOO
-    let retObj = {username: userInfo.username, bio: userInfo.bio}
+    let retObj = {username: userInfo.username, bio: userInfo.bio, profilePic: userInfo.profilePic}
     res.end(JSON.stringify(retObj));
   })
 });

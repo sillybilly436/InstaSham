@@ -48,7 +48,7 @@ html, body {
 #specificContainer {
     display: grid;
     grid-template-columns: 100vw;
-    grid-template-rows: 8vh 84vh 8vh;
+    grid-template-rows: 12vh 76vh 12vh;
 }
 
 .navBar {
@@ -73,7 +73,8 @@ html, body {
     height: 20px;
 }
 
-#userProfilePic {
+.userProfilePic {
+    aspect-ratio: 1 / 1;
     border-radius: 50%;
     width: 50%;
     margin-left: auto;
@@ -264,7 +265,7 @@ Stlye for the create post page
 #homeContainer {
     display: grid;
     grid-template-columns: 100vw;
-    grid-template-rows: 8vh 84vh 8vh;
+    grid-template-rows: 12vh 76vh 12vh;
 }
 
 #homeContent {
