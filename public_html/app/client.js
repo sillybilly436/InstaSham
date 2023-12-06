@@ -396,7 +396,7 @@ function getPosts() {
             console.log(retObj);
             let index = 0;
             for(jsonObj of retObj) {
-                htmlStr = htmlStr + `<center><span id="homeName${index}">${jsonObj.username}</span>
+                htmlStr = htmlStr + `<center><span><p id="globalName${index}" class="clickOnUsername" onclick="openNewUserPage(${index},'globalName')">${jsonObj.username}</p></span>
                 <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
                 <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
                 <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
@@ -712,7 +712,7 @@ function seeFriends(pageName) {
         let friendsList = jsonObj.people;
         let htmlStr = '<strong>Friends (click on name to view their page):</string><br><br>';
         for(let i = 0; i < friendsList.length; i++) {
-            htmlStr = htmlStr + `<p id="friend${i}" onclick="openNewUserPage(${i}, 'friend')">` + friendsList[i] + `</p><br><br>`
+            htmlStr = htmlStr + `<p id="friend${i}" class="clickOnUsername" onclick="openNewUserPage(${i}, 'friend')">` + friendsList[i] + `</p><br><br>`
         }
         let display = document.getElementById(pageName);
         display.innerHTML = htmlStr;
