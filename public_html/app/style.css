@@ -166,7 +166,7 @@ Stlye for the create post page
 }
 
 #createPostContent {
-    color: yellow;
+    color: white;
     text-align: center;
     grid-row: 2 / 3;
     grid-column: 1;
@@ -192,7 +192,7 @@ Stlye for the create post page
 }
 
 #uploadImgImg {
-    mix-blend-mode: multiply;
+
     display: block;
     height: 22vh;
     aspect-ratio: 1 / 1;
@@ -200,11 +200,17 @@ Stlye for the create post page
 
 .createPostImgs {
     margin: 2px;
-    background-color: yellow;
     display: inline-block;
     height: 22vh;
     aspect-ratio: 1 / 1;
-    border: 2px yellow solid;
+    border: 2px white solid;
+}
+
+.feedPics {
+    margin: 2px;
+    display: inline-block;
+    height: 50vh;
+    aspect-ratio: 1 / 1;
 }
 
 #createCaptionBox {
@@ -214,19 +220,30 @@ Stlye for the create post page
 #createCaption {
     height: 16vh;
     width: 90%;
-    border: 2px yellow solid;
+    border: 2px white solid;
     background-color: navy;
-    color: yellow;
+    color: white;
 }
 
 #createUserTagBox {
     grid-row: 3 / 4;
+    padding: 2px;
 }
 
 .userBox {
+    border: 2px white solid;
+    padding: 2px;
     display: inline-block;
     margin-left: 5px;
     margin-right: 5px;
+}
+
+.toRemove:hover {
+    border: 2px red solid;
+}
+
+.toAdd:hover {
+    border: 2px greenyellow solid;
 }
 
 .inTextPfp {
