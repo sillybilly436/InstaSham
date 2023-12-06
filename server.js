@@ -425,10 +425,11 @@ app.post('/search/post', (req,res) => {
 
 app.post('/add/like', (req,res) => {
   myUser = req.cookies.login.username;
-  console.log(`caption: ${req.body.caption}`);
-  console.log(`image: ${req.body.image}`);
-  console.log(`username: ${req.body.username}`);
-  let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
+  console.log(`caption: |${req.body.caption}|`);
+  console.log(`image: |${req.body.image}|`);
+  console.log(`username: |${req.body.username}|`);
+  
+  let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     let post = results[0];
     if (post.likes.includes(myUser)){

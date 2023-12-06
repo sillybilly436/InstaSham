@@ -190,6 +190,7 @@ function likePost(index){
     idxArr = picture.alt.split(" ");
     idx = idxArr.pop();
     pic = idxArr.join(" ");
+    console.log(pic);
     let postbody = {
         username: document.getElementById(`homeName${index}`).innerText,
         caption: document.getElementById(`homeCaption${index}`).innerText,
@@ -770,7 +771,6 @@ function closeChangeBio() {
         location.reload();
     })
 }
-
 
 // new work to display feed on user page
 function userfeed(){
