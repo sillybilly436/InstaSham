@@ -405,3 +405,7 @@ Stlye for the create post page
     grid-row: 2;
     grid-column: 1;
 }
+
+.clickOnUsername {
+    text-decoration: underline;
+}

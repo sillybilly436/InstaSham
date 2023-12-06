@@ -334,27 +334,33 @@ function homeSwapPic(dir,index){
  * Javascript for _
  */
 function searchFriends() {
-    let searchName = { name: document.getElementById('dmHomeSearch').value };
-    fetch('/find/friends', {
-        method:'POST',
-        body: JSON.stringify(searchName),
-        headers: {'Content-Type': 'application/json'}
-    }).then((res) => {
-        return res.text();
-    }).then((text) => {
-        let usersObj = JSON.parse(text);
-        let currKeys = Object.keys(usersObj);
-        let htmlStr = '';
-        for(let i = 0; i < currKeys.length; i++) {
-            let currKey = currKeys[i];
-            let currName = '' + usersObj[currKey];
-            htmlStr = htmlStr + '<p>' + currName + '</p>' + 
-            `<input type='button' name='dmHomeNewMessage${i}' id='dmHomeNewMessage${i}'
-            onclick='startMessage("${currName}")' value='Send Message'><br>`; 
-        }
+    let typedName = '' + document.getElementById('dmHomeSearch').value;
+    if(typedName.length > 0) {
+        let searchName = { name: document.getElementById('dmHomeSearch').value };
+        fetch('/find/friends', {
+            method:'POST',
+            body: JSON.stringify(searchName),
+            headers: {'Content-Type': 'application/json'}
+        }).then((res) => {
+            return res.text();
+        }).then((text) => {
+            let usersObj = JSON.parse(text);
+            let currKeys = Object.keys(usersObj);
+            let htmlStr = '';
+            for(let i = 0; i < currKeys.length; i++) {
+                let currKey = currKeys[i];
+                let currName = '' + usersObj[currKey];
+                htmlStr = htmlStr + '<p>' + currName + '</p>' + 
+                `<input type='button' name='dmHomeNewMessage${i}' id='dmHomeNewMessage${i}'
+                onclick='startMessage("${currName}")' value='Send Message'><br>`; 
+            }
+            let found = document.getElementById('dmHomeFriendsFound');
+            found.innerHTML = htmlStr;
+        });
+    } else {
         let found = document.getElementById('dmHomeFriendsFound');
-        found.innerHTML = htmlStr;
-    })
+        found.innerHTML = '';
+    }
 }
 
 function startMessage(userToMessage) {
@@ -396,7 +402,7 @@ function getPosts() {
             console.log(retObj);
             let index = 0;
             for(jsonObj of retObj) {
-                htmlStr = htmlStr + `<center><span id="homeName${index}">${jsonObj.username}</span>
+                htmlStr = htmlStr + `<center><span><p id="globalName${index}" class="clickOnUsername" onclick="openNewUserPage(${index},'globalName')">${jsonObj.username}</p></span>
                 <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
                 <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
                 <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
@@ -725,7 +731,7 @@ function seeFriends(pageName) {
         let friendsList = jsonObj.people;
         let htmlStr = '<strong>Friends (click on name to view their page):</string><br><br>';
         for(let i = 0; i < friendsList.length; i++) {
-            htmlStr = htmlStr + `<p id="friend${i}" onclick="openNewUserPage(${i}, 'friend')">` + friendsList[i] + `</p><br><br>`
+            htmlStr = htmlStr + `<p id="friend${i}" class="clickOnUsername" onclick="openNewUserPage(${i}, 'friend')">` + friendsList[i] + `</p><br><br>`
         }
         let display = document.getElementById(pageName);
         display.innerHTML = htmlStr;
