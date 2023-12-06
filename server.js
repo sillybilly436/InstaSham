@@ -286,7 +286,9 @@ app.post("/updateProfPic", upload.single('img'), (req, res) => {
     path = currPath;
     let findUser = userData.findOne({ username: username })
     findUser.then((user) => {
+      console.log(user.profilePic);
       user.profilePic = path;
+      console.log(user.profilePic);
       user.save();
     }).then(() => {
       res.end("updated");

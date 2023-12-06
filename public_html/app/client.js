@@ -782,6 +782,7 @@ if (newProfPicForm != null) {
 }
 
 function updateProfilePic() {
+    console.log('on the inside')
     for (var key of profFormData.entries()) {
         console.log(key[0] + ', ' + key[1]);
     }
@@ -789,6 +790,7 @@ function updateProfilePic() {
         method: "POST",
         body: profFormData,
     }).then((res) => {
+        console.log(res.text());
         return res.text();
     }).catch((err) => {
         console.log(err);
