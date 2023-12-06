@@ -513,8 +513,8 @@ function addComment(){
         caption: document.getElementById('specificCaption').innerText,
         image: pic,
         newCom: document.getElementById("specificYourComment").value,
-
     }
+    
     fetch(`/add/comment`, {
         method: 'POST',
         body: JSON.stringify(comBody),
