@@ -1,3 +1,9 @@
+/**
+    Name: Bronson Housmans, Billy Dolny, and Ben Curtis
+    Project: InstaSham
+    Server file for the project that connects with the database and allows for saving imgs
+ */
+
 
 const mongoose = require('mongoose');
 const express = require('express');
@@ -58,6 +64,12 @@ var messageData = mongoose.model('messageData', messageSchema);
 
 // creating an account
 app.post('/user/create', (req, res) => {
+    /**
+     * Checks to see if a user exists, if not creates a new user salting and hashing their
+     * password before sending to the database. Default profile pic and bio are filled in for the
+     * user
+     */
+
     let p1 = userData.find({username: req.body.username}).exec();
     p1.then( (results) => { 
       if (results.length > 0) {
@@ -92,6 +104,9 @@ app.post('/user/create', (req, res) => {
   });
 
 // logging in to an existing account
+/**
+ * checks login to see if it is a match with any user in the database using salt and hash.
+ */
 app.post('/user/login', (req, res) => {
     let u = req.body.username;
     let p1 = userData.find({username: u}).exec();
@@ -118,12 +133,10 @@ app.post('/user/login', (req, res) => {
       });
 });
 
-/*
-Testing multer to add img
-*/
 
+
+//setting up multer
 const multer = require('multer');
-//const upload = multer({ dest: 'public_html/app/uploads'});
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -135,14 +148,18 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage });
 
-// app.use('/create/post', express.static('uploads'));
-
+/**
+ * creates a post for the user after uploading all of their imgs. Saves the location of the imgs
+ * in order to set as the src of img later. 
+ */
 app.post('/create/post', upload.array('img'), (req, res) => {
+  
   let data = req.body;
   let imgs = req.files;
   let paths = [];
   for (let i = 0; i < imgs.length; i++) {
     let currPath = imgs[i].path;
+    // changes path to be better suited for src
     currPath = currPath.replace("public_html/app", ".");
     currPath = currPath.replace("public_html\\app", ".");
     paths.push(currPath);
@@ -164,7 +181,7 @@ app.post('/create/post', upload.array('img'), (req, res) => {
   });
 })
 
-
+// search users, used for finding for tags
 app.post('/search/users', (req,res) => {
   let username = req.body.name;
   let p1 = userData.find({username: {$regex: username}}).exec();
@@ -267,7 +284,9 @@ app.post('/dms/post', (req, res) => {
     res.end();
   })
 })
-
+/**
+ * saves the img passed for a new profile pic, then updates the user schema for the new pictire
+ */
 app.post("/updateProfPic", upload.single('img'), (req, res) => {
     let username = req.cookies.login.username;
     let newPic = req.file;
@@ -275,6 +294,7 @@ app.post("/updateProfPic", upload.single('img'), (req, res) => {
     let path;
     
     let currPath = newPic.path;
+    // changes path before saving in order to work better for src
     currPath = currPath.replace("public_html/app", ".");
     currPath = currPath.replace("public_html\\app", ".");
     path = currPath;
@@ -289,7 +309,7 @@ app.post("/updateProfPic", upload.single('img'), (req, res) => {
       res.end("err");
     })
 })
-
+// searches through posts with the regex of the users friends
 app.post(`/search/friend/posts`, (req, res) => {
   let friendlist = req.body.friends;
   let fullArr = [];
@@ -311,6 +331,7 @@ app.post(`/search/friend/posts`, (req, res) => {
     });
 });
 
+//adds a comment to the post and updates database
 app.post('/add/comment', (req,res) => {
   sender = req.body.persons;
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
@@ -326,6 +347,7 @@ app.post('/add/comment', (req,res) => {
   })
 });
 
+//searches through users
 app.get('/search/users/:currName', (req, res) => {
   let query = userData.find({username: {$regex: req.params.currName}}).exec();
   let namesList = [];
@@ -350,6 +372,7 @@ app.get('/search/users/:currName', (req, res) => {
   })
 });
 
+// finds users
 app.get(`/find/your/user`, (req, res) => {
   let name = req.cookies.login.username;
   let query1 = userData.find({username:name}).exec();
@@ -359,6 +382,7 @@ app.get(`/find/your/user`, (req, res) => {
   })
 });
 
+// adds friend to users database then saves
 app.post('/add/friend', (req, res) => {
   let user2 = req.body.friend;
   let user1 = req.cookies.login.username;
@@ -372,6 +396,7 @@ app.post('/add/friend', (req, res) => {
   })
 });
 
+// gets users friends from the schema
 app.get('/view/friends', (req, res) => {
   let currUser = req.cookies.login.username;
   let query = userData.find({username:currUser}).exec();
@@ -381,17 +406,18 @@ app.get('/view/friends', (req, res) => {
   })
 });
 
+// gets users name, bio, and profile picture
 app.get('/get/userInfo', (req, res) => {
   let currUser = req.cookies.login.username;
   let query = userData.find({username:currUser}).exec();
   query.then((user) => {
     let userInfo = user[0];
-    // WILL NEED TO COME BACK AND SEND PROFILE PIC TOO
     let retObj = {username: userInfo.username, bio: userInfo.bio, profilePic: userInfo.profilePic}
     res.end(JSON.stringify(retObj));
   })
 });
 
+// gets user info for viewing
 app.get('/get/viewUserInfo/:name', (req, res) => {
   let findName = req.params.name;
   let query = userData.find({username:findName}).exec();
@@ -403,6 +429,7 @@ app.get('/get/viewUserInfo/:name', (req, res) => {
   })
 });
 
+// upates bio for the user and saves to db
 app.post('/new/bio', (req, res) => {
   let newBio = req.body.bio;
   let currUser = req.cookies.login.username;
@@ -415,6 +442,7 @@ app.post('/new/bio', (req, res) => {
   })
 });
 
+// gets the posts a user has created
 app.get('/get/posts', (req,res) => {
   let items = postData.find({}).exec();
   items.then((results) => {
@@ -424,6 +452,7 @@ app.get('/get/posts', (req,res) => {
   });
 });
 
+// searches through the post database for a specific post
 app.post('/search/post', (req,res) => {
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
@@ -434,6 +463,7 @@ app.post('/search/post', (req,res) => {
   })
 });
 
+// adds a like and saves post to database
 app.post('/add/like', (req,res) => {
   myUser = req.cookies.login.username;
   
@@ -453,6 +483,7 @@ app.post('/add/like', (req,res) => {
   })
 });
 
+// searches for user that is logged in with cookies
 app.get('/search/own/user', (req, res) => {
   let currUser = req.cookies.login.username;
   let posts = postData.find({username: currUser}).exec();
@@ -464,6 +495,7 @@ app.get('/search/own/user', (req, res) => {
 
 })
 
+// searches through posts to find posts made by a user
 app.get('/search/user/posts/:name', (req, res) => {
   let viewUser = req.params.name;
   let posts = postData.find({username: viewUser}).exec();
