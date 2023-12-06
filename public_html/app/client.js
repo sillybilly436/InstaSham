@@ -117,7 +117,9 @@ function removeUserTag(username) {
 
 var uploadForm = document.getElementById("uploadForm");
 
-uploadForm.addEventListener("submit", createPost);
+if (uploadForm != null) {
+    uploadForm.addEventListener("submit", createPost);
+}
 
 function createPost(e) {
     e.preventDefault();
@@ -711,11 +713,68 @@ function fillViewUserPage() {
     })
 }
 
+var profFormData = new FormData();
+
+function reload() {
+    location.reload();
+}
+
+function viewChangeProfPic() {
+    document.getElementById("newProfFormButton").remove();
+    console.log("viewChange");
+    let picBox = document.getElementById("profPicBox");
+    picBox.innerHTML += 
+    '<form id="newProfPicForm">' +
+        '<input type="file" name="newProfPic" id="newProfilePic" onchange="previewProfPic()" required/>' +
+        '<button value="upload" class="invis" id="confButton">Confirm Changes</button>' +
+    '</form>' + 
+    '<button onclick="reload()" class="invis" id="discButton">Discard Changes</button>';
+}
+
+function previewProfPic() {
+    document.getElementById("userProfilePic").setAttribute("class", "invis");
+    let inPic = document.getElementById("newProfilePic");
+    let file = inPic.files[0];
+    profFormData.append('img', inPic.files[0]);
+    let profBox = document.getElementById("profPicBox");
+    let currHTML = profBox.innerHTML;
+    let newHTML = '<img id="tempProfilePic" class="userProfilePic" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
+    profBox.innerHTML = newHTML + currHTML;
+    document.getElementById("confButton").classList.remove("invis");
+    document.getElementById("discButton").classList.remove("invis");
+    document.getElementById("newProfilePic").remove();
+    var newProfPicForm = document.getElementById("newProfPicForm");
+    newProfPicForm.addEventListener("submit", updateProfilePic);
+}
+
+var newProfPicForm = document.getElementById("newProfPicForm");
+
+if (newProfPicForm != null) {
+    newProfPicForm.addEventListener("submit", updateProfilePic);
+}
+
+function updateProfilePic() {
+    for (var key of profFormData.entries()) {
+        console.log(key[0] + ', ' + key[1]);
+    }
+    fetch("/updateProfPic", {
+        method: "POST",
+        body: profFormData,
+    }).then((res) => {
+        return res.text();
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
 function fillUserPage() {
     fetch('/get/userInfo').then((res) => {
         return res.text();
     }).then((jsonStr) => {
         let jsonObj = JSON.parse(jsonStr);
+        let userProfilePic = document.getElementById("userProfilePic");
+        console.log(jsonObj.profilePic);
+        userProfilePic.src = jsonObj.profilePic;
         let nameSpot = document.getElementById('userUsernameSpot')
         nameSpot.innerText = jsonObj.username;
         let bioSpot = document.getElementById('userBioSpot');
