@@ -297,7 +297,7 @@ app.post(`/search/friend/posts`, (req, res) => {
 });
 
 app.post('/add/comment/', (req,res) => {
-  let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
+  let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     let post = results[0];
     let allComments = post.comments;
@@ -413,7 +413,7 @@ app.post('/search/post', (req,res) => {
   console.log(`caption: ${req.body.caption}`);
   console.log(`image: ${req.body.image}`);
   console.log(`username: ${req.body.username}`);
-  let query = postData.find({caption:{$regex:req.body.caption}, image:{$regex:req.body.image}, username:{$regex:req.body.username}}).exec();
+  let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     let post = results[0];
       const formattedJSON = JSON.stringify(results, null, 2);
