@@ -506,4 +506,4 @@ app.get('/search/user/posts/:name', (req, res) => {
   });
 });
 
-app.listen(port, () => { console.log('server has started: http://127.0.0.1:3000/'); });
+app.listen(port, () => { console.log('server has started'); });
