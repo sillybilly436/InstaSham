@@ -236,42 +236,6 @@ app.get('/user/dms', (req, res) => {
     let messages = {dms: user.directMessages}
     res.end(JSON.stringify(messages));
   })
-})
-app.post('/add/item', (req,res) => {
-  let pTitle = req.body.title;
-  let pDesc = req.body.description;
-  let pImg = req.body.image;
-  let pTags = req.body.tags;
-  let pUser = req.cookies.login.username;
-  let itemObj = {title: pTitle, description: pDesc, image: pImg, tags: pTags};
-      let item = new itemData(itemObj);
-      item.save()
-          .then(() => {
-              console.log(item); // You can log the saved message here
-              let query = userData.find({username:{$regex:pUser}}).exec();
-              query.then((documents) => {
-                  let user = documents[0];
-                  console.log(user);
-                  let list = user.listings
-                  list.push(itemObj);
-                  console.log(user);
-                  user.save();
-                  res.end("Successful");
-              });
-          })
-          .catch((error) => {
-              console.error("Error saving message:", error);
-              res.status(500).end("Error saving message.");
-          });
-});
-
-app.get('/get/items', (req,res) => {
-  let items = itemData.find({}).exec();
-  items.then((results) => {
-      const formattedJSON = JSON.stringify(results, null, 2);
-      res.setHeader('Content-Type', 'application/json');
-      res.end(formattedJSON);
-  });
 });
 
 // searches for messages between users
@@ -286,7 +250,6 @@ app.get('/dms/load/:name', (req, res) => {
     res.end(JSON.stringify(retObj));
   })
 })
-
 
 //handles creation of new DM between users
 app.post('/dms/post', (req, res) => {
@@ -368,7 +331,7 @@ app.get('/search/users/:currName', (req, res) => {
     let retObj = { names: namesList };
     res.end(JSON.stringify(retObj));
   })
-})
+});
 
 app.get(`/find/your/user`, (req, res) => {
   let name = req.cookies.login.username;
@@ -379,8 +342,6 @@ app.get(`/find/your/user`, (req, res) => {
     res.end(JSON.stringify(curUser));
   })
 });
-
-
 
 app.post('/add/friend', (req, res) => {
   let user2 = req.body.friend;
@@ -402,7 +363,7 @@ app.get('/view/friends', (req, res) => {
     let retObj = {people:person[0].friends};
     res.end(JSON.stringify(retObj));
   })
-})
+});
 
 app.get('/get/userInfo', (req, res) => {
   let currUser = req.cookies.login.username;
@@ -413,7 +374,7 @@ app.get('/get/userInfo', (req, res) => {
     let retObj = {username: userInfo.username, bio: userInfo.bio}
     res.end(JSON.stringify(retObj));
   })
-})
+});
 
 app.get('/get/viewUserInfo/:name', (req, res) => {
   let findName = req.params.name;
@@ -424,7 +385,7 @@ app.get('/get/viewUserInfo/:name', (req, res) => {
     let retObj = {username: userInfo.username, bio: userInfo.bio}
     res.end(JSON.stringify(retObj));
   })
-})
+});
 
 app.post('/new/bio', (req, res) => {
   let newBio = req.body.bio;
@@ -436,17 +397,16 @@ app.post('/new/bio', (req, res) => {
     currPerson.save();
     res.end();
   })
-})
+});
+
 app.get('/get/posts', (req,res) => {
-  let items = itemData.find({}).exec();
+  let items = postData.find({}).exec();
   items.then((results) => {
       const formattedJSON = JSON.stringify(results, null, 2);
       res.setHeader('Content-Type', 'application/json');
       res.end(formattedJSON);
   });
 });
-
-
 
 app.post('/search/post', (req,res) => {
   console.log(`caption: ${req.body.caption}`);
