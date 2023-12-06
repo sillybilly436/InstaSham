@@ -447,13 +447,11 @@ app.post('/add/like', (req,res) => {
 
 app.get('/search/own/user', (req, res) => {
   let currUser = req.cookies.login.username;
-  console.log(currUser);
-  let query = postData.find({username:currUser}).exec();
-  query.then((postsItems) => {
-    const formattedJSON = JSON.stringify(postsItems, null, 2);
-    res.setHeader('Content-Type', 'application/json');
-    console.log(formattedJSON);
-    res.end(formattedJSON);
+  let posts = postData.find({username: currUser}).exec();
+  posts.then((postsItems) => {
+      const formattedJSON = JSON.stringify(postsItems, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
   })
 
 })

@@ -776,13 +776,15 @@ function closeChangeBio() {
 function userfeed(){
     fetch('/search/own/user/').then((res) => {
     return res.text();
-    }).then((result) => {
-        console.log(result);
-        return JSON.parse(result);
+    }).then((res) => {
+        //console.log(res);
+        return JSON.parse(res);
     }).then((retObj) => {
+        console.log(retObj);
         let htmlStr = '';
         let index = 0;
         for(jsonObj of retObj) {
+            console.log(jsonObj)
             htmlStr = htmlStr + `<center> <span id="homeName${index}">${jsonObj.username}</span>
             <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
             <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
@@ -796,12 +798,12 @@ function userfeed(){
             maxtag = jsonObj.tags.length;
             console.log(`maxtag: ${maxtag}`);
             if (maxtag > 5){maxtag = 5;}
-            for(var i = 0; i < maxtag; i++) {
+            for(var j = 0; j < maxtag; j++) {
                 var tag = jsonObj.tags;
                 if (tag == null){
                     break;
                 }
-                htmlStr = htmlStr + `${tag[i]}, `;
+                htmlStr = htmlStr + `${tag[j]}, `;
             }
             htmlStr = htmlStr.substring(0, htmlStr.length-2) + `<br><strong>Comments:</strong><br>`
             
@@ -811,10 +813,10 @@ function userfeed(){
             maxCom = jsonObj.comments.length;
             console.log(`maxCom: ${maxCom}`);
             if (maxCom > 2){maxCom = 2;}
-            for(var i = 0; i < maxCom; i++) {
+            for(var j = 0; j < maxCom; j++) {
                 var comments = jsonObj.comments;
                 
-                htmlStr = htmlStr + `${comments[i]}<br>`;
+                htmlStr = htmlStr + `${comments[j]}<br>`;
             }
             htmlStr = htmlStr + `<span>...</span><br>`;
             index+=1;
@@ -823,4 +825,3 @@ function userfeed(){
         content.innerHTML = htmlStr;
     });
 }
-
