@@ -96,7 +96,6 @@ app.post('/user/login', (req, res) => {
     let u = req.body.username;
     let p1 = userData.find({username: u}).exec();
     p1.then( (results) => {
-        console.log(results);
         for(let i = 0; i < results.length; i++) {
     
           let existingSalt = results[i].salt;
@@ -139,7 +138,6 @@ var upload = multer({ storage: storage });
 // app.use('/create/post', express.static('uploads'));
 
 app.post('/create/post', upload.array('img'), (req, res) => {
-  console.log("Entered Create Post");
   let data = req.body;
   let imgs = req.files;
   let paths = [];
@@ -149,8 +147,6 @@ app.post('/create/post', upload.array('img'), (req, res) => {
     currPath = currPath.replace("public_html\\app", ".");
     paths.push(currPath);
   }
-  console.log(data);
-  console.log(imgs);
   let newPost = new postData({
     username: data.username,
     image: paths,
@@ -161,7 +157,6 @@ app.post('/create/post', upload.array('img'), (req, res) => {
     tags: data.tagged,
   })
   newPost.save().then( (doc) => {
-    console.log(doc);
     res.end("post created");
   }).catch( (err) => { 
     console.log(err);
@@ -199,7 +194,6 @@ app.post('/dm', (req,res) => {
   let p1 = dmData.find({chatName: {$regex: names}}).exec();
   p1.then((response) => {
     if(response.length > 0) {
-      console.log(response[0].chats);
       let resObj = {chats: response[0].chats};
       res.end(JSON.stringify(resObj));
     } else {
@@ -298,7 +292,6 @@ app.post("/updateProfPic", upload.single('img'), (req, res) => {
 
 app.post(`/search/friend/posts`, (req, res) => {
   let friendlist = req.body.friends;
-  console.log(friendlist);
   let fullArr = [];
   
   Promise.all(
@@ -310,7 +303,6 @@ app.post(`/search/friend/posts`, (req, res) => {
       // results is an array of items from each query
       fullArr = fullArr.concat(...results);
       // shuffle(fullArr);
-      console.log(fullArr);
       res.end(JSON.stringify(fullArr));
     })
     .catch((error) => {
@@ -323,16 +315,13 @@ app.post('/add/comment', (req,res) => {
   sender = req.body.persons;
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
-    console.log(results);
     let post = results[0];
-    console.log(post);
     let allComments = post.comments;
 
     allComments.push(`<strong>${sender}: </strong>${req.body.newCom}<br>`);
     post.save();
       const formattedJSON = JSON.stringify(results[0], null, 2);
       res.setHeader('Content-Type', 'application/json');
-      console.log(formattedJSON);
       res.end(formattedJSON);
   })
 });
@@ -366,7 +355,6 @@ app.get(`/find/your/user`, (req, res) => {
   let query1 = userData.find({username:name}).exec();
   query1.then((person) => {
     let curUser = person[0];
-    console.log(curUser)
     res.end(JSON.stringify(curUser));
   })
 });
@@ -437,24 +425,17 @@ app.get('/get/posts', (req,res) => {
 });
 
 app.post('/search/post', (req,res) => {
-  console.log(`caption: ${req.body.caption}`);
-  console.log(`image: ${req.body.image}`);
-  console.log(`username: ${req.body.username}`);
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     let post = results[0];
       const formattedJSON = JSON.stringify(results, null, 2);
       res.setHeader('Content-Type', 'application/json');
-      console.log(formattedJSON);
       res.end(formattedJSON);
   })
 });
 
 app.post('/add/like', (req,res) => {
   myUser = req.cookies.login.username;
-  console.log(`caption: |${req.body.caption}|`);
-  console.log(`image: |${req.body.image}|`);
-  console.log(`username: |${req.body.username}|`);
   
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
@@ -466,7 +447,6 @@ app.post('/add/like', (req,res) => {
       post.likes.push(myUser);
     }
     post.save()
-    console.log(post);
       const formattedJSON = JSON.stringify(results, null, 2);
       res.setHeader('Content-Type', 'application/json');
       res.end(formattedJSON);
