@@ -296,7 +296,7 @@ app.post(`/search/friend/posts`, (req, res) => {
     });
 });
 
-app.post('/add/comment/', (req,res) => {
+app.post('/add/comment', (req,res) => {
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     let post = results[0];
@@ -456,5 +456,15 @@ app.get('/search/own/user', (req, res) => {
   })
 
 })
+
+app.get('/search/user/posts/:name', (req, res) => {
+  let viewUser = req.params.name;
+  let posts = postData.find({username: viewUser}).exec();
+  posts.then((postsItems) => {
+      const formattedJSON = JSON.stringify(postsItems, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
+  });
+});
 
 app.listen(port, () => { console.log('server has started: http://127.0.0.1:3000/'); });
