@@ -17,7 +17,6 @@ function previewImg() {
     if (files) {
         for (i = 0; i < files.length; i++) {
             let file = files[i];
-            console.log(file.name);
             j += 1;
             selectedImgs.push(file);
             let current = document.getElementById("previewPhotos");
@@ -32,9 +31,7 @@ function previewImg() {
 
 
 function removeImg(img) {
-    console.log(selectedImgs);
     selectedImgs.splice(selectedImgs.indexOf(img), 1);
-    console.log(selectedImgs);
     document.getElementById(img).remove();
 }
 
@@ -62,15 +59,12 @@ function tagSearchUser() {
             let skip = false;
             if (usersObj[i]) {
                 for (let j = 0; j < taggedUsers.length; j++) {
-                    console.log(taggedUsers);
-                    console.log(taggedUsers[j]);
                     if (usersObj[i].username == taggedUsers[j]) {
                         numSearch += 1;
                         skip = true;
                         break;
                     }
                 }
-                console.log(skip);
                 if (skip == false) {
                     htmlStr +=
                         '<div class="userBox toAdd" id="' + usersObj[i].username + 'ToTag" on onclick="addUserTag(\'' + usersObj[i].username + '\')">' +
@@ -90,14 +84,12 @@ function tagSearchUser() {
 function addUserTag(username) {
     taggedUsers.push(username);
     let oldHTML = document.getElementById(username + "ToTag").innerHTML;
-    console.log(oldHTML);
     document.getElementById(username + "ToTag").remove();
     let htmlStr =
         '<div class="userBox toRemove" id="' + username + 'Tagged" onclick="removeUserTag(\'' + username + '\')">' +
             oldHTML +
         '</div>'; 
     document.getElementById('taggedUsers').innerHTML += htmlStr;
-    console.log(document.getElementById('taggedUsers'));
     if (document.getElementById('createTagStart')) {
         document.getElementById('createTagStart').remove();
     }
@@ -134,17 +126,12 @@ function createPost(e) {
 
     formData.append('username', decoded.username);
     let files = document.getElementById("uploadImgs");
-    console.log(files.files);
     for (let i = 0; i < files.files.length; i++) {
-        console.log(files.files[i]);
         formData.append('img', files.files[i]);
     }
     formData.append('caption', document.getElementById("createCaption").value);
     for (let i = 0; i < taggedUsers.length; i++) {
         formData.append('tagged', taggedUsers[i]);
-    }
-    for (var key of formData.entries()) {
-        console.log(key[0] + ', ' + key[1]);
     }
     fetch("/create/post", {
         method:'POST',
@@ -177,10 +164,8 @@ function likeSpecific(){
         }).then((res) => {
             return res.text();
         }).then((result) => {
-            console.log(result);
             return JSON.parse(result);
         }).then((retObj) => {
-            console.log(likeCom);
             likeCom.innerText = `${retObj[0].likes.length} Likes and ${retObj[0].comments.length} Comments`
 
         });
@@ -192,7 +177,6 @@ function likePost(index){
     idxArr = picture.alt.split(" ");
     idx = idxArr.pop();
     pic = idxArr.join(" ");
-    console.log(pic);
     let postbody = {
         username: document.getElementById(`homeName${index}`).innerText,
         caption: document.getElementById(`homeCaption${index}`).innerText,
@@ -205,10 +189,8 @@ function likePost(index){
         }).then((res) => {
             return res.text();
         }).then((result) => {
-            console.log(result);
             return JSON.parse(result);
         }).then((retObj) => {
-            console.log(likeCom);
             likeCom.innerText = `${retObj[0].likes.length} Likes and ${retObj[0].comments.length} Comments`
 
         });
@@ -221,16 +203,13 @@ function homefeed(){
     fetch('/find/your/user').then((res) => {
     return res.text();
     }).then((res) => {
-        console.log(res);
         return JSON.parse(res);
     }).then((retObj) => {
-        console.log(retObj);
         username = retObj.username;
         proPic = retObj.profilePic;
         friendList = retObj.friends;
         
         homefeedbody = {friends: friendList};
-        console.log(`this is proPic: ${proPic}`);
         fetch(`/search/friend/posts`, {
         method:'POST',
         body: JSON.stringify(homefeedbody),
@@ -243,7 +222,6 @@ function homefeed(){
             let htmlStr = '';
             htmlStr = htmlStr + `<span><img id="homeProfilePic" src="${proPic}" alt="profilePic">`;
             htmlStr = htmlStr + `<p id="homeUsername">${username}</p>`
-            console.log(retObj);
             let index = 0;
             for(jsonObj of retObj) {
                 htmlStr = htmlStr + `<center><span><p id="homeName${index}" class="clickOnUsername" onclick="openNewUserPage(${index},'homeName')">${jsonObj.username}</p></span>
@@ -257,7 +235,6 @@ function homefeed(){
                 
                 htmlStr = htmlStr + `<strong>Tagged: </strong>`;
                 maxtag = jsonObj.tags.length;
-                console.log(`maxtag: ${maxtag}`);
                 if (maxtag > 5){maxtag = 5;}
                 for(var i = 0; i < maxtag; i++) {
                     var tag = jsonObj.tags;
@@ -267,11 +244,9 @@ function homefeed(){
                     htmlStr = htmlStr + `${tag[i]}, `;
                 }
                 htmlStr = htmlStr.substring(0, htmlStr.length-2) + `<br><strong>Comments:</strong><br>`
-            
-                console.log(jsonObj);                
+                       
                 // Iterate to ony have like 2 show
                 maxCom = jsonObj.comments.length;
-                console.log(`maxCom: ${maxCom}`);
                 if (maxCom > 2){maxCom = 2;}
                 for(var i = 0; i < maxCom; i++) {
                     var comments = jsonObj.comments;
@@ -281,7 +256,6 @@ function homefeed(){
                 htmlStr = htmlStr + `<span>...</span><br><br>`;
             index += 1;
             }
-            console.log(htmlStr)
             let content = document.getElementById('homeContent')
             content.innerHTML = htmlStr;
         });
@@ -306,14 +280,10 @@ function homeSwapPic(dir,index){
         body: JSON.stringify(comBody),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
-        console.log(res);
         return res.text();
     }).then((results) => {
-        console.log(results);
         return JSON.parse(results);
     }).then ((retObj) => {
-        console.log(retObj);
-        console.log(idx);
         if (dir == 1){
             idx = idx - 1;
         } else { idx++;}
@@ -364,7 +334,6 @@ function searchFriends() {
 }
 
 function startMessage(userToMessage) {
-    console.log(userToMessage);
     let otherName = { name: userToMessage };
     fetch('/dm', {
         method:'POST',
@@ -381,25 +350,20 @@ function getPosts() {
     fetch('/find/your/user').then((res) => {
     return res.text();
     }).then((res) => {
-        console.log(res);
         return JSON.parse(res);
     }).then((retObj) => {
-        console.log(retObj);
         username = retObj.username;
         proPic = retObj.profilePic;
         
         
         fetch(`/get/posts`).then((res) => {
-            console.log(res);
             return res.text();
         }).then((res) => {
-            console.log(res);
             return JSON.parse(res);
         }).then((retObj) => {
             let htmlStr = '';
             htmlStr = htmlStr + `<span><img id="homeProfilePic" src="${proPic}" alt="profilePic">`;
             htmlStr = htmlStr + `<p id="homeUsername">${username}</p>`
-            console.log(retObj);
             let index = 0;
             for(jsonObj of retObj) {
                 htmlStr = htmlStr + `<center><span><p id="homeName${index}" class="clickOnUsername" onclick="openNewUserPage(${index},'globalName')">${jsonObj.username}</p></span>
@@ -413,7 +377,6 @@ function getPosts() {
                 
                 htmlStr = htmlStr + `<strong>Tagged: </strong>`;
                 maxtag = jsonObj.tags.length;
-                console.log(`maxtag: ${maxtag}`);
                 if (maxtag > 5){maxtag = 5;}
                 for(var i = 0; i < maxtag; i++) {
                     var tag = jsonObj.tags;
@@ -423,11 +386,9 @@ function getPosts() {
                     htmlStr = htmlStr + `${tag[i]}, `;
                 }
                 htmlStr = htmlStr.substring(0, htmlStr.length-2) + `<br><strong>Comments:</strong><br>`
-            
-                console.log(jsonObj);                
+                       
                 // Iterate to ony have like 2 show
                 maxCom = jsonObj.comments.length;
-                console.log(`maxCom: ${maxCom}`);
                 if (maxCom > 2){maxCom = 2;}
                 for(var i = 0; i < maxCom; i++) {
                     var comments = jsonObj.comments;
@@ -437,7 +398,6 @@ function getPosts() {
                 htmlStr = htmlStr + `<span>...</span><br><br>`;
             index += 1;
             }
-            console.log(htmlStr)
             let content = document.getElementById('globalContent')
             content.innerHTML = htmlStr;
         });
@@ -452,7 +412,6 @@ function openMessage(elementNum) {
 }
 
 function provideDMs() {
-    console.log('about to fetch');
     fetch('/user/dms').then((res) => {
         return res.text();
     }).then((jsonStr) => {
@@ -513,7 +472,6 @@ function addComment(){
     fetch('/find/your/user').then((res) => {
         return res.text();
         }).then((res) => {
-            console.log(res);
             return JSON.parse(res);
         }).then((retObj) => {
             personName = retObj.username;
@@ -540,23 +498,17 @@ function addComment(){
         body: JSON.stringify(comBody),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
-        console.log(res);
         return res.text();
     }).then((results) => {
-        console.log(results);
         return JSON.parse(results);
     }).then((retObj) => {
         let coms = retObj.comments
-        console.log(coms);
 
         for (com of coms){
-            console.log(com);
             htmlStr = htmlStr + `${com}`;
         }
-        console.log(htmlStr);
         allCom.innerHTML = htmlStr;
         likeCom.innerText = `${retObj.likes.length} Likes and ${retObj.comments.length} Comments`;
-        console.log(allCom);
     });
 });
 
@@ -565,7 +517,6 @@ function addComment(){
 
 
 function redirectSpecific(index){
-    console.log("redirecting to specific");
     ausername = document.getElementById(`homeName${index}`).innerText;
     acaption = document.getElementById(`homeCaption${index}`).innerText;
     apic = document.getElementById(`postPic${index}`);
@@ -590,14 +541,10 @@ function specificPost() {
     }).then((res) => {
         return res.text();
     }).then((res) => {
-        console.log(res);
         return JSON.parse(res);
     }).then((retObj) => {
-        console.log(retObj);
-        console.log(retObj[0].profilePic);
         proPic = retObj[0].profilePic;
     
-        console.log(`this is proPic: ${proPic}`);
         var specificPostBody = {caption: acaption, image: apic, username: ausername};
         fetch(`/search/post`, {
         method:'POST',
@@ -610,7 +557,6 @@ function specificPost() {
         }).then((retObj) => {
             let htmlStr = '';
             for(jsonObj of retObj) {
-                console.log(jsonObj);
 
                 // WILL NEED TO ADD USER INFO TO POST DATA
                 // ALSO WILL PROB NEED LOOP TO SEE ALL COMMENTS.
@@ -627,7 +573,6 @@ function specificPost() {
                 }
                 htmlStr.substring(0,htmlStr.length-2);
                 htmlStr = htmlStr + `<br>`;
-                console.log(jsonObj);
                 htmlStr = htmlStr + `<p><strong>COMMENTS:</strong></p><div id="allComments">`
                 for(comment of jsonObj.comments) {
                     htmlStr = htmlStr + `${comment}`;
@@ -637,9 +582,7 @@ function specificPost() {
                 htmlStr = htmlStr + `<input type="text" placeholder="Type your comment here!" id="specificYourComment">
                 <input type="button" value="Add Comment" id="specificCommentButt" onclick="addComment();"></center>`;
                 htmlStr = htmlStr + `<br>`;
-                console.log(jsonObj);
             }
-            console.log(htmlStr)
             let content = document.getElementById('userContent')
             content.innerHTML = htmlStr;
         });
@@ -664,14 +607,10 @@ function swapPic(dir){
         body: JSON.stringify(comBody),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
-        console.log(res);
         return res.text();
     }).then((results) => {
-        console.log(results);
         return JSON.parse(results);
     }).then ((retObj) => {
-        console.log(retObj);
-        console.log(idx);
         if (dir == 1){
             idx = idx - 1;
         } else { idx++;}
@@ -770,7 +709,6 @@ function reload() {
 
 function viewChangeProfPic() {
     document.getElementById("newProfFormButton").remove();
-    console.log("viewChange");
     let picBox = document.getElementById("profPicBox");
     picBox.innerHTML += 
     '<form id="newProfPicForm">' +
@@ -804,9 +742,6 @@ if (newProfPicForm != null) {
 
 function updateProfilePic(e) {
     e.preventDefault();
-    for (var key of profFormData.entries()) {
-        console.log(key[0] + ', ' + key[1]);
-    }
     fetch("/updateProfPic", {
         method: "POST",
         body: profFormData,
@@ -814,7 +749,6 @@ function updateProfilePic(e) {
         reload()
         return res.text();
     }).catch((err) => {
-        console.log(err);
     })
 }
 
@@ -824,7 +758,6 @@ function fillUserPage() {
     }).then((jsonStr) => {
         let jsonObj = JSON.parse(jsonStr);
         let userProfilePic = document.getElementById("userProfilePic");
-        console.log(jsonObj.profilePic);
         userProfilePic.src = jsonObj.profilePic;
         let nameSpot = document.getElementById('userUsernameSpot')
         nameSpot.innerText = jsonObj.username;
@@ -864,14 +797,11 @@ function userfeed(){
     fetch('/search/own/user/').then((res) => {
     return res.text();
     }).then((res) => {
-        //console.log(res);
         return JSON.parse(res);
     }).then((retObj) => {
-        console.log(retObj);
         let htmlStr = '';
         let index = 0;
         for(jsonObj of retObj) {
-            console.log(jsonObj)
             htmlStr = htmlStr + `<center> <span id="homeName${index}">${jsonObj.username}</span>
             <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
             <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
@@ -883,7 +813,6 @@ function userfeed(){
             
             htmlStr = htmlStr + `<strong>Tagged: </strong>`;
             maxtag = jsonObj.tags.length;
-            console.log(`maxtag: ${maxtag}`);
             if (maxtag > 5){maxtag = 5;}
             for(var j = 0; j < maxtag; j++) {
                 var tag = jsonObj.tags;
@@ -893,12 +822,9 @@ function userfeed(){
                 htmlStr = htmlStr + `${tag[j]}, `;
             }
             htmlStr = htmlStr.substring(0, htmlStr.length-2) + `<br><strong>Comments:</strong><br>`
-            
-            console.log('line 778');
-            console.log(jsonObj);                
+                      
             // Iterate to ony have like 2 show
             maxCom = jsonObj.comments.length;
-            console.log(`maxCom: ${maxCom}`);
             if (maxCom > 2){maxCom = 2;}
             for(var j = 0; j < maxCom; j++) {
                 var comments = jsonObj.comments;
@@ -915,18 +841,14 @@ function userfeed(){
 
 function viewUserFeed(viewName) {
     let strName = '' + viewName;
-    console.log(viewName);
     fetch(`/search/user/posts/${strName}`).then((res) => {
         return res.text();
         }).then((res) => {
-            //console.log(res);
             return JSON.parse(res);
         }).then((retObj) => {
-            console.log(retObj);
             let htmlStr = '';
             let index = 0;
             for(jsonObj of retObj) {
-                console.log(jsonObj)
                 htmlStr = htmlStr + `<center> <span id="homeName${index}">${jsonObj.username}</span>
                 <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
                 <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
@@ -938,7 +860,6 @@ function viewUserFeed(viewName) {
                 
                 htmlStr = htmlStr + `<strong>Tagged: </strong>`;
                 maxtag = jsonObj.tags.length;
-                console.log(`maxtag: ${maxtag}`);
                 if (maxtag > 5){maxtag = 5;}
                 for(var j = 0; j < maxtag; j++) {
                     var tag = jsonObj.tags;
@@ -948,11 +869,9 @@ function viewUserFeed(viewName) {
                     htmlStr = htmlStr + `${tag[j]}, `;
                 }
                 htmlStr = htmlStr.substring(0, htmlStr.length-2) + `<br><strong>Comments:</strong><br>`
-                
-                console.log(jsonObj);                
+                          
                 // Iterate to ony have like 2 show
                 maxCom = jsonObj.comments.length;
-                console.log(`maxCom: ${maxCom}`);
                 if (maxCom > 2){maxCom = 2;}
                 for(var j = 0; j < maxCom; j++) {
                     var comments = jsonObj.comments;
