@@ -1,6 +1,7 @@
 /**
  * Names: Billy Dolny, Ben Curtis, Bronson Housmans
- * Description:
+ * Description: Code for the final project that adds functionality to the client
+ * side. Sends requests and receives information from the server.
  */
 
 /**
@@ -12,6 +13,9 @@ var selectedImgs = [];
 var j = 0;
 
 function previewImg() {
+    /**
+     * Allows the user to preview the image that is being uploaded.
+     */
     let uploadImg = document.getElementById('uploadImgs');
     var files = uploadImg.files;
     if (files) {
@@ -304,6 +308,11 @@ function homeSwapPic(dir,index){
  * Javascript for _
  */
 function searchFriends() {
+    /**
+     * @params: None
+     * This function is for the user to search in the input box on the User page
+     * to look up people to add as friends
+     */
     let typedName = '' + document.getElementById('dmHomeSearch').value;
     if(typedName.length > 0) {
         let searchName = { name: document.getElementById('dmHomeSearch').value };
@@ -314,6 +323,7 @@ function searchFriends() {
         }).then((res) => {
             return res.text();
         }).then((text) => {
+            // parses the object containing the names and then loops through them to print
             let usersObj = JSON.parse(text);
             let currKeys = Object.keys(usersObj);
             let htmlStr = '';
@@ -334,6 +344,11 @@ function searchFriends() {
 }
 
 function startMessage(userToMessage) {
+    /**
+     * @params: userToMessage- String for the name of the user to start a dm with
+     * Will send a request to the server and reveive a response. Then reloads
+     * the dmHome page
+     */
     let otherName = { name: userToMessage };
     fetch('/dm', {
         method:'POST',
@@ -345,6 +360,13 @@ function startMessage(userToMessage) {
 }
 
 function getPosts() {
+    /**
+     * @params: None
+     * Sends a request to the server to get the posts that have been made by
+     * all users on the application. Then creates HTML string to display the
+     * information on the global page. Capabilities to view the specific post,
+     * like, and click the underlined username to go to their page are included.
+     */
     let username = null;
     let proPic = null;
     fetch('/find/your/user').then((res) => {
@@ -365,6 +387,7 @@ function getPosts() {
             htmlStr = htmlStr + `<span><img id="homeProfilePic" src="${proPic}" alt="profilePic">`;
             htmlStr = htmlStr + `<p id="homeUsername">${username}</p>`
             let index = 0;
+            //for each post object it will display the post with the picture, likes, and comments
             for(jsonObj of retObj) {
                 htmlStr = htmlStr + `<center><span><p id="homeName${index}" class="clickOnUsername" onclick="openNewUserPage(${index},'homeName')">${jsonObj.username}</p></span>
                 <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
@@ -405,12 +428,23 @@ function getPosts() {
 }
 
 function openMessage(elementNum) {
+    /**
+     * @params: elementNum- Integer that represents the item number on the page
+     * that the user clicks on
+     * Gets the username from the document and encodes the url on dmSpecific
+     */
     let encodeStr = document.getElementById(`dmHomeOpenButton${elementNum}`).value;
     let splitEncode = encodeStr.split(' ');
     let otherUser = splitEncode[3];
     window.location.href = '/app/dmSpecific.html?' + encodeURIComponent(otherUser);
 }
 
+/**
+ * @params: None
+ * Sends a request to the server and gets an object back with all of the 
+ * users that have been messaged by the current user. Adds names and a open
+ * message button to a html string. 
+ */
 function provideDMs() {
     fetch('/user/dms').then((res) => {
         return res.text();
@@ -432,6 +466,13 @@ function refreshDMs() {
     setInterval(loadDMPage, 2000);
 }
 
+/**
+ * @params: None
+ * Sends a request to the server and gets an object back with all of the 
+ * messages that have been sent. Then adds all names in bold with the
+ * associated message to an html string. The string is then set to the 
+ * innerHTML of the dmSpecific page
+ */
 function loadDMPage() {
     var specificFriend = document.getElementById('dmSpecificFriend');
     var urlParam = new URLSearchParams(window.location.search);
@@ -453,6 +494,12 @@ function loadDMPage() {
     })
 }
 
+
+/**
+ * @params: None
+ * Gets the message that the current user wants to send and makes request to
+ * server. On response, the page is reloaded to display the new message
+ */
 function sendDM() {
     var dmBody = {user1: document.getElementById('dmSpecificFriend').innerText,
                 message: document.getElementById('dmSpecificInputMessage').value};
@@ -626,6 +673,13 @@ function swapPic(dir){
     });
 }
 
+/**
+ * Searches the users in the server that have usernames that match partially
+ * what is typed in the input bar. It then displays the usernames with buttons
+ * to start a message with them.
+ * @param {id name of element containing username} searchFriend 
+ * @param {id name of element of where to fill in with the html string} searchResults 
+ */
 function searchPeople(searchFriend, searchResults) {
     let currName = document.getElementById(searchFriend).value;
     currName = '' + currName;
@@ -650,6 +704,11 @@ function searchPeople(searchFriend, searchResults) {
     }
 }
 
+/**
+ * Allows the user to add a friend on the User page after looking up their name.
+ * The button that says add friend becomes added! after the click
+ * @param {gives the number of the element that the user click on} elementNum 
+ */
 function addFriend(elementNum) {
     let friend2add = {friend: document.getElementById(`user${elementNum}`).innerText};
     fetch('/add/friend', {
@@ -662,6 +721,12 @@ function addFriend(elementNum) {
     })
 }
 
+/**
+ * Allows the user to click a button to see all of their friends added in a list.
+ * They can then click on the name that is underlined to open their specific user
+ * page.
+ * @param {id name for the page that the current user of the website is on} pageName 
+ */
 function seeFriends(pageName) {
     fetch('/view/friends').then((res) => {
         return res.text();
@@ -677,11 +742,22 @@ function seeFriends(pageName) {
     })
 }
 
+/**
+ * When the user clicks on a button the function gets the corresponding username
+ * and encoded it in the url of the viewUser page.
+ * @param {gives the number of the element that the user click on. Is based
+ * on the order of the names on the page} elementNum 
+ * @param {name of the id for the page that the user is on} idName 
+ */
 function openNewUserPage(elementNum, idName) {
     let nextPageUser = '' + document.getElementById(`${idName}${elementNum}`).innerHTML;
     window.location.href = '/app/viewUser.html?' + encodeURIComponent(nextPageUser);
 }
 
+/**
+ * Fills the content of the viewUser.html page with their username, profile
+ * pic, bio, and then calls a function to fill the page with posts
+ */
 function fillViewUserPage() {
     var urlParam = new URLSearchParams(window.location.search);
     urlParam = '' + urlParam;
@@ -703,6 +779,9 @@ function fillViewUserPage() {
 
 var profFormData = new FormData();
 
+/**
+ * Reloads the current page
+ */
 function reload() {
     location.reload();
 }
@@ -752,6 +831,10 @@ function updateProfilePic(e) {
     })
 }
 
+/**
+ * fills the user.html page with their username, profile pic, bio, and then
+ * calls a function to load their posts
+ */
 function fillUserPage() {
     fetch('/get/userInfo').then((res) => {
         return res.text();
@@ -767,6 +850,10 @@ function fillUserPage() {
     }) 
 }
 
+/**
+ * When a button is clicked, the function opens a textarea for the user to put
+ * in a new bio.
+ */
 function openChangeBio() {
     let bioSpot = document.getElementById('userBioSpot')
     bioSpot.innerHTML = '<textarea id="userBio"></textarea>'
@@ -792,7 +879,9 @@ function closeChangeBio() {
     })
 }
 
-// new work to display feed on user page
+/**
+ * Fills the user page with all of their posts
+ */
 function userfeed(){
     fetch('/search/own/user/').then((res) => {
     return res.text();
@@ -801,13 +890,14 @@ function userfeed(){
     }).then((retObj) => {
         let htmlStr = '';
         let index = 0;
+        //for each post object returned from server the picture, comments, likes, and buttons
+        //are added to a html string that is set to the innerHTML of the posts div
         for(jsonObj of retObj) {
             htmlStr = htmlStr + `<center> <span id="homeName${index}">${jsonObj.username}</span>
             <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
             <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
             <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
             <p id="homeCaption${index}">${jsonObj.caption}</p><p id="homeLikeCom${index}">${jsonObj.likes.length} Likes and ${jsonObj.comments.length} Comments</p>`
-            //Add buttons for likes and specific posts
             htmlStr = htmlStr + `<input type="button" value="Like" class="homeCommentButt" onclick="likePost(${index});">`
             htmlStr = htmlStr + `<input type="button" value="See Post" class="homeCommentButt" onclick="redirectSpecific(${index});"><br>`
             
