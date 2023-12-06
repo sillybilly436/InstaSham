@@ -226,7 +226,7 @@ function homefeed(){
     }).then((retObj) => {
         console.log(retObj);
         username = retObj.username;
-        proPic = retObj.profilePic[0];
+        proPic = retObj.profilePic;
         friendList = retObj.friends;
         
         homefeedbody = {friends: friendList};
@@ -241,7 +241,7 @@ function homefeed(){
             return JSON.parse(res);
         }).then((retObj) => {
             let htmlStr = '';
-            htmlStr = htmlStr + `<span><img id="homeProfilePic" src="./images/${proPic}" alt="profilePic">`;
+            htmlStr = htmlStr + `<span><img id="homeProfilePic" src="${proPic}" alt="profilePic">`;
             htmlStr = htmlStr + `<p id="homeUsername">${username}</p>`
             console.log(retObj);
             let index = 0;
@@ -380,7 +380,7 @@ function getPosts() {
     }).then((retObj) => {
         console.log(retObj);
         username = retObj.username;
-        proPic = retObj.profilePic[0];
+        proPic = retObj.profilePic;
         
         
         fetch(`/get/posts`).then((res) => {
@@ -391,7 +391,7 @@ function getPosts() {
             return JSON.parse(res);
         }).then((retObj) => {
             let htmlStr = '';
-            htmlStr = htmlStr + `<span><img id="homeProfilePic" src="./images/${proPic}" alt="profilePic">`;
+            htmlStr = htmlStr + `<span><img id="homeProfilePic" src="${proPic}" alt="profilePic">`;
             htmlStr = htmlStr + `<p id="homeUsername">${username}</p>`
             console.log(retObj);
             let index = 0;
@@ -575,8 +575,8 @@ function specificPost() {
         return JSON.parse(res);
     }).then((retObj) => {
         console.log(retObj);
-        console.log(retObj[0].profilePic[0]);
-        proPic = retObj[0].profilePic[0];
+        console.log(retObj[0].profilePic);
+        proPic = retObj[0].profilePic;
     
         console.log(`this is proPic: ${proPic}`);
         var specificPostBody = {caption: acaption, image: apic, username: ausername};
@@ -596,7 +596,7 @@ function specificPost() {
                 // WILL NEED TO ADD USER INFO TO POST DATA
                 // ALSO WILL PROB NEED LOOP TO SEE ALL COMMENTS.
                 //MAKE ANOTHER FUNCTION TO CREATE THE SPECIFIC POST
-                htmlStr = htmlStr + `<span><img id="specificProfilePic" src="./images/${proPic}" alt="profilePic">
+                htmlStr = htmlStr + `<span><img id="specificProfilePic" src="${proPic}" alt="profilePic">
                 <div id="specificUsername">${jsonObj.username}</div></span>
                 <center><div><input type="button" value="<--" id="specificLikeButt" onclick="swapPic(1);">
                 <img class="feedPics" id="specificPic" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
@@ -781,8 +781,8 @@ if (newProfPicForm != null) {
     newProfPicForm.addEventListener("submit", updateProfilePic);
 }
 
-function updateProfilePic() {
-    console.log('on the inside')
+function updateProfilePic(e) {
+    e.preventDefault();
     for (var key of profFormData.entries()) {
         console.log(key[0] + ', ' + key[1]);
     }
@@ -790,7 +790,7 @@ function updateProfilePic() {
         method: "POST",
         body: profFormData,
     }).then((res) => {
-        console.log(res.text());
+        reload()
         return res.text();
     }).catch((err) => {
         console.log(err);

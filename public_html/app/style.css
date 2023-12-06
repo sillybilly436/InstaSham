@@ -294,21 +294,27 @@ Stlye for the create post page
 }
 
 .homeProPic {
-    max-width: 5%;
+    margin: 2px;
     border-radius: 50%;
-  height: auto;
+    display: inline-block;
+    height: 20vh;
+    aspect-ratio: 1 / 1;
 }
 
 #specificProfilePic {
-    max-width: 50%;
+    margin: 2px;
     border-radius: 50%;
-    height: auto;
+    display: inline-block;
+    height: 20vh;
+    aspect-ratio: 1 / 1;
 }
 
 #homeProfilePic {
-    max-width: 10%;
+    margin: 2px;
     border-radius: 50%;
-    height: auto;
+    display: inline-block;
+    height: 20vh;
+    aspect-ratio: 1 / 1;
 }
 
 #dmHomeExistingMessages {
