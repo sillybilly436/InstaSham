@@ -781,7 +781,8 @@ if (newProfPicForm != null) {
     newProfPicForm.addEventListener("submit", updateProfilePic);
 }
 
-function updateProfilePic() {
+function updateProfilePic(e) {
+    e.preventDefault();
     for (var key of profFormData.entries()) {
         console.log(key[0] + ', ' + key[1]);
     }
@@ -789,6 +790,7 @@ function updateProfilePic() {
         method: "POST",
         body: profFormData,
     }).then((res) => {
+        reload()
         return res.text();
     }).catch((err) => {
         console.log(err);
