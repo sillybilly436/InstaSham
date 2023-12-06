@@ -12,8 +12,8 @@
                         <div id="addPhotoBox">
                             <div class="createPostTitles">Add Photos To Your Post</div>
                             <div id="previewPhotos">
-                                <label id="labels" class="createPostImgs">
-                                    <input type="file" accept="image/*" id="uploadImgs" class="invis" name="uploadedImgs" onchange="previewImg()" multiple required>
+                                <label id="labels" class="createPostImgs toAdd" >
+                                    <input type="file" accept="image/*" id="uploadImgs" class="invis" name="uploadedImgs" onchange="previewImg()" multiple>
                                     <img src="./images/addImg.png" alt="addImg" id="uploadImgImg">
                                 </label>
                             </div>
@@ -39,7 +39,7 @@
                             <input type="text" id="userTagSearch" oninput="tagSearchUser()">
                             <div id="userTagList">
                                 <!-- ~5 of these created for the first 5 recomended users to add to the tags -->
-                                <div class="userBox" onclick="addUserTag('username')">
+                                <div class="userBox" onmouseover="" onclick="addUserTag('username')">
                                     <img class="inTextPfp" src="./images/blankPic.png" alt="'username' pfp" for="'username'">
                                     <div class="username">'username'</div>
                                 </div>

@@ -22,7 +22,7 @@ function previewImg() {
             selectedImgs.push(file);
             let current = document.getElementById("previewPhotos");
             let oldHTML = current.innerHTML;
-            let newHTML = '<img onclick="removeImg(\'' + file.name + '\')" id="' + file.name + '" class="createPostImgs" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
+            let newHTML = '<img onclick="removeImg(\'' + file.name + '\')" id="' + file.name + '" class="createPostImgs toRemove" src="' + URL.createObjectURL(file) + '" alt="Your Image"></img>';
             current.innerHTML = newHTML + oldHTML;
         }
         // document.getElementById('uploadImgImg').remove();
@@ -73,7 +73,7 @@ function tagSearchUser() {
                 console.log(skip);
                 if (skip == false) {
                     htmlStr +=
-                        '<div class="userBox" id="' + usersObj[i].username + 'ToTag" onclick="addUserTag(\'' + usersObj[i].username + '\')">' +
+                        '<div class="userBox toAdd" id="' + usersObj[i].username + 'ToTag" on onclick="addUserTag(\'' + usersObj[i].username + '\')">' +
                             '<img class="inTextPfp" src="' + usersObj[i].profilePic + '" alt="' + usersObj[i].username + ' pfp" for="' + usersObj[i].username + '">' + 
                             '<div class="username">' + usersObj[i].username + '</div>' + 
                         '</div>';
@@ -93,7 +93,7 @@ function addUserTag(username) {
     console.log(oldHTML);
     document.getElementById(username + "ToTag").remove();
     let htmlStr =
-        '<div class="userBox" id="' + username + 'Tagged" onclick="removeUserTag(\'' + username + '\')">' +
+        '<div class="userBox toRemove" id="' + username + 'Tagged" onclick="removeUserTag(\'' + username + '\')">' +
             oldHTML +
         '</div>'; 
     document.getElementById('taggedUsers').innerHTML += htmlStr;
@@ -115,8 +115,11 @@ var uploadForm = document.getElementById("uploadForm");
 uploadForm.addEventListener("submit", createPost);
 
 function createPost(e) {
-    console.log("array");
-    console.log(selectedImgs);
+    e.preventDefault();
+    if (selectedImgs.length == 0) {
+        alert("Please Upload An Image");
+        return;
+    }
 
     var formData = new FormData();
     for (let i = 0; i < selectedImgs.length; i++) {
@@ -127,7 +130,6 @@ function createPost(e) {
     decoded = decoded.replace("login=j:", "");
     decoded = JSON.parse(decoded); 
 
-    e.preventDefault();
     formData.append('username', decoded.username);
     let files = document.getElementById("uploadImgs");
     console.log(files.files);

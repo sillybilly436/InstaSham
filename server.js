@@ -145,6 +145,7 @@ app.post('/create/post', upload.array('img'), (req, res) => {
   for (let i = 0; i < imgs.length; i++) {
     let currPath = imgs[i].path;
     currPath = currPath.replace("public_html/app", ".");
+    currPath = currPath.replace("public_html\\app", ".");
     paths.push(currPath);
   }
   console.log(data);
