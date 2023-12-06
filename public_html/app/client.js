@@ -241,7 +241,7 @@ function homefeed(){
             return JSON.parse(res);
         }).then((retObj) => {
             let htmlStr = '';
-            htmlStr = htmlStr + `<span><img id="homeProfilePic" src="./images/${proPic}" alt="profilePic">`;
+            htmlStr = htmlStr + `<span><img id="homeProfilePic" src="${proPic}" alt="profilePic">`;
             htmlStr = htmlStr + `<p id="homeUsername">${username}</p>`
             console.log(retObj);
             let index = 0;
@@ -391,7 +391,7 @@ function getPosts() {
             return JSON.parse(res);
         }).then((retObj) => {
             let htmlStr = '';
-            htmlStr = htmlStr + `<span><img id="homeProfilePic" src="./images/${proPic}" alt="profilePic">`;
+            htmlStr = htmlStr + `<span><img id="homeProfilePic" src="${proPic}" alt="profilePic">`;
             htmlStr = htmlStr + `<p id="homeUsername">${username}</p>`
             console.log(retObj);
             let index = 0;
@@ -596,7 +596,7 @@ function specificPost() {
                 // WILL NEED TO ADD USER INFO TO POST DATA
                 // ALSO WILL PROB NEED LOOP TO SEE ALL COMMENTS.
                 //MAKE ANOTHER FUNCTION TO CREATE THE SPECIFIC POST
-                htmlStr = htmlStr + `<span><img id="specificProfilePic" src="./images/${proPic}" alt="profilePic">
+                htmlStr = htmlStr + `<span><img id="specificProfilePic" src="${proPic}" alt="profilePic">
                 <div id="specificUsername">${jsonObj.username}</div></span>
                 <center><div><input type="button" value="<--" id="specificLikeButt" onclick="swapPic(1);">
                 <img class="feedPics" id="specificPic" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
