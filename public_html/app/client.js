@@ -287,7 +287,14 @@ function homefeed(){
         });
 });
 }
-
+/**
+ * This function is used to swap the pic on the home page 
+ * if they have multiple photos to view. if you click the right
+ * arrow it goes to the next picture. If you click the left arrow it 
+ * does the previous picture.
+ * @param {The direction (0 is the right/ 1 is the left)} dir 
+ * @param {*} index 
+ */
 function homeSwapPic(dir,index){
     
     picture = document.getElementById(`postPic${index}`);
@@ -374,7 +381,12 @@ function startMessage(userToMessage) {
         location.reload();
     });
 }
-
+/**
+ * This is the function that is used to create the 
+ * feed for the global page. It should find every single 
+ * post (even the users and the people who are not the users 
+ * friends). Puts all of the created html into the globalContent div.
+ */
 function getPosts() {
     let username = null;
     let proPic = null;
@@ -506,10 +518,15 @@ function sendDM() {
         return res.text();
     });
 }
-
+/**
+ * This function is used when the person clicks Post Comments
+ * It will then grab the comment written in the input field 
+ * and then save the comment into the PostData on the server.
+ */
 function addComment(){
     let personName = null;
     let htmlStr = "";
+    // Find personal user on computer.
     fetch('/find/your/user').then((res) => {
         return res.text();
         }).then((res) => {
@@ -534,7 +551,7 @@ function addComment(){
         image: pic,
         newCom: document.getElementById("specificYourComment").value,
     }
-    
+    //Send comment to server to be saved
     fetch(`/add/comment`, {
         method: 'POST',
         body: JSON.stringify(comBody),
@@ -553,6 +570,7 @@ function addComment(){
             console.log(com);
             htmlStr = htmlStr + `${com}`;
         }
+        // Sets up the new html so it shows the new comment immediately after posting.
         console.log(htmlStr);
         allCom.innerHTML = htmlStr;
         likeCom.innerText = `${retObj.likes.length} Likes and ${retObj.comments.length} Comments`;
@@ -563,7 +581,11 @@ function addComment(){
     
 }
 
-
+/**
+ * This is used when the user clicks on See Post where it sends 
+ * the user to the specificPost page.
+ * @param {The specific index of posts on the home/global} index 
+ */
 function redirectSpecific(index){
     console.log("redirecting to specific");
     ausername = document.getElementById(`homeName${index}`).innerText;
@@ -574,7 +596,12 @@ function redirectSpecific(index){
     apic = idxArr.join(" ");
     window.location.href = `/app/specificPost.html?username=${encodeURIComponent(ausername)}&caption=${encodeURIComponent(acaption)}&pic=${encodeURIComponent(apic)}&index=${encodeURIComponent(index)}`;
 }
-
+/**
+ * This is the function that fills in the entire content of the 
+ * specificPost page with the information the User was looking for.
+ * It should have the user who posted then the picture, caption, tags, and
+ * comments, with the view of likes and total comments.
+ */
 function specificPost() {
     const params = new URLSearchParams(window.location.search);
     const ausername = params.get('username');
@@ -583,7 +610,7 @@ function specificPost() {
     //Make comment be created with + instead of spaces 
     let proPic = null;
     var findUserBody = {name: ausername};
-    fetch('/search/users', {
+    fetch('/search/users', { // Find the user to get the profile pic.
     method:'POST',
     body: JSON.stringify(findUserBody),
     headers: {'Content-Type': 'application/json'}
@@ -612,9 +639,6 @@ function specificPost() {
             for(jsonObj of retObj) {
                 console.log(jsonObj);
 
-                // WILL NEED TO ADD USER INFO TO POST DATA
-                // ALSO WILL PROB NEED LOOP TO SEE ALL COMMENTS.
-                //MAKE ANOTHER FUNCTION TO CREATE THE SPECIFIC POST
                 htmlStr = htmlStr + `<span><img id="specificProfilePic" src="${proPic}" alt="profilePic">
                 <div id="specificUsername">${jsonObj.username}</div></span>
                 <center><div><input type="button" value="<--" id="specificLikeButt" onclick="swapPic(1);">
@@ -645,14 +669,18 @@ function specificPost() {
         });
 });
 }
-
+/** ONLY USED IN SPECIFIC POST
+ * This function is used when the User clicks on the arrow keys 
+ * to look at the other images that were posted. If they click the 
+ * left arrow it goes to the index -1 and if they click the right they
+ * send it to index + 1 and also prevents index errors.
+ * @param {The directions (0 is positive/ 1 is negative)} dir 
+ */
 function swapPic(dir){
-    
     picture = document.getElementById("specificPic");
     idxArr = picture.alt.split(" ");
     idx = idxArr.pop();
     pic = idxArr.join(" ");
-
     let comBody = {
         username: document.getElementById('specificUsername').innerText,
         caption: document.getElementById('specificCaption').innerText,
@@ -683,7 +711,6 @@ function swapPic(dir){
         picLoc = retObj[0].image[idx];
         picture.src = picLoc;
         picture.alt = picLoc + " "+idx;
-
     });
 }
 
