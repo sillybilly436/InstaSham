@@ -320,6 +320,7 @@ app.post(`/search/friend/posts`, (req, res) => {
 });
 
 app.post('/add/comment', (req,res) => {
+  sender = req.body.persons;
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
     console.log(results);
@@ -327,7 +328,7 @@ app.post('/add/comment', (req,res) => {
     console.log(post);
     let allComments = post.comments;
 
-    allComments.push(req.body.newCom);
+    allComments.push(`<strong>${sender}:</strong>${req.body.newCom}<br>`);
     post.save();
       const formattedJSON = JSON.stringify(results[0], null, 2);
       res.setHeader('Content-Type', 'application/json');

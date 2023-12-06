@@ -276,7 +276,7 @@ function homefeed(){
                 for(var i = 0; i < maxCom; i++) {
                     var comments = jsonObj.comments;
                     
-                    htmlStr = htmlStr + `${comments[i]}<br>`;
+                    htmlStr = htmlStr + `${comments[i]}`;
                 }
                 htmlStr = htmlStr + `<span>...</span><br><br>`;
             index += 1;
@@ -432,7 +432,7 @@ function getPosts() {
                 for(var i = 0; i < maxCom; i++) {
                     var comments = jsonObj.comments;
                     
-                    htmlStr = htmlStr + `${comments[i]}<br>`;
+                    htmlStr = htmlStr + `${comments[i]}`;
                 }
                 htmlStr = htmlStr + `<span>...</span><br><br>`;
             index += 1;
@@ -508,6 +508,17 @@ function sendDM() {
 }
 
 function addComment(){
+    let personName = null;
+    let htmlStr = null;
+    fetch('/find/your/user').then((res) => {
+        return res.text();
+        }).then((res) => {
+            console.log(res);
+            return JSON.parse(res);
+        }).then((retObj) => {
+            personName = retObj.username;
+
+    
     let allCom = document.getElementById("allComments");
     let likeCom = document.getElementById("likeCom");
     let picture = document.getElementById("specificPic");
@@ -517,6 +528,7 @@ function addComment(){
 
 
     let comBody = {
+        persons: personName,
         username: document.getElementById('specificUsername').innerText,
         caption: document.getElementById('specificCaption').innerText,
         image: pic,
@@ -536,16 +548,17 @@ function addComment(){
     }).then((retObj) => {
         let coms = retObj.comments
         console.log(coms);
-        htmlStr = ``;
+
         for (com of coms){
             console.log(com);
-            htmlStr = htmlStr + `${com}<br>`;
+            htmlStr = htmlStr + `${com}`;
         }
         console.log(htmlStr);
         allCom.innerHTML = htmlStr;
         likeCom.innerText = `${retObj.likes.length} Likes and ${retObj.comments.length} Comments`;
         console.log(allCom);
     });
+});
 
     
 }
@@ -617,7 +630,7 @@ function specificPost() {
                 console.log(jsonObj);
                 htmlStr = htmlStr + `<p><strong>COMMENTS:</strong></p><div id="allComments">`
                 for(comment of jsonObj.comments) {
-                    htmlStr = htmlStr + `${comment}<br>`;
+                    htmlStr = htmlStr + `${comment}`;
                 }
                 htmlStr = htmlStr + `</div>`;
 
@@ -890,7 +903,7 @@ function userfeed(){
             for(var j = 0; j < maxCom; j++) {
                 var comments = jsonObj.comments;
                 
-                htmlStr = htmlStr + `${comments[j]}<br>`;
+                htmlStr = htmlStr + `${comments[j]}`;
             }
             htmlStr = htmlStr + `<span>...</span><br>`;
             index+=1;
@@ -944,7 +957,7 @@ function viewUserFeed(viewName) {
                 for(var j = 0; j < maxCom; j++) {
                     var comments = jsonObj.comments;
                     
-                    htmlStr = htmlStr + `${comments[j]}<br>`;
+                    htmlStr = htmlStr + `${comments[j]}`;
                 }
                 htmlStr = htmlStr + `<span>...</span><br>`;
                 index+=1;
