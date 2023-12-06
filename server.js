@@ -296,11 +296,14 @@ app.post(`/search/friend/posts`, (req, res) => {
     });
 });
 
-app.post('/add/comment/', (req,res) => {
+app.post('/add/comment', (req,res) => {
   let query = postData.find({caption:{$regex:req.body.caption}, image:req.body.image, username:{$regex:req.body.username}}).exec();
   query.then((results) => {
+    console.log(results);
     let post = results[0];
+    console.log(post);
     let allComments = post.comments;
+
     allComments.push(req.body.newCom);
     post.save();
       const formattedJSON = JSON.stringify(results[0], null, 2);

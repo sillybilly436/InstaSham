@@ -502,13 +502,16 @@ function sendDM() {
 function addComment(){
     let allCom = document.getElementById("allComments");
     let likeCom = document.getElementById("likeCom");
-    console.log(allCom);
-    let newComment = document.getElementById("specificYourComment").value;
-    newComment = newComment.replaceAll(" ", "+");
+    let picture = document.getElementById("specificPic");
+    idxArr = picture.alt.split(" ");
+    idx = idxArr.pop();
+    pic = idxArr.join(" ");
+
+
     let comBody = {
         username: document.getElementById('specificUsername').innerText,
         caption: document.getElementById('specificCaption').innerText,
-        image: document.getElementById("specificPic").src,
+        image: pic,
         newCom: document.getElementById("specificYourComment").value,
 
     }
