@@ -774,15 +774,15 @@ function closeChangeBio() {
 
 // new work to display feed on user page
 function userfeed(){
-    fetch('/search/own/user').then((res) => {
+    fetch('/search/own/user/').then((res) => {
     return res.text();
-    }).then((res) => {
-        console.log(res);
-        return JSON.parse(res);
+    }).then((result) => {
+        console.log(result);
+        return JSON.parse(result);
     }).then((retObj) => {
         let htmlStr = '';
         let index = 0;
-        for(jsonObj in retObj) {
+        for(jsonObj of retObj) {
             htmlStr = htmlStr + `<center> <span id="homeName${index}">${jsonObj.username}</span>
             <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
             <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
@@ -819,75 +819,8 @@ function userfeed(){
             htmlStr = htmlStr + `<span>...</span><br>`;
             index+=1;
         }
-        let content = document.getElementById('userPostSpot')
+        let content = document.getElementById('userPostsSpot')
         content.innerHTML = htmlStr;
     });
 }
 
-function likePost(index){
-    let likeCom = document.getElementById(`homeLikeCom${index}`);
-    picture = document.getElementById(`postPic${index}`);
-    idxArr = picture.alt.split(" ");
-    idx = idxArr.pop();
-    pic = idxArr.join(" ");
-    let postbody = {
-        username: document.getElementById(`homeName${index}`).innerText,
-        caption: document.getElementById(`homeCaption${index}`).innerText,
-        image: pic,
-        };
-    fetch(`/add/like`, {
-            method: 'POST',
-            body: JSON.stringify(postbody),
-            headers: { 'Content-Type': 'application/json'}
-        }).then((res) => {
-            return res.text();
-        }).then((result) => {
-            console.log(result);
-            return JSON.parse(result);
-        }).then((retObj) => {
-            console.log(likeCom);
-            likeCom.innerText = `${retObj[0].likes.length} Likes and ${retObj[0].comments.length} Comments`
-
-        });
-}
-
-function homeSwapPic(dir,index){
-    
-    picture = document.getElementById(`postPic${index}`);
-    idxArr = picture.alt.split(" ");
-    idx = idxArr.pop();
-    pic = idxArr.join(" ");
-
-    let comBody = {
-        username: document.getElementById(`homeName${index}`).innerText,
-        caption: document.getElementById(`homeCaption${index}`).innerText,
-        image: pic,
-    }
-
-    fetch(`/search/post`, {
-        method: 'POST',
-        body: JSON.stringify(comBody),
-        headers: {'Content-Type': 'application/json'}
-    }).then((res) => {
-        console.log(res);
-        return res.text();
-    }).then((results) => {
-        console.log(results);
-        return JSON.parse(results);
-    }).then ((retObj) => {
-        console.log(retObj);
-        console.log(idx);
-        if (dir == 1){
-            idx = idx - 1;
-        } else { idx++;}
-        if (idx < 0){
-            idx = retObj[0].image.length-1;
-        }else if (idx == retObj[0].image.length){
-            idx = 0;
-        }
-        picLoc = retObj[0].image[idx];
-        picture.src = picLoc;
-        picture.alt = picLoc + " "+idx;
-
-    });
-}
