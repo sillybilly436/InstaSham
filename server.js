@@ -483,4 +483,14 @@ app.get('/search/own/user', (req, res) => {
 
 })
 
+app.get('/search/user/posts/:name', (req, res) => {
+  let viewUser = req.params.name;
+  let posts = postData.find({username: viewUser}).exec();
+  posts.then((postsItems) => {
+      const formattedJSON = JSON.stringify(postsItems, null, 2);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(formattedJSON);
+  });
+});
+
 app.listen(port, () => { console.log('server has started: http://127.0.0.1:3000/'); });

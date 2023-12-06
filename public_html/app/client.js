@@ -246,7 +246,7 @@ function homefeed(){
             console.log(retObj);
             let index = 0;
             for(jsonObj of retObj) {
-                htmlStr = htmlStr + `<center><span id="homeName${index}">${jsonObj.username}</span>
+                htmlStr = htmlStr + `<center><span><p id="homeName${index}" class="clickOnUsername" onclick="openNewUserPage(${index},'homeName')">${jsonObj.username}</p></span>
                 <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
                 <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
                 <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
@@ -712,15 +712,15 @@ function seeFriends(pageName) {
         let friendsList = jsonObj.people;
         let htmlStr = '<strong>Friends (click on name to view their page):</string><br><br>';
         for(let i = 0; i < friendsList.length; i++) {
-            htmlStr = htmlStr + `<p id="friend${i}" onclick="openNewUserPage(${i})">` + friendsList[i] + `</p><br><br>`
+            htmlStr = htmlStr + `<p id="friend${i}" onclick="openNewUserPage(${i}, 'friend')">` + friendsList[i] + `</p><br><br>`
         }
         let display = document.getElementById(pageName);
         display.innerHTML = htmlStr;
     })
 }
 
-function openNewUserPage(elementNum) {
-    let nextPageUser = '' + document.getElementById(`friend${elementNum}`).innerHTML;
+function openNewUserPage(elementNum, idName) {
+    let nextPageUser = '' + document.getElementById(`${idName}${elementNum}`).innerHTML;
     window.location.href = '/app/viewUser.html?' + encodeURIComponent(nextPageUser);
 }
 
@@ -736,6 +736,8 @@ function fillViewUserPage() {
         nameSpot.innerText = jsonObj.username;
         let bioSpot = document.getElementById('viewUserBioSpot');
         bioSpot.innerText = jsonObj.bio;
+        let uName = '' + jsonObj.username;
+        viewUserFeed(uName);
     })
 }
 
@@ -886,4 +888,58 @@ function userfeed(){
         let content = document.getElementById('userPostsSpot')
         content.innerHTML = htmlStr;
     });
+}
+
+function viewUserFeed(viewName) {
+    let strName = '' + viewName;
+    console.log(viewName);
+    fetch(`/search/user/posts/${strName}`).then((res) => {
+        return res.text();
+        }).then((res) => {
+            //console.log(res);
+            return JSON.parse(res);
+        }).then((retObj) => {
+            console.log(retObj);
+            let htmlStr = '';
+            let index = 0;
+            for(jsonObj of retObj) {
+                console.log(jsonObj)
+                htmlStr = htmlStr + `<center> <span id="homeName${index}">${jsonObj.username}</span>
+                <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
+                <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
+                <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
+                <p id="homeCaption${index}">${jsonObj.caption}</p><p id="homeLikeCom${index}">${jsonObj.likes.length} Likes and ${jsonObj.comments.length} Comments</p>`
+                //Add buttons for likes and specific posts
+                htmlStr = htmlStr + `<input type="button" value="Like" class="homeCommentButt" onclick="likePost(${index});">`
+                htmlStr = htmlStr + `<input type="button" value="See Post" class="homeCommentButt" onclick="redirectSpecific(${index});"><br>`
+                
+                htmlStr = htmlStr + `<strong>Tagged: </strong>`;
+                maxtag = jsonObj.tags.length;
+                console.log(`maxtag: ${maxtag}`);
+                if (maxtag > 5){maxtag = 5;}
+                for(var j = 0; j < maxtag; j++) {
+                    var tag = jsonObj.tags;
+                    if (tag == null){
+                        break;
+                    }
+                    htmlStr = htmlStr + `${tag[j]}, `;
+                }
+                htmlStr = htmlStr.substring(0, htmlStr.length-2) + `<br><strong>Comments:</strong><br>`
+                
+                console.log(jsonObj);                
+                // Iterate to ony have like 2 show
+                maxCom = jsonObj.comments.length;
+                console.log(`maxCom: ${maxCom}`);
+                if (maxCom > 2){maxCom = 2;}
+                for(var j = 0; j < maxCom; j++) {
+                    var comments = jsonObj.comments;
+                    
+                    htmlStr = htmlStr + `${comments[j]}<br>`;
+                }
+                htmlStr = htmlStr + `<span>...</span><br>`;
+                index+=1;
+            }
+            let content = document.getElementById('viewUserPostsSpot')
+            content.innerHTML = htmlStr;
+        });
 }
