@@ -276,7 +276,7 @@ function homefeed(){
                 for(var i = 0; i < maxCom; i++) {
                     var comments = jsonObj.comments;
                     
-                    htmlStr = htmlStr + `${comments[i]}<br>`;
+                    htmlStr = htmlStr + `${comments[i]}`;
                 }
                 htmlStr = htmlStr + `<span>...</span><br><br>`;
             index += 1;
@@ -350,7 +350,7 @@ function searchFriends() {
             for(let i = 0; i < currKeys.length; i++) {
                 let currKey = currKeys[i];
                 let currName = '' + usersObj[currKey];
-                htmlStr = htmlStr + '<p>' + currName + '</p>' + 
+                htmlStr = htmlStr + '<p class="dmHomeNames">' + currName + '</p>' + 
                 `<input type='button' name='dmHomeNewMessage${i}' id='dmHomeNewMessage${i}'
                 onclick='startMessage("${currName}")' value='Send Message'><br>`; 
             }
@@ -402,7 +402,7 @@ function getPosts() {
             console.log(retObj);
             let index = 0;
             for(jsonObj of retObj) {
-                htmlStr = htmlStr + `<center><span><p id="globalName${index}" class="clickOnUsername" onclick="openNewUserPage(${index},'globalName')">${jsonObj.username}</p></span>
+                htmlStr = htmlStr + `<center><span><p id="homeName${index}" class="clickOnUsername" onclick="openNewUserPage(${index},'globalName')">${jsonObj.username}</p></span>
                 <div><input type="button" value="<--" id="specificLikeButt" onclick="homeSwapPic(1,${index});">
                 <img class="feedPics" id="postPic${index}" src="${jsonObj.image[0]}" alt="${jsonObj.image[0]} 0">
                 <input type="button" value="-->" id="specificLikeButt" onclick="homeSwapPic(0,${index});"></div>
@@ -432,7 +432,7 @@ function getPosts() {
                 for(var i = 0; i < maxCom; i++) {
                     var comments = jsonObj.comments;
                     
-                    htmlStr = htmlStr + `${comments[i]}<br>`;
+                    htmlStr = htmlStr + `${comments[i]}`;
                 }
                 htmlStr = htmlStr + `<span>...</span><br><br>`;
             index += 1;
@@ -508,6 +508,17 @@ function sendDM() {
 }
 
 function addComment(){
+    let personName = null;
+    let htmlStr = "";
+    fetch('/find/your/user').then((res) => {
+        return res.text();
+        }).then((res) => {
+            console.log(res);
+            return JSON.parse(res);
+        }).then((retObj) => {
+            personName = retObj.username;
+
+    
     let allCom = document.getElementById("allComments");
     let likeCom = document.getElementById("likeCom");
     let picture = document.getElementById("specificPic");
@@ -517,6 +528,7 @@ function addComment(){
 
 
     let comBody = {
+        persons: personName,
         username: document.getElementById('specificUsername').innerText,
         caption: document.getElementById('specificCaption').innerText,
         image: pic,
@@ -536,16 +548,17 @@ function addComment(){
     }).then((retObj) => {
         let coms = retObj.comments
         console.log(coms);
-        htmlStr = ``;
+
         for (com of coms){
             console.log(com);
-            htmlStr = htmlStr + `${com}<br>`;
+            htmlStr = htmlStr + `${com}`;
         }
         console.log(htmlStr);
         allCom.innerHTML = htmlStr;
         likeCom.innerText = `${retObj.likes.length} Likes and ${retObj.comments.length} Comments`;
         console.log(allCom);
     });
+});
 
     
 }
@@ -617,7 +630,7 @@ function specificPost() {
                 console.log(jsonObj);
                 htmlStr = htmlStr + `<p><strong>COMMENTS:</strong></p><div id="allComments">`
                 for(comment of jsonObj.comments) {
-                    htmlStr = htmlStr + `${comment}<br>`;
+                    htmlStr = htmlStr + `${comment}`;
                 }
                 htmlStr = htmlStr + `</div>`;
 
@@ -742,6 +755,8 @@ function fillViewUserPage() {
         nameSpot.innerText = jsonObj.username;
         let bioSpot = document.getElementById('viewUserBioSpot');
         bioSpot.innerText = jsonObj.bio;
+        let profilePicSpot = document.getElementById('viewUserProfilePic')
+        profilePicSpot.src = jsonObj.profilePic;
         let uName = '' + jsonObj.username;
         viewUserFeed(uName);
     })
@@ -888,7 +903,7 @@ function userfeed(){
             for(var j = 0; j < maxCom; j++) {
                 var comments = jsonObj.comments;
                 
-                htmlStr = htmlStr + `${comments[j]}<br>`;
+                htmlStr = htmlStr + `${comments[j]}`;
             }
             htmlStr = htmlStr + `<span>...</span><br>`;
             index+=1;
@@ -942,7 +957,7 @@ function viewUserFeed(viewName) {
                 for(var j = 0; j < maxCom; j++) {
                     var comments = jsonObj.comments;
                     
-                    htmlStr = htmlStr + `${comments[j]}<br>`;
+                    htmlStr = htmlStr + `${comments[j]}`;
                 }
                 htmlStr = htmlStr + `<span>...</span><br>`;
                 index+=1;
