@@ -72,6 +72,7 @@ app.post('/user/create', (req, res) => {
   
         var newUser = new userData({ 
           username: req.body.username,
+          profilePic: ".\\images\\blankPic.png",
           password: newHash,
           salt: newSalt,
           friends: [],
