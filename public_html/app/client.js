@@ -774,7 +774,7 @@ function closeChangeBio() {
 
 // new work to display feed on user page
 function userfeed(){
-    fetch('/search/own/user').then((res) => {
+    fetch('/search/own/user/').then((res) => {
     return res.text();
     }).then((res) => {
         //console.log(res);
