@@ -226,7 +226,7 @@ function homefeed(){
     }).then((retObj) => {
         console.log(retObj);
         username = retObj.username;
-        proPic = retObj.profilePic[0];
+        proPic = retObj.profilePic;
         friendList = retObj.friends;
         
         homefeedbody = {friends: friendList};
@@ -380,7 +380,7 @@ function getPosts() {
     }).then((retObj) => {
         console.log(retObj);
         username = retObj.username;
-        proPic = retObj.profilePic[0];
+        proPic = retObj.profilePic;
         
         
         fetch(`/get/posts`).then((res) => {
@@ -575,8 +575,8 @@ function specificPost() {
         return JSON.parse(res);
     }).then((retObj) => {
         console.log(retObj);
-        console.log(retObj[0].profilePic[0]);
-        proPic = retObj[0].profilePic[0];
+        console.log(retObj[0].profilePic);
+        proPic = retObj[0].profilePic;
     
         console.log(`this is proPic: ${proPic}`);
         var specificPostBody = {caption: acaption, image: apic, username: ausername};
