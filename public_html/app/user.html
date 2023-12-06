@@ -1,10 +1,9 @@
 <!--
     Name: Bronson Housmans, Billy Dolny, and Ben Curtis
     Project: InstaSham
-    Description: This html site is created to be a loging screen,
-    It is also used to be able to create a new account as well. It should
-    stop duplicte users and if the user not real or password does not
-    match.
+    Description: html for viewing a specific user. Allows for a user to change their profile
+    picture as well as their bio, and look at the posts they have created. The user can also
+    search for friends or see their existing friends.
 -->
 
 <!DOCTYPE html>
@@ -19,19 +18,27 @@
         <div id="userContainer">
             <div class="shamBanner">InstaSham</div>
             <div id="userContent">
+
                 <div id="userInfoSpot">
+                    <!-- prof pic box dynamically changes to let the user add an img, prefiew that
+                         img, and choose if they want to keep that change-->
                     <div id="profPicBox">
                         <img id="userProfilePic" class="userProfilePic" src="./images/blankPic.png" alt="image">
                         <button id="newProfFormButton" onclick="viewChangeProfPic()">Change Profile Pic</button>
                     </div>
                     <div id="userUsernameSpot"></div>
+                    <!-- bio and change bio options -->
                     <div id="userBioSpot"></div><br>
                     <div id="userButtonSpot">
                         <input type="button" value="Click to change bio" id="userChangeBio"
                         name="userChangeBio" onclick="openChangeBio()">
                     </div>
                 </div>
+
+                <!-- displays the posts a user has created updated on load-->
                 <div id="userPostsSpot">POSTS THE USER HAS CREATED</div>
+
+                <!-- spot to search for friends, or look at existing friends -->
                 <div id="userFriendSpot">
                     <div id="userSearchContain">
                         <input id="userSearchFriend" placeholder="Search here for new friends!"

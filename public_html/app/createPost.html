@@ -1,17 +1,29 @@
+<!--
+    Name: Bronson Housmans, Billy Dolny, and Ben Curtis
+    Project: InstaSham
+    Page for the project InstaSham allowing for creating a post.
+    This page contains a place to add imgs, previews imgs, remove previewed imgs, add a caption
+    add tags, remove tags, and search users to tag
+-->
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <title>Create Post</title>
         <link rel="stylesheet" type="text/css" href="./style.css">
     </head>
+    <!--Loads the first users to tag-->
     <body onload="tagSearchUser()">
         <div id="createPostContainer">
             <div class="shamBanner">InstaSham</div>
+                <!--form for the whole post-->
                 <form id="uploadForm">
                     <div id="createPostContent">
+                        <!--Box for uploading imgs, contains what will be previewed imgs and the place to upload files-->
                         <div id="addPhotoBox">
                             <div class="createPostTitles">Add Photos To Your Post</div>
                             <div id="previewPhotos">
+                                <!--having the file upload as display none in the same label as an immage makes clicking on the image open the file explorer-->
                                 <label id="labels" class="createPostImgs toAdd" >
                                     <input type="file" accept="image/*" id="uploadImgs" class="invis" name="uploadedImgs" onchange="previewImg()" multiple>
                                     <img src="./images/addImg.png" alt="addImg" id="uploadImgImg">
@@ -19,6 +31,7 @@
                             </div>
                         </div>
 
+                        <!--caption box-->
                         <div id="createCaptionBox">
                             <div class="createPostTitles">Add A Caption To Your Post</div>
                             <textarea id="createCaption"></textarea>
