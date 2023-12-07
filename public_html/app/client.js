@@ -11,11 +11,11 @@
 var selectedImgs = [];
 
 var j = 0;
-
+/**
+ * function that allows a user to preview an image before uploading it by creating a temporary url and updating
+ * the html. Stores img for uploading later because it will be lost from the HTML element after this
+ */
 function previewImg() {
-    /**
-     * Allows the user to preview the image that is being uploaded.
-     */
     let uploadImg = document.getElementById('uploadImgs');
     var files = uploadImg.files;
     if (files) {
@@ -33,14 +33,20 @@ function previewImg() {
     }
 }
 
-
+/**
+ * function to remove an img from the stored imgs
+ * @param {img to remove} img 
+ */
 function removeImg(img) {
     selectedImgs.splice(selectedImgs.indexOf(img), 1);
     document.getElementById(img).remove();
 }
 
 let taggedUsers = [];
-
+/**
+ * searches through users and returns the 5 closest to the search in order to display them
+ * to be clicked on to tag
+ */
 function tagSearchUser() {
     if (taggedUsers.length == 0) {
         let decoded = decodeURIComponent(document.cookie);
@@ -85,6 +91,10 @@ function tagSearchUser() {
     })
 }
 
+/**
+ * adds a user to the tagged list, updating the HTMl to show the same
+ * @param {user to be tagged} username 
+ */
 function addUserTag(username) {
     taggedUsers.push(username);
     let oldHTML = document.getElementById(username + "ToTag").innerHTML;
@@ -100,34 +110,49 @@ function addUserTag(username) {
     tagSearchUser();
 }
 
+/**
+ * removes user from tag list, adding them back to the to be tagged section, updating HTML
+ * @param {user to be removed} username 
+ */
 function removeUserTag(username) {
     taggedUsers.splice(taggedUsers.indexOf(username), 1);
     document.getElementById(username + "Tagged").remove();
     tagSearchUser();
 }
 
+// check to see if on right page
 var uploadForm = document.getElementById("uploadForm");
 
 if (uploadForm != null) {
     uploadForm.addEventListener("submit", createPost);
 }
 
+/**
+ * creates a post, making sure there is an img, and send its to get uplaoded to the database
+ * @param {form, used to prevent default where it would reload the page} e 
+ * @returns just ends the function early
+ */
 function createPost(e) {
+    //prevent reload and form submission
     e.preventDefault();
+    //check there is at least 1 img
     if (selectedImgs.length == 0) {
         alert("Please Upload An Image");
         return;
     }
 
+    // ensure multipart
     var formData = new FormData();
     for (let i = 0; i < selectedImgs.length; i++) {
         formData.append("img", selectedImgs[i]);
     }
 
+    // get username
     let decoded = decodeURIComponent(document.cookie);
     decoded = decoded.replace("login=j:", "");
     decoded = JSON.parse(decoded); 
 
+    // get imgs and username into multipart to submit
     formData.append('username', decoded.username);
     let files = document.getElementById("uploadImgs");
     for (let i = 0; i < files.files.length; i++) {
