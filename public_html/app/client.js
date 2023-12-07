@@ -33,7 +33,10 @@ function previewImg() {
     }
 }
 
-
+/**
+ * Removes the image from the createPost
+ * @param {the image} img 
+ */
 function removeImg(img) {
     selectedImgs.splice(selectedImgs.indexOf(img), 1);
     document.getElementById(img).remove();
@@ -149,7 +152,9 @@ function createPost(e) {
     });
     
 }
-
+/**
+ * This function adds the like for the specific Posts.
+ */
 function likeSpecific(){
     let likeCom = document.getElementById(`likeCom`);
     picture = document.getElementById(`specificPic`);
@@ -174,7 +179,11 @@ function likeSpecific(){
 
         });
 }
-
+/**
+ * This function is used to like the posts 
+ * and change the specific posts.
+ * @param {The index of the post} index 
+ */
 function likePost(index){
     let likeCom = document.getElementById(`homeLikeCom${index}`);
     picture = document.getElementById(`postPic${index}`);
@@ -199,7 +208,12 @@ function likePost(index){
 
         });
 }
-
+/**
+ * This function creates all of the posts in the home.html
+ * It goes and find only the posts you are friends with 
+ * and shows those. You can like them and also see more of the 
+ * post.
+ */
 function homefeed(){
     let username = null;
     let proPic = null;
@@ -312,14 +326,12 @@ function homeSwapPic(dir,index){
 
 
 /**
- * Javascript for _
+ * @params: None
+ * This function is for the user to search in the input box on the User page
+ * to look up people to add as friends
  */
 function searchFriends() {
-    /**
-     * @params: None
-     * This function is for the user to search in the input box on the User page
-     * to look up people to add as friends
-     */
+
     let typedName = '' + document.getElementById('dmHomeSearch').value;
     if(typedName.length > 0) {
         let searchName = { name: document.getElementById('dmHomeSearch').value };
@@ -349,7 +361,11 @@ function searchFriends() {
         found.innerHTML = '';
     }
 }
-
+/**
+ * This is the way the javascript starts a Direct message
+ * with someone else.
+ * @param {Username} userToMessage 
+ */
 function startMessage(userToMessage) {
     /**
      * @params: userToMessage- String for the name of the user to start a dm with
@@ -366,19 +382,14 @@ function startMessage(userToMessage) {
     });
 }
 /**
- * This is the function that is used to create the 
- * feed for the global page. It should find every single 
- * post (even the users and the people who are not the users 
- * friends). Puts all of the created html into the globalContent div.
+ * @params: None
+ * Sends a request to the server to get the posts that have been made by
+ * all users on the application. Then creates HTML string to display the
+ * information on the global page. Capabilities to view the specific post,
+ * like, and click the underlined username to go to their page are included.
  */
 function getPosts() {
-    /**
-     * @params: None
-     * Sends a request to the server to get the posts that have been made by
-     * all users on the application. Then creates HTML string to display the
-     * information on the global page. Capabilities to view the specific post,
-     * like, and click the underlined username to go to their page are included.
-     */
+
     let username = null;
     let proPic = null;
     fetch('/find/your/user').then((res) => {
@@ -438,13 +449,12 @@ function getPosts() {
         });
 });
 }
-
+/**
+ * @params: elementNum- Integer that represents the item number on the page
+ * that the user clicks on
+ * Gets the username from the document and encodes the url on dmSpecific
+ */
 function openMessage(elementNum) {
-    /**
-     * @params: elementNum- Integer that represents the item number on the page
-     * that the user clicks on
-     * Gets the username from the document and encodes the url on dmSpecific
-     */
     let encodeStr = document.getElementById(`dmHomeOpenButton${elementNum}`).value;
     let splitEncode = encodeStr.split(' ');
     let otherUser = splitEncode[3];
@@ -812,7 +822,10 @@ var profFormData = new FormData();
 function reload() {
     location.reload();
 }
-
+/**
+ * This is used to change the profile pic
+ * permanently
+ */
 function viewChangeProfPic() {
     document.getElementById("newProfFormButton").remove();
     let picBox = document.getElementById("profPicBox");
@@ -823,7 +836,10 @@ function viewChangeProfPic() {
     '</form>' + 
     '<button onclick="reload()" class="invis" id="discButton">Discard Changes</button>';
 }
-
+/**
+ * This shows a previewed version of a picture that the
+ * user selected as the potential profile picture.
+ */
 function previewProfPic() {
     document.getElementById("userProfilePic").setAttribute("class", "invis");
     let inPic = document.getElementById("newProfilePic");
@@ -845,7 +861,11 @@ var newProfPicForm = document.getElementById("newProfPicForm");
 if (newProfPicForm != null) {
     newProfPicForm.addEventListener("submit", updateProfilePic);
 }
-
+/**
+ * This is a function that updates the profile pic
+ * on the server side.
+ * @param  e 
+ */
 function updateProfilePic(e) {
     e.preventDefault();
     fetch("/updateProfPic", {
@@ -888,7 +908,10 @@ function openChangeBio() {
     bioButton.innerHTML = `<input type="button" value="Click to confirm bio change" id="userChangeBio"
                     name="userChangeBio" onclick="closeChangeBio()">`
 }
-
+/**
+ * This closes the change bio when the user is 
+ * editing the bio on the user page.
+ */
 function closeChangeBio() {
     let newBioWords = document.getElementById('userBio').value
     let newBio = {bio: newBioWords};
@@ -955,7 +978,12 @@ function userfeed(){
         content.innerHTML = htmlStr;
     });
 }
-
+/**
+ * This function creates the post content in the 
+ * user page that shows all of their own post they created.
+ * It is very similar to the home feed and User feed.
+ * @param {username} viewName 
+ */
 function viewUserFeed(viewName) {
     let strName = '' + viewName;
     fetch(`/search/user/posts/${strName}`).then((res) => {
